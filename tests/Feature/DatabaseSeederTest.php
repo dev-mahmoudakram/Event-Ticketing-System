@@ -43,6 +43,31 @@ class DatabaseSeederTest extends TestCase
         ]));
     }
 
+    public function test_the_database_seeder_can_be_run_twice(): void
+    {
+        // Deployments re-run db:seed; the second pass must not collide on the event's unique
+        // slug or duplicate its demo content.
+        $this->seed(DatabaseSeeder::class);
+        $this->seed(DatabaseSeeder::class);
+
+        $this->assertSame(1, Event::where('slug', 'ccs-2026')->count());
+        $this->assertSame(1, User::where('email', config('admin.seed_email'))->count());
+    }
+
+    public function test_reseeding_leaves_existing_event_content_untouched(): void
+    {
+        $this->seed(DatabaseSeeder::class);
+        $event = Event::where('slug', 'ccs-2026')->firstOrFail();
+        $speakerCount = $event->speakers()->count();
+        $event->update(['name_en' => 'Renamed By An Admin']);
+
+        $this->seed(DatabaseSeeder::class);
+
+        // An admin's edits survive, and the child content is not duplicated on top of them.
+        $this->assertSame('Renamed By An Admin', $event->fresh()->name_en);
+        $this->assertSame($speakerCount, $event->speakers()->count());
+    }
+
     /**
      * Seeders run on deployments installed with `composer install --no-dev`, where
      * fakerphp/faker is absent and Laravel therefore never defines fake(). Model factories

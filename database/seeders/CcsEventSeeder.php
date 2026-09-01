@@ -22,10 +22,32 @@ use Illuminate\Database\Seeder;
 
 class CcsEventSeeder extends Seeder
 {
+    /** Slug of the event this seeder populates. */
+    private const EVENT_SLUG = 'ccs-2026';
+
+    /**
+     * Seeds the demo content for the CCS event.
+     *
+     * Runs once and then stands aside. Re-running would duplicate every speaker, sponsor,
+     * ticket type and agenda item, and clearing the event first is worse still: tickets,
+     * contact messages and newsletter subscribers all cascade off events, so a re-seed on a
+     * live site would delete real ticket requests. Drop the event deliberately if you want
+     * this content rebuilt.
+     */
     public function run(): void
     {
+        if (Event::where('slug', self::EVENT_SLUG)->exists()) {
+            $this->command?->warn(
+                'Skipped: the '.self::EVENT_SLUG.' event already exists. Delete it first if you '
+                .'intend to rebuild its demo content — note that doing so also deletes its '
+                .'tickets, contact messages and newsletter subscribers.'
+            );
+
+            return;
+        }
+
         $event = Event::create([
-            'slug' => 'ccs-2026',
+            'slug' => self::EVENT_SLUG,
             'name_ar' => 'قمة صناع المحتوى',
             'name_en' => 'Content Creators Summit',
             'tagline_ar' => 'أثر يتوالى',
