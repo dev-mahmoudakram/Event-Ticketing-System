@@ -9,6 +9,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\ReelRequest;
 use App\Models\Event;
 use App\Models\Reel;
+use App\Support\UploadLimit;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -24,7 +25,7 @@ class ReelController extends Controller
 
     public function create(Event $event): View
     {
-        return view('admin.reels.form', ['event' => $event, 'reel' => new Reel]);
+        return view('admin.reels.form', ['event' => $event, 'reel' => new Reel, 'uploadLimit' => UploadLimit::label()]);
     }
 
     public function store(ReelRequest $request, Event $event): RedirectResponse
@@ -42,7 +43,7 @@ class ReelController extends Controller
     {
         $this->assertBelongsToEvent($event, $reel);
 
-        return view('admin.reels.form', ['event' => $event, 'reel' => $reel]);
+        return view('admin.reels.form', ['event' => $event, 'reel' => $reel, 'uploadLimit' => UploadLimit::label()]);
     }
 
     public function update(ReelRequest $request, Event $event, Reel $reel): RedirectResponse

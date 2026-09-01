@@ -259,7 +259,6 @@
     "Clip": "المقطع",
     "Video": "الفيديو",
     "Poster Image": "صورة الغلاف",
-    "Vertical clip (9:16 works best). Max 9 MB.": "مقطع عمودي (النسبة 9:16 هي الأفضل). بحد أقصى 9 ميجابايت.",
     "Optional still shown before the clip plays.": "صورة اختيارية تظهر قبل تشغيل المقطع.",
     "Vertical clips shown in The Reel section, and in the hero cards at the top of the landing page.": "مقاطع عمودية تظهر في قسم المقاطع، وفي بطاقات أعلى الصفحة الرئيسية.",
     "Current file — choosing a new one replaces it.": "الملف الحالي — اختيار ملف جديد سيحل محله.",
@@ -278,5 +277,8 @@
     "Talks": "الجلسات",
     "& more": "والمزيد",
     "Venue TBA": "المكان يُعلن لاحقًا",
-    "Bronze Sponsors": "الرعاة البرونزيون"
+    "Bronze Sponsors": "الرعاة البرونزيون",
+    "The video could not be uploaded. This server accepts files up to :limit — raise upload_max_filesize and post_max_size to allow more.": "تعذّر رفع الفيديو. يقبل الخادم ملفات حتى :limit — قم برفع قيمتي upload_max_filesize و post_max_size للسماح بحجم أكبر.",
+    "The poster could not be uploaded. This server accepts files up to :limit.": "تعذّر رفع صورة الغلاف. يقبل الخادم ملفات حتى :limit.",
+    "Vertical clip (9:16 works best). This server accepts up to :limit.": "مقطع عمودي (النسبة 9:16 هي الأفضل). يقبل الخادم حتى :limit."
 }

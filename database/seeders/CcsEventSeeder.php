@@ -77,7 +77,17 @@ class CcsEventSeeder extends Seeder
             'photo_path' => 'https://picsum.photos/seed/ccs-speaker-omar/400/400',
             'sort_order' => 3,
         ]);
-        Speaker::factory()->for($event)->create(['photo_path' => 'https://picsum.photos/seed/ccs-speaker-extra/400/400']);
+        Speaker::create([
+            'event_id' => $event->id,
+            'name_ar' => 'سلمى حسن',
+            'name_en' => 'Salma Hassan',
+            'title_ar' => 'منتجة بودكاست',
+            'title_en' => 'Podcast Producer',
+            'bio_ar' => 'منتجة بودكاست تعمل مع صناع المحتوى على تحويل أفكارهم إلى حلقات مسموعة.',
+            'bio_en' => 'Podcast producer who turns creator ideas into finished, listenable episodes.',
+            'photo_path' => 'https://picsum.photos/seed/ccs-speaker-extra/400/400',
+            'sort_order' => 4,
+        ]);
 
         $sponsors = [
             ['name_ar' => 'نايل تك', 'name_en' => 'Nile Tech', 'tier' => 'platinum'],
@@ -167,7 +177,16 @@ class CcsEventSeeder extends Seeder
             'capacity' => 40,
             'sort_order' => 1,
         ]);
-        Workshop::factory()->for($event)->create();
+        Workshop::create([
+            'event_id' => $event->id,
+            'slug' => 'short-form-editing-workshop',
+            'name_ar' => 'ورشة مونتاج المحتوى القصير',
+            'name_en' => 'Short-Form Editing Workshop',
+            'description_ar' => 'جلسة عملية في مونتاج المقاطع القصيرة وإيقاعها.',
+            'description_en' => 'A hands-on session on cutting and pacing short-form video.',
+            'capacity' => 30,
+            'sort_order' => 2,
+        ]);
 
         AgendaItem::create([
             'event_id' => $event->id,

@@ -268,7 +268,6 @@
     "Clip": "Clip",
     "Video": "Video",
     "Poster Image": "Poster Image",
-    "Vertical clip (9:16 works best). Max 9 MB.": "Vertical clip (9:16 works best). Max 9 MB.",
     "Optional still shown before the clip plays.": "Optional still shown before the clip plays.",
     "Vertical clips shown in The Reel section, and in the hero cards at the top of the landing page.": "Vertical clips shown in The Reel section, and in the hero cards at the top of the landing page.",
     "Current file — choosing a new one replaces it.": "Current file — choosing a new one replaces it.",
@@ -287,5 +286,8 @@
     "Talks": "Talks",
     "& more": "& more",
     "Venue TBA": "Venue TBA",
-    "Bronze Sponsors": "Bronze Sponsors"
+    "Bronze Sponsors": "Bronze Sponsors",
+    "The video could not be uploaded. This server accepts files up to :limit — raise upload_max_filesize and post_max_size to allow more.": "The video could not be uploaded. This server accepts files up to :limit — raise upload_max_filesize and post_max_size to allow more.",
+    "The poster could not be uploaded. This server accepts files up to :limit.": "The poster could not be uploaded. This server accepts files up to :limit.",
+    "Vertical clip (9:16 works best). This server accepts up to :limit.": "Vertical clip (9:16 works best). This server accepts up to :limit."
 }
