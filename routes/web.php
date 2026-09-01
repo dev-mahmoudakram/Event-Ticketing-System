@@ -13,6 +13,7 @@ use App\Http\Controllers\Admin\ReelController;
 use App\Http\Controllers\Admin\SpeakerController;
 use App\Http\Controllers\Admin\SponsorController;
 use App\Http\Controllers\Admin\TestimonialController;
+use App\Http\Controllers\Admin\TicketCheckInController;
 use App\Http\Controllers\Admin\TicketRequestFieldController;
 use App\Http\Controllers\Admin\TicketRequestQueueController;
 use App\Http\Controllers\Admin\TicketTypeController;
@@ -24,6 +25,7 @@ use App\Http\Controllers\EventsController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LandingPageController;
 use App\Http\Controllers\NewsletterSubscriberController;
+use App\Http\Controllers\TicketPaymentController;
 use App\Http\Controllers\TicketRequestController;
 use App\Http\Controllers\WorkshopController;
 use App\Http\Middleware\EnsureEventIsPublished;
@@ -42,6 +44,21 @@ Route::prefix('events/{event}')->middleware(EnsureEventIsPublished::class)->grou
     Route::post('/request', [TicketRequestController::class, 'store'])->name('ticket-requests.store');
     Route::post('/contact', [ContactMessageController::class, 'store'])->name('contact.store');
     Route::post('/newsletter', [NewsletterSubscriberController::class, 'store'])->name('newsletter.store');
+});
+
+// Payment link route for ticket payment completion 
+// will be updated once we integrate with payment gateway
+Route::get('tickets/{ticket}/payment', [TicketPaymentController::class, 'complete'])
+    ->middleware('signed')
+    ->name('tickets.payment');
+
+// Check-in routes for scanning and verifying tickets
+Route::middleware('auth')->prefix('check-in')->name('check-in.')->group(function () {
+    Route::get('{event}', [TicketCheckInController::class, 'index'])->name('index');
+    Route::get('{event}/{ticketId}', [TicketCheckInController::class, 'scan'])
+        ->middleware('signed')
+        ->name('scan');
+    Route::post('{event}', [TicketCheckInController::class, 'store'])->name('store');
 });
 
 Route::prefix('admin')->name('admin.')->group(function () {

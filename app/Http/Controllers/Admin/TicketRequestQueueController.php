@@ -16,6 +16,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\View\View;
 use Symfony\Component\HttpFoundation\StreamedResponse;
@@ -46,7 +47,9 @@ class TicketRequestQueueController extends Controller
         )->validate()['status'];
 
         $ticketStatus = $status === 'approved' ? TicketStatus::PaymentPending : TicketStatus::Rejected;
-        $mail = $status === 'approved' ? new TicketRequestApproved($ticket) : new TicketRequestRejected($ticket);
+        $mail = $status === 'approved'
+            ? new TicketRequestApproved($ticket, URL::temporarySignedRoute('tickets.payment', now()->addDays(7), ['ticket' => $ticket]))
+            : new TicketRequestRejected($ticket);
         $successMessage = $status === 'approved'
             ? __('Ticket approved successfully.')
             : __('Ticket rejected successfully.');

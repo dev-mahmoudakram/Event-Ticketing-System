@@ -15,7 +15,7 @@ class TicketRequestApproved extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public function __construct(public Ticket $ticket) {}
+    public function __construct(public Ticket $ticket, public string $paymentUrl) {}
 
     public function envelope(): Envelope
     {

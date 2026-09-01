@@ -119,6 +119,141 @@ h1, h2, h3, h4, h5, .font-display {
   display: none !important;
 }
 
+.check-in-shell {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 32px 20px;
+  background: radial-gradient(circle at 50% 0%, #34484a 0, var(--color-ccs-black) 48%, #101517 100%);
+}
+
+.check-in-panel {
+  width: min(100%, 520px);
+  padding: clamp(32px, 7vw, 64px) clamp(24px, 7vw, 56px);
+  border: 1px solid rgba(124, 203, 207, 0.2);
+  background: rgba(23, 31, 34, 0.92);
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.35);
+  text-align: center;
+}
+
+.check-in-mark, .check-in-result-icon {
+  width: 76px;
+  height: 76px;
+  margin: 0 auto 28px;
+  border: 1px solid var(--color-ccs-teal-light);
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  animation: check-in-pulse 2.2s ease-in-out infinite;
+}
+
+.check-in-mark span {
+  width: 30px;
+  height: 30px;
+  border: 2px solid var(--color-ccs-teal-light);
+  border-radius: 50%;
+}
+
+.check-in-kicker {
+  color: var(--color-ccs-teal-light);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.check-in-panel h1 {
+  margin-top: 10px;
+  font-size: clamp(1.8rem, 5vw, 2.8rem);
+  font-weight: 800;
+}
+
+.check-in-event, .check-in-result-message {
+  margin-top: 10px;
+  color: #b8c2c4;
+}
+
+.check-in-form {
+  display: grid;
+  gap: 12px;
+  margin-top: 32px;
+  text-align: left;
+}
+
+.check-in-form label {
+  color: #d1d5db;
+  font-size: 0.875rem;
+}
+
+.check-in-form input {
+  width: 100%;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: #101517;
+  color: white;
+  padding: 13px 14px;
+  outline: none;
+}
+
+.check-in-form input:focus {
+  border-color: var(--color-ccs-teal-light);
+}
+
+.check-in-form button, .check-in-back {
+  display: inline-block;
+  margin-top: 8px;
+  border: 0;
+  background: var(--color-ccs-teal);
+  color: white;
+  padding: 13px 18px;
+  text-align: center;
+  font-weight: 700;
+}
+
+.check-in-alert, .check-in-field-error {
+  margin-top: 18px;
+  font-size: 0.875rem;
+}
+
+.check-in-alert-success { color: var(--color-ccs-teal-light); }
+.check-in-alert-error, .check-in-field-error { color: #fca5a5; }
+.check-in-kicker-success { color: var(--color-ccs-teal-light); }
+.check-in-kicker-error { color: #fca5a5; }
+
+.check-in-result-icon-verified {
+  border-color: var(--color-ccs-teal-light);
+  color: var(--color-ccs-teal-light);
+  font-size: 2.5rem;
+}
+
+.check-in-result-icon-used, .check-in-result-icon-unpaid, .check-in-result-icon-invalid {
+  border-color: #fca5a5;
+  color: #fca5a5;
+  font-size: 2rem;
+}
+
+.check-in-details {
+  display: grid;
+  gap: 12px;
+  margin-top: 28px;
+  padding-top: 22px;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  text-align: left;
+}
+
+.check-in-details div { display: flex; justify-content: space-between; gap: 16px; }
+.check-in-details span { color: #8d9a9d; }
+.check-in-details strong { overflow-wrap: anywhere; }
+.check-in-back { margin-top: 28px; background: transparent; color: var(--color-ccs-teal-light); }
+
+@keyframes check-in-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(124, 203, 207, 0.2); }
+  50% { box-shadow: 0 0 0 14px rgba(124, 203, 207, 0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .check-in-mark, .check-in-result-icon { animation: none; }
+}
+
 .ccs-section {
   padding-inline: clamp(20px, 6vw, 80px);
   padding-bottom: 100px;

@@ -5,4 +5,5 @@
     {{ __('has been approved.') }}
 </p>
 <p>{{ __('Reference') }}: {{ $ticket->ticket_number }}</p>
-<p>{{ __('Your ticket is currently awaiting payment. Further instructions will follow.') }}</p>
+<p>{{ __('Click the link below to confirm your payment and receive your ticket:') }}</p>
+<p><a href="{{ $paymentUrl }}">{{ __('Confirm payment and get my ticket') }}</a></p>
