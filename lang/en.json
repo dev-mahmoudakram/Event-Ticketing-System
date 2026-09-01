@@ -287,7 +287,8 @@
     "& more": "& more",
     "Venue TBA": "Venue TBA",
     "Bronze Sponsors": "Bronze Sponsors",
-    "The video could not be uploaded. This server accepts files up to :limit — raise upload_max_filesize and post_max_size to allow more.": "The video could not be uploaded. This server accepts files up to :limit — raise upload_max_filesize and post_max_size to allow more.",
-    "The poster could not be uploaded. This server accepts files up to :limit.": "The poster could not be uploaded. This server accepts files up to :limit.",
-    "Vertical clip (9:16 works best). This server accepts up to :limit.": "Vertical clip (9:16 works best). This server accepts up to :limit."
+    "This file is too large. The limit is :intended, but this server currently accepts only :server — raise upload_max_filesize and post_max_size to allow the full size.": "This file is too large. The limit is :intended, but this server currently accepts only :server — raise upload_max_filesize and post_max_size to allow the full size.",
+    "This file is too large. The limit is :intended.": "This file is too large. The limit is :intended.",
+    "Vertical clip (9:16 works best). Up to :intended — but this server currently accepts only :server.": "Vertical clip (9:16 works best). Up to :intended — but this server currently accepts only :server.",
+    "Vertical clip (9:16 works best). Up to :intended.": "Vertical clip (9:16 works best). Up to :intended."
 }

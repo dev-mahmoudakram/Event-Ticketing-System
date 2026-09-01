@@ -15,7 +15,7 @@
             :label="__('Video')"
             :current="$reel->videoUrl()"
             :required="!$reel->exists"
-            :hint="__('Vertical clip (9:16 works best). This server accepts up to :limit.', ['limit' => $uploadLimit])"
+            :hint="$uploadLimit"
         />
 
         <x-admin.media-upload

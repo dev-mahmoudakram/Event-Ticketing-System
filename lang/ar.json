@@ -278,7 +278,8 @@
     "& more": "والمزيد",
     "Venue TBA": "المكان يُعلن لاحقًا",
     "Bronze Sponsors": "الرعاة البرونزيون",
-    "The video could not be uploaded. This server accepts files up to :limit — raise upload_max_filesize and post_max_size to allow more.": "تعذّر رفع الفيديو. يقبل الخادم ملفات حتى :limit — قم برفع قيمتي upload_max_filesize و post_max_size للسماح بحجم أكبر.",
-    "The poster could not be uploaded. This server accepts files up to :limit.": "تعذّر رفع صورة الغلاف. يقبل الخادم ملفات حتى :limit.",
-    "Vertical clip (9:16 works best). This server accepts up to :limit.": "مقطع عمودي (النسبة 9:16 هي الأفضل). يقبل الخادم حتى :limit."
+    "This file is too large. The limit is :intended, but this server currently accepts only :server — raise upload_max_filesize and post_max_size to allow the full size.": "هذا الملف كبير جدًا. الحد الأقصى :intended، لكن هذا الخادم يقبل حاليًا :server فقط — قم برفع قيمتي upload_max_filesize و post_max_size للسماح بالحجم الكامل.",
+    "This file is too large. The limit is :intended.": "هذا الملف كبير جدًا. الحد الأقصى :intended.",
+    "Vertical clip (9:16 works best). Up to :intended — but this server currently accepts only :server.": "مقطع عمودي (النسبة 9:16 هي الأفضل). حتى :intended — لكن هذا الخادم يقبل حاليًا :server فقط.",
+    "Vertical clip (9:16 works best). Up to :intended.": "مقطع عمودي (النسبة 9:16 هي الأفضل). حتى :intended."
 }

@@ -113,6 +113,48 @@ class ReelCrudTest extends TestCase
         $this->actingAs($admin)->get(route('admin.events.reels.edit', [$event, $reel]))->assertNotFound();
     }
 
+    public function test_a_video_over_the_configured_ceiling_is_rejected(): void
+    {
+        Storage::fake('public');
+        config(['media.max_video_kb' => 25 * 1024]);
+        $admin = User::factory()->create();
+        $event = Event::factory()->create();
+
+        $response = $this->actingAs($admin)->post(route('admin.events.reels.store', $event), [
+            'video' => UploadedFile::fake()->create('huge.mp4', 26 * 1024, 'video/mp4'),
+        ]);
+
+        $response->assertSessionHasErrors(['video']);
+        $this->assertDatabaseCount('reels', 0);
+    }
+
+    public function test_a_video_within_the_ceiling_is_accepted(): void
+    {
+        Storage::fake('public');
+        config(['media.max_video_kb' => 25 * 1024]);
+        $admin = User::factory()->create();
+        $event = Event::factory()->create();
+
+        $response = $this->actingAs($admin)->post(route('admin.events.reels.store', $event), [
+            'video' => UploadedFile::fake()->create('fine.mp4', 900, 'video/mp4'),
+            'caption_en' => 'Within the limit',
+        ]);
+
+        $response->assertSessionHasNoErrors();
+        $this->assertDatabaseHas('reels', ['caption_en' => 'Within the limit']);
+    }
+
+    public function test_the_upload_area_states_the_configured_ceiling(): void
+    {
+        config(['media.max_video_kb' => 25 * 1024]);
+        $admin = User::factory()->create();
+        $event = Event::factory()->create();
+
+        $response = $this->actingAs($admin)->get(route('admin.events.reels.create', $event).'?lang=en');
+
+        $response->assertSee('25 MB');
+    }
+
     public function test_admin_can_view_index_and_create_pages(): void
     {
         $admin = User::factory()->create();

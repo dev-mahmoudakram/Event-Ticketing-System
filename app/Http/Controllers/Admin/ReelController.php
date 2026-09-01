@@ -25,7 +25,7 @@ class ReelController extends Controller
 
     public function create(Event $event): View
     {
-        return view('admin.reels.form', ['event' => $event, 'reel' => new Reel, 'uploadLimit' => UploadLimit::label()]);
+        return view('admin.reels.form', ['event' => $event, 'reel' => new Reel, 'uploadLimit' => $this->uploadLimitNotice()]);
     }
 
     public function store(ReelRequest $request, Event $event): RedirectResponse
@@ -43,7 +43,7 @@ class ReelController extends Controller
     {
         $this->assertBelongsToEvent($event, $reel);
 
-        return view('admin.reels.form', ['event' => $event, 'reel' => $reel, 'uploadLimit' => UploadLimit::label()]);
+        return view('admin.reels.form', ['event' => $event, 'reel' => $reel, 'uploadLimit' => $this->uploadLimitNotice()]);
     }
 
     public function update(ReelRequest $request, Event $event, Reel $reel): RedirectResponse
@@ -68,6 +68,26 @@ class ReelController extends Controller
         $reel->delete();
 
         return redirect()->route('admin.events.reels.index', $event);
+    }
+
+    /**
+     * Text for the upload area: the intended ceiling, plus a nudge about the server's own
+     * limit when that is the lower of the two.
+     */
+    private function uploadLimitNotice(): string
+    {
+        $intended = (int) config('media.max_video_kb');
+
+        if (UploadLimit::isServerConstrained($intended)) {
+            return __('Vertical clip (9:16 works best). Up to :intended — but this server currently accepts only :server.', [
+                'intended' => UploadLimit::label($intended),
+                'server' => UploadLimit::label(UploadLimit::serverKilobytes()),
+            ]);
+        }
+
+        return __('Vertical clip (9:16 works best). Up to :intended.', [
+            'intended' => UploadLimit::label($intended),
+        ]);
     }
 
     private function assertBelongsToEvent(Event $event, Reel $reel): void
