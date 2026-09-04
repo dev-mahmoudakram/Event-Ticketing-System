@@ -32,8 +32,13 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                 @foreach($events as $event)
                     <a href="{{ route('landing.show', $event) }}" class="group block rounded-3xl border border-hub-purple/15 overflow-hidden hover:border-hub-purple/40 transition-colors">
-                        <div class="hub-blueprint-grid aspect-[16/9] flex items-end p-6" style="background-color: var(--color-hub-purple);">
-                            <span class="text-xs font-bold uppercase tracking-[0.18em] text-white/70">{{ $event->start_date->format('M j') }}&ndash;{{ $event->end_date->format('j, Y') }}</span>
+                        <div class="hub-blueprint-grid relative aspect-[16/9] flex items-end p-6 overflow-hidden" style="background-color: var(--color-hub-purple);">
+                            @if($event->coverImageUrl())
+                                <img src="{{ $event->coverImageUrl() }}" alt="" loading="lazy" class="absolute inset-0 w-full h-full object-cover">
+                                {{-- Keeps the date readable whatever the photograph is. --}}
+                                <span class="absolute inset-0 bg-hub-dark/40" aria-hidden="true"></span>
+                            @endif
+                            <span class="relative text-xs font-bold uppercase tracking-[0.18em] text-white/70">{{ $event->start_date->format('M j') }}&ndash;{{ $event->end_date->format('j, Y') }}</span>
                         </div>
                         <div class="p-6">
                             <h2 class="font-display text-xl font-bold mb-2 transition-colors group-hover:text-hub-purple">

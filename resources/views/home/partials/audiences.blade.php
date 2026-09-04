@@ -33,8 +33,10 @@
 
     {{-- The page's one interactive moment, built as a real tablist: arrow keys move between
          sides and the selected state is announced, not just coloured. --}}
-    <div class="flex justify-center mb-12">
-        <div class="hub-segment" role="tablist" aria-label="{{ __('Choose your side') }}">
+    {{-- The switch stays put while the deck scrolls past it, so the reader can always see
+         which side they are reading and swap without scrolling back up. --}}
+    <div class="sticky top-[5.5rem] z-30 flex justify-center mb-12">
+        <div class="hub-segment shadow-lg shadow-hub-purple/10" role="tablist" aria-label="{{ __('Choose your side') }}">
             @foreach($audiences as $key => $audience)
                 <button
                     type="button"
@@ -73,7 +75,7 @@
                  leaves the edge of the previous card visible. --}}
             <div class="flex flex-col gap-8">
                 @foreach($audience['cards'] as $index => $card)
-                    <div class="lg:sticky" style="top: calc(7rem + {{ $index * 1.75 }}rem)">
+                    <div class="lg:sticky" style="top: calc(10rem + {{ $index * 1.75 }}rem)">
                         <div class="rounded-[2rem] border border-hub-purple/15 bg-hub-lavender overflow-hidden">
                             <div class="grid grid-cols-1 lg:grid-cols-2 items-center gap-8 lg:gap-12 p-8 md:p-12">
                                 <div>

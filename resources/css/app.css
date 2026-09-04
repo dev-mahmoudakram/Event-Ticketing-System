@@ -758,3 +758,12 @@ h1, h2, h3, h4, h5, .font-display {
   height: 100%;
   object-fit: cover;
 }
+
+footer .hub-panel-dark {
+  border-top-right-radius: 2rem;
+  border-top-left-radius: 2rem;
+  border-bottom-right-radius: 0;
+  border-bottom-left-radius: 0;
+  background: var(--color-hub-purple);
+  color: #fff;
+}

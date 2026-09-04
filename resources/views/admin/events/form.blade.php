@@ -4,13 +4,20 @@
 @section('content')
     <x-admin.page-header :title="$event->exists ? __('Edit Event') : __('New Event')" />
 
-    <form method="POST" action="{{ $event->exists ? route('admin.events.update', $event) : route('admin.events.store') }}">
+    <form method="POST" action="{{ $event->exists ? route('admin.events.update', $event) : route('admin.events.store') }}" enctype="multipart/form-data">
         @csrf
         @if($event->exists) @method('PUT') @endif
 
         <x-admin.field name="slug" label="{{ __('Slug') }}" :value="old('slug', $event->slug)" />
         <x-admin.bilingual-field name="name" label="{{ __('Name') }}" :value-ar="old('name_ar', $event->name_ar)" :value-en="old('name_en', $event->name_en)" />
         <x-admin.bilingual-field name="tagline" label="{{ __('Tagline') }}" :value-ar="old('tagline_ar', $event->tagline_ar)" :value-en="old('tagline_en', $event->tagline_en)" />
+
+        <x-admin.media-upload
+            name="cover_image"
+            :label="__('Cover Image')"
+            :current="$event->coverImageUrl()"
+            :hint="__('Shown wherever this event is listed, such as the event cards on the Creators Hub page. Up to :limit.', ['limit' => $uploadLimit])"
+        />
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <x-admin.field type="date" name="start_date" label="{{ __('Start Date') }}" :value="old('start_date', optional($event->start_date)->toDateString())" />

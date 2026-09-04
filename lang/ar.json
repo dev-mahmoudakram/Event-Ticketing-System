@@ -363,5 +363,7 @@
     "Logos shown in the partners strip on the Creators Hub page. These belong to the platform; an individual event has its own sponsors under that event.": "الشعارات المعروضة في شريط الشركاء بصفحة Creators Hub. هذه تخص المنصة؛ ولكل فعالية رعاتها الخاصون ضمن صفحتها.",
     "A white or light logo on a transparent background reads best against the dark strip. Up to :limit.": "الشعار الأبيض أو الفاتح على خلفية شفافة هو الأوضح على الشريط الداكن. حتى :limit.",
     "Previous partners": "الشركاء السابقون",
-    "Next partners": "الشركاء التاليون"
+    "Next partners": "الشركاء التاليون",
+    "Cover Image": "صورة الغلاف",
+    "Shown wherever this event is listed, such as the event cards on the Creators Hub page. Up to :limit.": "تظهر أينما تُعرض هذه الفعالية، مثل بطاقات الفعاليات في صفحة Creators Hub. حتى :limit."
 }

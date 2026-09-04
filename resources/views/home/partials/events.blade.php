@@ -55,8 +55,12 @@
                     <a href="{{ route('landing.show', $featuredEvent) }}" class="hub-pill hub-pill-solid">{{ __('View Event') }}</a>
                 </div>
 
+                {{-- The event's own cover image is the admin's deliberate choice, so it wins over
+                     whichever reel happens to be first. --}}
                 <div class="hub-media-well rounded-3xl aspect-[4/3]">
-                    @if($featuredReel)
+                    @if($featuredEvent->coverImageUrl())
+                        <img src="{{ $featuredEvent->coverImageUrl() }}" alt="{{ app()->getLocale() === 'ar' ? $featuredEvent->name_ar : $featuredEvent->name_en }}" loading="lazy">
+                    @elseif($featuredReel)
                         <video
                             src="{{ $featuredReel->videoUrl() }}"
                             @if($featuredReel->posterUrl()) poster="{{ $featuredReel->posterUrl() }}" @endif
@@ -70,11 +74,18 @@
             @if($otherEvents->isNotEmpty())
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mt-10 pt-10 border-t border-hub-purple/10">
                     @foreach($otherEvents as $event)
-                        <a href="{{ route('landing.show', $event) }}" class="group rounded-3xl border border-hub-purple/15 p-7 transition-colors hover:border-hub-purple/40">
-                            <p class="text-sm text-hub-dark/50 mb-2">{{ $event->start_date->format('j M Y') }}</p>
-                            <h3 class="font-display text-xl font-bold text-hub-purple">
-                                {{ app()->getLocale() === 'ar' ? $event->name_ar : $event->name_en }}
-                            </h3>
+                        <a href="{{ route('landing.show', $event) }}" class="group rounded-3xl border border-hub-purple/15 overflow-hidden transition-colors hover:border-hub-purple/40">
+                            @if($event->coverImageUrl())
+                                <div class="hub-media-well aspect-[16/9]">
+                                    <img src="{{ $event->coverImageUrl() }}" alt="" loading="lazy">
+                                </div>
+                            @endif
+                            <div class="p-7">
+                                <p class="text-sm text-hub-dark/50 mb-2">{{ $event->start_date->format('j M Y') }}</p>
+                                <h3 class="font-display text-xl font-bold text-hub-purple">
+                                    {{ app()->getLocale() === 'ar' ? $event->name_ar : $event->name_en }}
+                                </h3>
+                            </div>
                         </a>
                     @endforeach
                 </div>

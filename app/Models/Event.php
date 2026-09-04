@@ -6,6 +6,7 @@ namespace App\Models;
 
 use App\Enums\EventStatus;
 use App\Enums\LandingPageSection;
+use App\Models\Concerns\ResolvesStoredMedia;
 use Database\Factories\EventFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -14,6 +15,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class Event extends Model
 {
     use HasFactory;
+    use ResolvesStoredMedia;
 
     /** @var list<string> The landing page sections an admin can independently show or hide. Hero is not included — it always renders. */
     public const TOGGLEABLE_SECTIONS = [
@@ -22,7 +24,7 @@ class Event extends Model
     ];
 
     protected $fillable = [
-        'slug', 'name_ar', 'name_en', 'tagline_ar', 'tagline_en',
+        'slug', 'name_ar', 'name_en', 'tagline_ar', 'tagline_en', 'cover_image_path',
         'start_date', 'end_date',
         'venue_name_ar', 'venue_name_en', 'venue_address_ar', 'venue_address_en',
         'map_embed_url', 'status', 'visible_sections',
@@ -34,6 +36,15 @@ class Event extends Model
         'status' => EventStatus::class,
         'visible_sections' => 'array',
     ];
+
+    /**
+     * The image that represents this event wherever it is listed, such as the event cards on
+     * the Creators Hub landing page.
+     */
+    public function coverImageUrl(): ?string
+    {
+        return $this->storedMediaUrl($this->cover_image_path);
+    }
 
     public function getRouteKeyName(): string
     {

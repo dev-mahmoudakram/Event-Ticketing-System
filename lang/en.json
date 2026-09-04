@@ -372,5 +372,7 @@
     "Logos shown in the partners strip on the Creators Hub page. These belong to the platform; an individual event has its own sponsors under that event.": "Logos shown in the partners strip on the Creators Hub page. These belong to the platform; an individual event has its own sponsors under that event.",
     "A white or light logo on a transparent background reads best against the dark strip. Up to :limit.": "A white or light logo on a transparent background reads best against the dark strip. Up to :limit.",
     "Previous partners": "Previous partners",
-    "Next partners": "Next partners"
+    "Next partners": "Next partners",
+    "Cover Image": "Cover Image",
+    "Shown wherever this event is listed, such as the event cards on the Creators Hub page. Up to :limit.": "Shown wherever this event is listed, such as the event cards on the Creators Hub page. Up to :limit."
 }

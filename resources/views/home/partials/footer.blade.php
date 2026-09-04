@@ -1,7 +1,7 @@
 {{-- resources/views/home/partials/footer.blade.php --}}
 @php $sectionBase = ($onHomePage ?? true) ? '' : route('home'); @endphp
 
-<footer class="hub-shell pb-6 pt-2">
+<footer class="hub-shell pt-2">
     <div class="hub-panel-dark hub-pad">
         <div class="grid grid-cols-1 md:grid-cols-[1.4fr_1fr_1fr] gap-12 mb-14">
             <div>
