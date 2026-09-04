@@ -1,6 +1,6 @@
 {{-- resources/views/home/partials/faq.blade.php --}}
 @if($faqs->isNotEmpty())
-    <section id="faq" class="hub-shell scroll-mt-28 py-6">
+    <section id="faq" class="hub-shell scroll-mt-24 py-6">
         <div class="hub-panel hub-pad">
             <h2 class="font-display text-[clamp(1.9rem,4vw,3rem)] font-extrabold leading-[1.1] tracking-tight text-hub-purple mb-10" data-reveal>
                 @site('faq.heading')

@@ -1,5 +1,5 @@
 {{-- resources/views/home/partials/community.blade.php --}}
-<section id="community" class="hub-shell scroll-mt-28 py-6">
+<section id="community" class="hub-shell scroll-mt-24 py-6">
     {{-- The reference's full-bleed "long haul" band: one dark panel with centred copy. --}}
     <div class="hub-panel-dark hub-pad relative overflow-hidden text-center">
         <img

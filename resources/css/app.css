@@ -731,6 +731,18 @@ h1, h2, h3, h4, h5, .font-display {
   background: color-mix(in srgb, var(--color-hub-purple) 8%, transparent);
 }
 
+/* On a dark panel the purple hairline disappears, so the control needs a light
+   edge instead. Geometry stays with .hub-round-btn. */
+.hub-round-btn-light {
+  border-color: color-mix(in srgb, white 45%, transparent);
+  color: #fff;
+}
+
+.hub-round-btn-light:hover {
+  border-color: #fff;
+  background: color-mix(in srgb, white 12%, transparent);
+}
+
 /* Media wells stand in for photography the brand does not have yet: an uploaded
    image fills them, otherwise they render as a brand-coloured panel. */
 .hub-media-well {

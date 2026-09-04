@@ -7,6 +7,7 @@ namespace App\Http\Controllers;
 use App\Enums\EventStatus;
 use App\Models\Event;
 use App\Models\HeroSlide;
+use App\Models\HubPartner;
 use App\Models\SiteFaq;
 use App\Support\SiteText;
 use Illuminate\View\View;
@@ -30,6 +31,7 @@ class HomeController extends Controller
             'otherEvents' => $events->slice(1),
             'stats' => $this->stats(),
             'whyEgypt' => $this->whyEgypt(),
+            'partners' => HubPartner::orderBy('sort_order')->get(),
             'faqs' => SiteFaq::orderBy('sort_order')->get(),
         ]);
     }

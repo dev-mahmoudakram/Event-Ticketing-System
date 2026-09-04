@@ -1,5 +1,5 @@
 {{-- resources/views/home/partials/events.blade.php --}}
-<section id="events" class="hub-shell scroll-mt-28 py-6">
+<section id="events" class="hub-shell scroll-mt-24 py-6">
     <div class="hub-panel hub-pad">
         <div class="flex flex-wrap items-end justify-between gap-6 mb-10">
             <h2 class="font-display text-[clamp(1.9rem,4vw,3rem)] font-extrabold leading-[1.1] tracking-tight text-hub-purple max-w-2xl" data-reveal>

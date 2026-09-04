@@ -145,7 +145,6 @@ class SiteContentRegistry
                 'label' => __('Partners'),
                 'description' => __('The partnership invitation.'),
                 'fields' => [
-                    'eyebrow' => ['label' => __('Small label'), 'type' => 'text', 'default' => 'Partners'],
                     'heading' => ['label' => __('Heading'), 'type' => 'textarea', 'default' => 'Built through collaboration.'],
                     'body' => ['label' => __('Body'), 'type' => 'textarea', 'default' => 'Creators Hub is founded on partnerships with the brands and organizations that supply, build, and shape the industry.'],
                     'cta' => ['label' => __('Button'), 'type' => 'text', 'default' => 'Become a Partner'],

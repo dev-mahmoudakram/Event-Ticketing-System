@@ -33,6 +33,12 @@
             @endif
             {{ __('Hero Slides') }}
         </a>
+        <a href="{{ route('admin.hub-partners.index') }}" class="flex items-center gap-2 px-3 py-2 rounded {{ request()->routeIs('admin.hub-partners.*') ? 'bg-gray-900' : 'hover:bg-gray-900' }}">
+            @if(request()->routeIs('admin.hub-partners.*'))
+                <span class="ccs-flag-accent" style="width:4px;height:16px;"></span>
+            @endif
+            {{ __('Creators Hub Partners') }}
+        </a>
         <a href="{{ route('admin.site-faqs.index') }}" class="flex items-center gap-2 px-3 py-2 rounded {{ request()->routeIs('admin.site-faqs.*') ? 'bg-gray-900' : 'hover:bg-gray-900' }}">
             @if(request()->routeIs('admin.site-faqs.*'))
                 <span class="ccs-flag-accent" style="width:4px;height:16px;"></span>

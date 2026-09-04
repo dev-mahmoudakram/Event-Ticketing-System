@@ -355,5 +355,13 @@
     "Side 2, card 2 image": "صورة البطاقة 2 - الجانب الثاني",
     "Side 2, card 3 image": "صورة البطاقة 3 - الجانب الثاني",
     "Side 2, card 4 image": "صورة البطاقة 4 - الجانب الثاني",
-    "Get in touch": "تواصل معنا"
+    "Get in touch": "تواصل معنا",
+    "Creators Hub Partners": "شركاء Creators Hub",
+    "New Partner": "شريك جديد",
+    "Edit Partner": "تعديل الشريك",
+    "No partners yet.": "لا يوجد شركاء بعد.",
+    "Logos shown in the partners strip on the Creators Hub page. These belong to the platform; an individual event has its own sponsors under that event.": "الشعارات المعروضة في شريط الشركاء بصفحة Creators Hub. هذه تخص المنصة؛ ولكل فعالية رعاتها الخاصون ضمن صفحتها.",
+    "A white or light logo on a transparent background reads best against the dark strip. Up to :limit.": "الشعار الأبيض أو الفاتح على خلفية شفافة هو الأوضح على الشريط الداكن. حتى :limit.",
+    "Previous partners": "الشركاء السابقون",
+    "Next partners": "الشركاء التاليون"
 }

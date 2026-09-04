@@ -7,7 +7,7 @@
 @endphp
 
 @if($heading && $points !== [])
-    <section id="why-egypt" class="hub-shell scroll-mt-28 py-6">
+    <section id="why-egypt" class="hub-shell scroll-mt-24 py-6">
         <div class="hub-panel hub-pad">
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20">
                 <div>

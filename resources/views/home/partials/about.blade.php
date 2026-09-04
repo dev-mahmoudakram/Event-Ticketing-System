@@ -1,7 +1,7 @@
 {{-- resources/views/home/partials/about.blade.php --}}
 @php $aboutImage = \App\Support\SiteText::image('about', 'image'); @endphp
 
-<section id="about" class="hub-shell scroll-mt-28 py-6">
+<section id="about" class="hub-shell scroll-mt-24 py-6">
     <div class="hub-panel hub-pad">
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-start">
             <div data-reveal>

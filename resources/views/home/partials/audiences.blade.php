@@ -23,7 +23,7 @@
 
 {{-- Sits directly on the page ground rather than inside a white panel, so the stacked cards
      read as a deck the way they do in the reference. --}}
-<section id="audiences" class="hub-shell scroll-mt-28 py-16 md:py-24" x-data="{ active: 'builders' }">
+<section id="audiences" class="hub-shell scroll-mt-24 py-16 md:py-24" x-data="{ active: 'builders' }">
     <div class="max-w-2xl mx-auto text-center mb-10">
         <h2 class="font-display text-[clamp(1.9rem,4vw,3rem)] font-extrabold leading-[1.1] tracking-tight text-hub-purple mb-5" data-reveal>
             @site('audiences.heading')
