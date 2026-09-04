@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\EventController;
 use App\Http\Controllers\Admin\FaqController;
 use App\Http\Controllers\Admin\GalleryPhotoController;
+use App\Http\Controllers\Admin\HeroSlideController;
 use App\Http\Controllers\Admin\LandingPageContentController;
 use App\Http\Controllers\Admin\NewsletterSubscriberController as AdminNewsletterSubscriberController;
 use App\Http\Controllers\Admin\ReelController;
@@ -77,6 +78,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('site-content/{section}', [SiteContentController::class, 'edit'])->name('site-content.edit');
         Route::put('site-content/{section}', [SiteContentController::class, 'update'])->name('site-content.update');
         Route::resource('site-faqs', SiteFaqController::class)->except('show');
+        Route::resource('hero-slides', HeroSlideController::class)->except('show');
         Route::resource('events', EventController::class)->except('show');
         Route::resource('events.speakers', SpeakerController::class)->except('show');
         Route::resource('events.workshops', AdminWorkshopController::class)->except('show');

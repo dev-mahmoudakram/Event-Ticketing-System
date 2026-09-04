@@ -6,6 +6,7 @@ namespace App\Http\Controllers;
 
 use App\Enums\EventStatus;
 use App\Models\Event;
+use App\Models\HeroSlide;
 use App\Models\SiteFaq;
 use App\Support\SiteText;
 use Illuminate\View\View;
@@ -24,6 +25,7 @@ class HomeController extends Controller
             ->get();
 
         return view('home.show', [
+            'heroSlides' => HeroSlide::orderBy('sort_order')->get(),
             'featuredEvent' => $events->first(),
             'otherEvents' => $events->slice(1),
             'stats' => $this->stats(),

@@ -331,5 +331,18 @@
     "Questions shown on the Creators Hub landing page. The section stays hidden while there are none.": "الأسئلة المعروضة في صفحة Creators Hub الرئيسية. يبقى القسم مخفيًا ما دامت فارغة.",
     "Three figures shown near the top of the landing page. The band stays hidden until at least one figure and its label are filled in.": "ثلاثة أرقام تظهر أعلى الصفحة الرئيسية. يبقى الشريط مخفيًا حتى تُملأ نقطة واحدة على الأقل مع تسميتها.",
     "The reasons to build here. The section stays hidden until the heading and at least one point are filled in.": "أسباب البناء هنا. يبقى القسم مخفيًا حتى يُملأ العنوان ونقطة واحدة على الأقل.",
-    "Content saved.": "تم حفظ المحتوى."
+    "Content saved.": "تم حفظ المحتوى.",
+    "Hero Slides": "شرائح الواجهة",
+    "New Slide": "شريحة جديدة",
+    "Edit Slide": "تعديل الشريحة",
+    "No slides yet.": "لا توجد شرائح بعد.",
+    "Uses the shared hero copy": "يستخدم نص الواجهة المشترك",
+    "Images shown in the full-screen slider at the top of the Creators Hub page. One slide simply shows that image; with none, the hero falls back to the brand background.": "الصور المعروضة في الشريط المتحرك بأعلى صفحة Creators Hub. الشريحة الواحدة تعرض صورتها فقط؛ وبدون أي شرائح تعود الواجهة إلى خلفية الهوية.",
+    "Wide landscape works best, since it fills the whole screen. Up to :limit.": "الصور العريضة هي الأفضل لأنها تملأ الشاشة بالكامل. حتى :limit.",
+    "Leave the headline and text blank to reuse the hero copy from Creators Hub Content.": "اترك العنوان والنص فارغين لإعادة استخدام نص الواجهة من محتوى Creators Hub.",
+    "Supporting text": "النص المساند",
+    "Headline": "العنوان",
+    "Choose a slide": "اختر شريحة",
+    "Slide :number": "الشريحة :number",
+    "Back": "رجوع"
 }

@@ -340,5 +340,18 @@
     "Questions shown on the Creators Hub landing page. The section stays hidden while there are none.": "Questions shown on the Creators Hub landing page. The section stays hidden while there are none.",
     "Three figures shown near the top of the landing page. The band stays hidden until at least one figure and its label are filled in.": "Three figures shown near the top of the landing page. The band stays hidden until at least one figure and its label are filled in.",
     "The reasons to build here. The section stays hidden until the heading and at least one point are filled in.": "The reasons to build here. The section stays hidden until the heading and at least one point are filled in.",
-    "Content saved.": "Content saved."
+    "Content saved.": "Content saved.",
+    "Hero Slides": "Hero Slides",
+    "New Slide": "New Slide",
+    "Edit Slide": "Edit Slide",
+    "No slides yet.": "No slides yet.",
+    "Uses the shared hero copy": "Uses the shared hero copy",
+    "Images shown in the full-screen slider at the top of the Creators Hub page. One slide simply shows that image; with none, the hero falls back to the brand background.": "Images shown in the full-screen slider at the top of the Creators Hub page. One slide simply shows that image; with none, the hero falls back to the brand background.",
+    "Wide landscape works best, since it fills the whole screen. Up to :limit.": "Wide landscape works best, since it fills the whole screen. Up to :limit.",
+    "Leave the headline and text blank to reuse the hero copy from Creators Hub Content.": "Leave the headline and text blank to reuse the hero copy from Creators Hub Content.",
+    "Supporting text": "Supporting text",
+    "Headline": "Headline",
+    "Choose a slide": "Choose a slide",
+    "Slide :number": "Slide :number",
+    "Back": "Back"
 }
