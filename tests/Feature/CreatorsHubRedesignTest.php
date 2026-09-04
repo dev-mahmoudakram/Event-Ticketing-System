@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace Tests\Feature;
 
 use App\Enums\EventStatus;
-use App\Enums\SiteSection;
 use App\Models\Event;
 use App\Models\SiteContent;
 use App\Models\SiteFaq;
 use App\Models\User;
+use App\Support\SiteText;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -17,12 +17,15 @@ class CreatorsHubRedesignTest extends TestCase
 {
     use RefreshDatabase;
 
-    private function setContent(SiteSection $section, string $key, string $value): void
+    private function setContent(string $section, string $key, string $value): void
     {
         SiteContent::updateOrCreate(
             ['section' => $section, 'field_key' => $key],
             ['value_en' => $value, 'value_ar' => $value],
         );
+
+        // Content is cached per request; a test writes then renders in the same process.
+        SiteText::flush();
     }
 
     public function test_the_audience_switch_renders_both_sides(): void
@@ -44,15 +47,15 @@ class CreatorsHubRedesignTest extends TestCase
     public function test_a_stat_needs_both_a_figure_and_a_label_to_show(): void
     {
         // A figure with no label would render a number with nothing explaining it.
-        $this->setContent(SiteSection::Stats, 'figure_one', '120');
+        $this->setContent('stats', 'figure_one', '120');
 
         $this->get(route('home').'?lang=en')->assertDontSee('120');
     }
 
     public function test_a_complete_stat_pair_is_shown(): void
     {
-        $this->setContent(SiteSection::Stats, 'figure_one', '120');
-        $this->setContent(SiteSection::Stats, 'label_one', 'Exhibitors');
+        $this->setContent('stats', 'figure_one', '120');
+        $this->setContent('stats', 'label_one', 'Exhibitors');
 
         $response = $this->get(route('home').'?lang=en');
 
@@ -62,7 +65,7 @@ class CreatorsHubRedesignTest extends TestCase
 
     public function test_why_egypt_stays_hidden_without_a_heading_and_a_point(): void
     {
-        $this->setContent(SiteSection::WhyEgypt, 'heading', 'Why Egypt');
+        $this->setContent('why_egypt', 'heading', 'Why Egypt');
 
         // Heading alone is not enough — the section would render an empty list.
         $this->get(route('home').'?lang=en')->assertDontSee('id="why-egypt"', false);
@@ -70,8 +73,8 @@ class CreatorsHubRedesignTest extends TestCase
 
     public function test_why_egypt_renders_admin_supplied_points(): void
     {
-        $this->setContent(SiteSection::WhyEgypt, 'heading', 'Why Egypt');
-        $this->setContent(SiteSection::WhyEgypt, 'point_one', 'A growing construction sector');
+        $this->setContent('why_egypt', 'heading', 'Why Egypt');
+        $this->setContent('why_egypt', 'point_one', 'A growing construction sector');
 
         $response = $this->get(route('home').'?lang=en');
 
@@ -117,33 +120,43 @@ class CreatorsHubRedesignTest extends TestCase
     {
         $admin = User::factory()->create();
 
-        $response = $this->actingAs($admin)->put(route('admin.site-content.update'), [
-            'content' => [
-                'stats' => ['figure_one' => ['en' => '40', 'ar' => '٤٠'], 'label_one' => ['en' => 'Studios', 'ar' => 'استوديو']],
+        $response = $this->actingAs($admin)->put(route('admin.site-content.update', 'stats'), [
+            'fields' => [
+                'figure_one' => ['en' => '40', 'ar' => '٤٠'],
+                'label_one' => ['en' => 'Studios', 'ar' => 'استوديو'],
             ],
         ]);
 
-        $response->assertRedirect(route('admin.site-content.edit'));
+        $response->assertRedirect(route('admin.site-content.edit', 'stats'));
         $this->assertDatabaseHas('site_contents', ['section' => 'stats', 'field_key' => 'figure_one', 'value_en' => '40']);
     }
 
-    public function test_unknown_content_keys_are_ignored(): void
+    public function test_an_unknown_section_is_not_editable(): void
     {
         $admin = User::factory()->create();
 
-        $this->actingAs($admin)->put(route('admin.site-content.update'), [
-            'content' => [
-                'stats' => ['not_a_real_field' => ['en' => 'x', 'ar' => 'x']],
-                'not_a_real_section' => ['heading' => ['en' => 'x', 'ar' => 'x']],
-            ],
-        ]);
+        $this->actingAs($admin)
+            ->put(route('admin.site-content.update', 'not_a_real_section'), ['fields' => []])
+            ->assertNotFound();
 
         $this->assertDatabaseCount('site_contents', 0);
     }
 
+    public function test_fields_outside_the_registry_are_ignored(): void
+    {
+        $admin = User::factory()->create();
+
+        // Only what the registry declares gets written, so a tampered form cannot inject keys.
+        $this->actingAs($admin)->put(route('admin.site-content.update', 'faq'), [
+            'fields' => ['not_a_real_field' => ['en' => 'x', 'ar' => 'x']],
+        ]);
+
+        $this->assertDatabaseMissing('site_contents', ['field_key' => 'not_a_real_field']);
+    }
+
     public function test_guests_cannot_edit_site_content(): void
     {
-        $this->get(route('admin.site-content.edit'))->assertRedirect(route('admin.login'));
+        $this->get(route('admin.site-content.index'))->assertRedirect(route('admin.login'));
         $this->get(route('admin.site-faqs.index'))->assertRedirect(route('admin.login'));
     }
 }

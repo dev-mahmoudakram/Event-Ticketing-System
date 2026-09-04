@@ -1,38 +1,30 @@
 {{-- resources/views/home/partials/audiences.blade.php --}}
 @php
-    // Two sides of the same room. The split mirrors the two groups the About section already
-    // names: the people who design and build, and the people supplying them.
-    $audiences = [
-        'builders' => [
-            'tab' => __('If you design or build'),
-            'lede' => __('For interior designers, architects, contractors and developers.'),
-            'cards' => [
-                ['title' => __('Meet your next collaborator'), 'body' => __('Sit with the studios, contractors and suppliers you would otherwise only ever email.')],
-                ['title' => __('Handle the materials'), 'body' => __('See finishes and products in person, before they reach a supplier catalogue.')],
-                ['title' => __('Learn from finished work'), 'body' => __('Sessions run by people describing projects they actually completed, including what went wrong.')],
-                ['title' => __('Show what you have built'), 'body' => __('Put your projects in front of the people commissioning the next ones.')],
-            ],
-        ],
-        'brands' => [
-            'tab' => __('If you supply or sponsor'),
-            'lede' => __('For manufacturers, material suppliers and brands serving the sector.'),
-            'cards' => [
-                ['title' => __('Reach the specifiers'), 'body' => __('The architects and contractors who decide what actually goes into a build.')],
-                ['title' => __('Demonstrate, do not advertise'), 'body' => __('Let people handle the product instead of reading about it.')],
-                ['title' => __('Join the programme'), 'body' => __('Take part in the sessions, not just the floor space around them.')],
-                ['title' => __('Back an event'), 'body' => __('Partner with us and help shape how the industry gathers.')],
-            ],
-        ],
+    use App\Support\SiteText;
+
+    // Two sides of the same room, all of it editable under Creators Hub Content.
+    $card = fn (string $side, string $slot) => [
+        'title' => SiteText::get('audiences', $side.'_'.$slot.'_title'),
+        'body' => SiteText::get('audiences', $side.'_'.$slot.'_body'),
     ];
+
+    $audiences = [];
+    foreach (['builders', 'brands'] as $side) {
+        $audiences[$side] = [
+            'tab' => SiteText::get('audiences', $side.'_tab'),
+            'lede' => SiteText::get('audiences', $side.'_lede'),
+            'cards' => array_map(fn (string $slot) => $card($side, $slot), ['one', 'two', 'three', 'four']),
+        ];
+    }
 @endphp
 
 <section id="audiences" class="scroll-mt-24 hub-section" x-data="{ active: 'builders' }">
     <div class="max-w-2xl mb-10">
         <h2 class="font-display text-[clamp(2rem,4.5vw,3.25rem)] font-extrabold leading-[1.05] tracking-tight mb-5">
-            {{ __('Two sides of the same room.') }}
+            @site('audiences.heading')
         </h2>
         <p class="text-lg text-gray-300 leading-relaxed">
-            {{ __('An event only works when both halves of the industry turn up. Pick your side to see what Creators Hub is for.') }}
+            @site('audiences.body')
         </p>
     </div>
 

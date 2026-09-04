@@ -2,33 +2,42 @@
 @extends('layouts.admin')
 
 @section('content')
-    <x-admin.page-header :title="__('Creators Hub Content')" />
+    <x-admin.page-header :title="$definition['label']">
+        <x-admin.button href="{{ route('admin.site-content.index') }}" variant="secondary">{{ __('Back') }}</x-admin.button>
+    </x-admin.page-header>
 
-    <p class="text-sm text-gray-400 mb-6 max-w-2xl">{{ __('Copy for the Creators Hub landing page at the root of the site. Leave a section blank and it stays hidden — nothing half-filled is shown to visitors.') }}</p>
+    <p class="text-sm text-gray-400 mb-6 max-w-2xl">{{ $definition['description'] }}</p>
 
     @if(session('status'))
         <p class="mb-6 text-sm font-bold text-ccs-teal-light">{{ session('status') }}</p>
     @endif
 
-    <form method="POST" action="{{ route('admin.site-content.update') }}">
+    <form method="POST" action="{{ route('admin.site-content.update', $section) }}" enctype="multipart/form-data">
         @csrf
         @method('PUT')
 
-        @foreach($sections as $section)
-            <section class="mb-10 border-b border-gray-800 pb-8">
-                <h2 class="font-display text-lg font-bold mb-1">{{ $section->label() }}</h2>
-                <p class="text-sm text-gray-500 mb-5 max-w-2xl">{{ $section->description() }}</p>
+        @foreach($definition['fields'] as $fieldKey => $field)
+            @php $record = $stored->get($fieldKey); @endphp
 
-                @foreach($section->fields() as $fieldKey => $label)
-                    @php $existing = $stored->get($section->value.'.'.$fieldKey); @endphp
-                    <x-admin.bilingual-field
-                        :name="'content['.$section->value.']['.$fieldKey.']'"
-                        :label="$label"
-                        :value-ar="old('content.'.$section->value.'.'.$fieldKey.'.ar', $existing?->value_ar)"
-                        :value-en="old('content.'.$section->value.'.'.$fieldKey.'.en', $existing?->value_en)"
-                    />
-                @endforeach
-            </section>
+            @if(($field['type'] ?? 'text') === 'image')
+                <x-admin.media-upload
+                    :name="'images['.$fieldKey.']'"
+                    :label="$field['label']"
+                    :current="$record?->urlFor($record->value_en)"
+                    :hint="__('Optional. Leave empty to keep the current look. Up to :limit.', ['limit' => $uploadLimit])"
+                />
+            @else
+                <x-admin.bilingual-field
+                    :type="$field['type'] ?? 'text'"
+                    :name="$fieldKey"
+                    :name-ar="'fields['.$fieldKey.'][ar]'"
+                    :name-en="'fields['.$fieldKey.'][en]'"
+                    :label="$field['label']"
+                    :value-ar="old('fields.'.$fieldKey.'.ar', $record?->value_ar)"
+                    :value-en="old('fields.'.$fieldKey.'.en', $record?->value_en)"
+                    :placeholder="isset($field['default']) ? __($field['default']) : null"
+                />
+            @endif
         @endforeach
 
         <x-admin.button type="submit">{{ __('Save') }}</x-admin.button>

@@ -2,22 +2,22 @@
 {{-- Entirely admin-supplied (Creators Hub Content). No claims about the region are hardcoded
      here — the section simply does not render until someone writes them. --}}
 @php
-    $points = collect(['point_one', 'point_two', 'point_three', 'point_four', 'point_five', 'point_six'])
-        ->map(fn (string $key) => $whyEgypt->get($key))
-        ->filter()
-        ->values();
-    $heading = $whyEgypt->get('heading');
+    $points = $whyEgypt['points'];
+    $heading = $whyEgypt['heading'];
 @endphp
 
-@if($heading && $points->isNotEmpty())
+@if($heading && $points !== [])
     <section id="why-egypt" class="scroll-mt-24 hub-section bg-hub-lavender text-hub-dark">
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-14 lg:gap-20 items-start">
             <div>
                 <h2 class="font-display text-[clamp(2rem,4.5vw,3.25rem)] font-extrabold leading-[1.05] tracking-tight mb-6">
                     {{ $heading }}
                 </h2>
-                @if($whyEgypt->get('body'))
-                    <p class="text-lg text-hub-dark/70 leading-relaxed max-w-xl">{{ $whyEgypt->get('body') }}</p>
+                @if($whyEgypt['body'])
+                    <p class="text-lg text-hub-dark/70 leading-relaxed max-w-xl mb-8">{{ $whyEgypt['body'] }}</p>
+                @endif
+                @if($whyEgypt['image'])
+                    <img src="{{ $whyEgypt['image'] }}" alt="" class="w-full rounded-2xl object-cover aspect-[4/3]" loading="lazy">
                 @endif
             </div>
 

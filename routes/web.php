@@ -73,8 +73,9 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
         // Creators Hub (the site root) is not an event, so its copy lives outside the
         // per-event content screens.
-        Route::get('site-content', [SiteContentController::class, 'edit'])->name('site-content.edit');
-        Route::put('site-content', [SiteContentController::class, 'update'])->name('site-content.update');
+        Route::get('site-content', [SiteContentController::class, 'index'])->name('site-content.index');
+        Route::get('site-content/{section}', [SiteContentController::class, 'edit'])->name('site-content.edit');
+        Route::put('site-content/{section}', [SiteContentController::class, 'update'])->name('site-content.update');
         Route::resource('site-faqs', SiteFaqController::class)->except('show');
         Route::resource('events', EventController::class)->except('show');
         Route::resource('events.speakers', SpeakerController::class)->except('show');

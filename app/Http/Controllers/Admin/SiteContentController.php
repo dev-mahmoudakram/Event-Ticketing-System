@@ -4,56 +4,105 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Admin;
 
-use App\Enums\SiteSection;
+use App\Http\Controllers\Concerns\HandlesMediaUploads;
 use App\Http\Controllers\Controller;
 use App\Models\SiteContent;
+use App\Support\SiteContentRegistry;
+use App\Support\SiteText;
+use App\Support\UploadLimit;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class SiteContentController extends Controller
 {
-    public function edit(): View
-    {
-        $stored = SiteContent::all()->keyBy(
-            fn (SiteContent $content) => $content->section->value.'.'.$content->field_key
-        );
+    use HandlesMediaUploads;
 
-        return view('admin.site-content.edit', [
-            'sections' => SiteSection::cases(),
-            'stored' => $stored,
+    public function index(): View
+    {
+        return view('admin.site-content.index', [
+            'sections' => SiteContentRegistry::sections(),
+            'filled' => SiteContent::all()
+                ->groupBy('section')
+                ->map(fn ($rows) => $rows->filter(fn (SiteContent $row) => trim((string) $row->value_en.$row->value_ar) !== '')->count()),
         ]);
     }
 
-    public function update(Request $request): RedirectResponse
+    public function edit(string $section): View
     {
-        $validated = $request->validate([
-            'content' => ['array'],
-            'content.*.*.ar' => ['nullable', 'string', 'max:2000'],
-            'content.*.*.en' => ['nullable', 'string', 'max:2000'],
+        $definition = $this->definitionFor($section);
+
+        return view('admin.site-content.edit', [
+            'section' => $section,
+            'definition' => $definition,
+            'stored' => SiteContent::where('section', $section)->get()->keyBy('field_key'),
+            'uploadLimit' => UploadLimit::label(UploadLimit::effectiveKilobytes((int) config('media.max_image_kb'))),
+        ]);
+    }
+
+    public function update(Request $request, string $section): RedirectResponse
+    {
+        $definition = $this->definitionFor($section);
+
+        $request->validate([
+            'fields' => ['array'],
+            'fields.*.ar' => ['nullable', 'string', 'max:2000'],
+            'fields.*.en' => ['nullable', 'string', 'max:2000'],
+            'images.*' => ['nullable', 'image', 'max:'.UploadLimit::effectiveKilobytes((int) config('media.max_image_kb'))],
         ]);
 
-        foreach ($validated['content'] ?? [] as $sectionValue => $fields) {
-            $section = SiteSection::tryFrom($sectionValue);
+        foreach ($definition['fields'] as $fieldKey => $field) {
+            if (($field['type'] ?? 'text') === 'image') {
+                $this->saveImage($request, $section, $fieldKey);
 
-            if ($section === null) {
                 continue;
             }
 
-            foreach ($fields as $fieldKey => $values) {
-                // Ignore anything the enum does not declare, so a tampered form cannot
-                // write arbitrary keys into the content table.
-                if (! array_key_exists($fieldKey, $section->fields())) {
-                    continue;
-                }
+            $values = $request->input("fields.{$fieldKey}", []);
 
-                SiteContent::updateOrCreate(
-                    ['section' => $section, 'field_key' => $fieldKey],
-                    ['value_ar' => $values['ar'] ?? null, 'value_en' => $values['en'] ?? null],
-                );
-            }
+            SiteContent::updateOrCreate(
+                ['section' => $section, 'field_key' => $fieldKey],
+                ['value_ar' => $values['ar'] ?? null, 'value_en' => $values['en'] ?? null],
+            );
         }
 
-        return redirect()->route('admin.site-content.edit')->with('status', __('Content saved.'));
+        SiteText::flush();
+
+        return redirect()
+            ->route('admin.site-content.edit', $section)
+            ->with('status', __('Content saved.'));
+    }
+
+    /**
+     * Images are stored once for both locales, in value_en. Uploading replaces whatever was
+     * there; leaving the field alone keeps it.
+     */
+    private function saveImage(Request $request, string $section, string $fieldKey): void
+    {
+        $record = SiteContent::firstOrNew(['section' => $section, 'field_key' => $fieldKey]);
+        $path = $this->storeUploadedMedia($request, "images.{$fieldKey}", 'site');
+
+        if ($path === null) {
+            return;
+        }
+
+        $this->deleteStoredMedia($record->value_en);
+        $record->value_en = $path;
+        $record->save();
+    }
+
+    /**
+     * @return array{label: string, description: string, fields: array<string, array{label: string, type: string, default?: string}>}
+     */
+    private function definitionFor(string $section): array
+    {
+        $definition = SiteContentRegistry::sections()[$section] ?? null;
+
+        if ($definition === null) {
+            throw new NotFoundHttpException;
+        }
+
+        return $definition;
     }
 }

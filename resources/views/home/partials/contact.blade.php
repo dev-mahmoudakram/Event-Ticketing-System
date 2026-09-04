@@ -1,9 +1,9 @@
 {{-- resources/views/home/partials/contact.blade.php --}}
 <section id="contact" class="scroll-mt-24 hub-section grid grid-cols-1 lg:grid-cols-2 gap-16">
     <div data-reveal>
-        <p class="hub-eyebrow text-hub-purple-light mb-4">{{ __('Contact') }}</p>
-        <h2 class="font-display text-3xl md:text-5xl font-extrabold leading-[1.05] tracking-tight mb-6">{{ __('Get in touch.') }}</h2>
-        <p class="text-lg text-gray-300 max-w-md leading-relaxed">{{ __('Whether you want to attend, partner, or bring an event idea to us — tell us a bit about it.') }}</p>
+        <p class="hub-eyebrow text-hub-purple-light mb-4">@site('contact.eyebrow')</p>
+        <h2 class="font-display text-3xl md:text-5xl font-extrabold leading-[1.05] tracking-tight mb-6">@site('contact.heading')</h2>
+        <p class="text-lg text-gray-300 max-w-md leading-relaxed">@site('contact.body')</p>
     </div>
     <form method="POST" action="{{ route('contact.store.general') }}" class="flex flex-col gap-4" data-reveal data-reveal-delay="1">
         @csrf
@@ -25,6 +25,6 @@
             <textarea id="hub-contact-message" name="message" rows="4" placeholder="{{ __('Message') }}" class="w-full px-4 py-4 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-500 transition-colors focus:border-hub-purple-light focus:outline-none">{{ old('message') }}</textarea>
             @error('message') <p class="text-red-400 text-sm mt-1">{{ $message }}</p> @enderror
         </div>
-        <button type="submit" class="px-6 py-4 rounded-lg hub-btn-primary font-bold transition-transform duration-200 hover:scale-[1.02]">{{ __('Send Message') }}</button>
+        <button type="submit" class="px-6 py-4 rounded-lg hub-btn-primary font-bold transition-transform duration-200 hover:scale-[1.02]">@site('contact.submit')</button>
     </form>
 </section>

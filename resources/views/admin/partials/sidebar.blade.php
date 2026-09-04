@@ -21,7 +21,7 @@
             {{ __('Events') }}
         </a>
 
-        <a href="{{ route('admin.site-content.edit') }}" class="flex items-center gap-2 px-3 py-2 rounded {{ request()->routeIs('admin.site-content.*') ? 'bg-gray-900' : 'hover:bg-gray-900' }}">
+        <a href="{{ route('admin.site-content.index') }}" class="flex items-center gap-2 px-3 py-2 rounded {{ request()->routeIs('admin.site-content.*') ? 'bg-gray-900' : 'hover:bg-gray-900' }}">
             @if(request()->routeIs('admin.site-content.*'))
                 <span class="ccs-flag-accent" style="width:4px;height:16px;"></span>
             @endif

@@ -2,7 +2,7 @@
 @if($faqs->isNotEmpty())
     <section id="faq" class="scroll-mt-24 hub-section">
         <h2 class="font-display text-[clamp(2rem,4.5vw,3.25rem)] font-extrabold leading-[1.05] tracking-tight mb-10 max-w-2xl">
-            {{ __('Questions people ask us.') }}
+            @site('faq.heading')
         </h2>
 
         <div class="max-w-3xl border-t border-white/10" x-data="{ open: null }">

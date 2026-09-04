@@ -8,7 +8,7 @@
                     <img src="{{ asset('images/creators-hub/mark-white.png') }}" alt="" aria-hidden="true" class="h-7 w-auto">
                     <span class="font-display font-extrabold text-xl tracking-tight">Creators <span class="text-hub-purple-light">Hub</span></span>
                 </div>
-                <p class="text-sm text-gray-400 max-w-[240px]">{{ __('Connecting the interior design and construction industry through events, community, and collaboration.') }}</p>
+                <p class="text-sm text-gray-400 max-w-[240px]">@site('footer.blurb')</p>
             </div>
             <div class="flex flex-col gap-3">
                 <span class="text-xs font-bold uppercase tracking-wide text-gray-500 mb-1">{{ __('Explore') }}</span>

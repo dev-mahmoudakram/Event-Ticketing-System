@@ -4,32 +4,21 @@ declare(strict_types=1);
 
 namespace App\Models;
 
-use App\Enums\SiteSection;
+use App\Models\Concerns\ResolvesStoredMedia;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Collection;
 
 class SiteContent extends Model
 {
+    use ResolvesStoredMedia;
+
     protected $fillable = ['section', 'field_key', 'value_ar', 'value_en'];
 
-    protected $casts = ['section' => SiteSection::class];
-
     /**
-     * Every stored value for a section, keyed by field, resolved to the current locale.
-     *
-     * Blank values are dropped so a view can ask "is anything filled in here?" with a simple
-     * isEmpty(), and half-configured sections can hide themselves rather than render gaps.
-     *
-     * @return Collection<string, string>
+     * Resolve a stored media path to a URL, reusing the same rules as the rest of the app so
+     * uploads and external URLs both keep working.
      */
-    public static function valuesFor(SiteSection $section): Collection
+    public function urlFor(?string $path): ?string
     {
-        $column = app()->getLocale() === 'ar' ? 'value_ar' : 'value_en';
-
-        return static::query()
-            ->where('section', $section)
-            ->get()
-            ->mapWithKeys(fn (SiteContent $content) => [$content->field_key => (string) $content->{$column}])
-            ->filter(fn (string $value) => trim($value) !== '');
+        return $this->storedMediaUrl($path);
     }
 }

@@ -1,17 +1,17 @@
 {{-- resources/views/home/partials/community.blade.php --}}
 <section id="community" class="scroll-mt-24 hub-section grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
     <div data-reveal>
-        <p class="hub-eyebrow text-hub-purple-light mb-6">{{ __('Community') }}</p>
+        <p class="hub-eyebrow text-hub-purple-light mb-6">@site('community.eyebrow')</p>
         <h2 class="font-display text-[clamp(2rem,4.5vw,3.25rem)] font-extrabold leading-[1.05] tracking-tight mb-6">
-            {{ __("More than events. It's a community.") }}
+            @site('community.heading')
         </h2>
         <p class="text-lg text-gray-300 leading-relaxed max-w-xl mb-4">
-            {{ __('Creators Hub is about relationships that outlast a single event — the ongoing exchange between the people designing spaces and the people building them.') }}
+            @site('community.body')
         </p>
         <p class="font-display text-xl font-bold text-hub-purple-light mb-10">
-            {{ __('A place where ideas meet people, and people create what comes next.') }}
+            @site('community.statement')
         </p>
-        <a href="#contact" class="inline-flex px-7 py-3.5 rounded-lg hub-btn-primary text-sm font-bold transition-transform duration-200 hover:scale-[1.03]">{{ __('Join the Community') }}</a>
+        <a href="#contact" class="inline-flex px-7 py-3.5 rounded-lg hub-btn-primary text-sm font-bold transition-transform duration-200 hover:scale-[1.03]">@site('community.cta')</a>
     </div>
 
     <div class="relative aspect-square" aria-hidden="true" data-reveal data-reveal-delay="1">
