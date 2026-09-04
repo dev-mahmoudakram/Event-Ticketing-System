@@ -43,9 +43,9 @@ class CreatorsHubHomePageTest extends TestCase
 
     public function test_home_page_shows_the_coming_soon_state_when_no_events_exist(): void
     {
-        $response = $this->get(route('home'));
+        $response = $this->get(route('home').'?lang=en');
 
-        $response->assertSee(__('Coming Soon'));
+        $response->assertSee(__('Our first gathering is in the works.'));
     }
 
     public function test_home_page_shows_a_real_published_event_as_featured(): void
@@ -56,7 +56,7 @@ class CreatorsHubHomePageTest extends TestCase
 
         $response->assertSee('Design Week Cairo');
         $response->assertSee('href="'.route('landing.show', $event).'"', false);
-        $response->assertDontSee(__('Coming Soon'));
+        $response->assertDontSee(__('Our first gathering is in the works.'));
     }
 
     public function test_home_page_does_not_show_draft_events(): void
@@ -66,7 +66,7 @@ class CreatorsHubHomePageTest extends TestCase
         $response = $this->get(route('home').'?lang=en');
 
         $response->assertDontSee('Secret Draft Event');
-        $response->assertSee(__('Coming Soon'));
+        $response->assertSee(__('Our first gathering is in the works.'));
     }
 
     public function test_events_index_lists_real_published_events(): void

@@ -91,6 +91,21 @@ function initHero() {
     });
 }
 
+function initHubHero() {
+    const copy = document.querySelector('[data-hero-copy]');
+    if (!copy || prefersReducedMotion) return;
+
+    // A single page-load sequence: the headline, its supporting line and the actions
+    // resolve in order. Everything below the fold is left to the existing reveals.
+    gsap.from(copy.children, {
+        y: 28,
+        opacity: 0,
+        duration: 0.9,
+        stagger: 0.12,
+        ease: 'power3.out',
+    });
+}
+
 function initReel() {
     const stage = document.querySelector('[data-reel-stage]');
     if (!stage) return;
@@ -227,6 +242,7 @@ function initSponsorStagger() {
 export default function initCcsMotion() {
     initScrollProgress();
     initHero();
+    initHubHero();
     initReel();
     initSponsorStagger();
 }

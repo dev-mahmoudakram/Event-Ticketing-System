@@ -15,7 +15,7 @@
         <a href="{{ $sectionBase }}#hero" class="hover:text-white transition-colors">{{ __('Home') }}</a>
         <a href="{{ $sectionBase }}#about" class="hover:text-white transition-colors">{{ __('About') }}</a>
         <a href="{{ route('events.index') }}" class="hover:text-white transition-colors {{ request()->routeIs('events.index') ? 'text-white' : '' }}">{{ __('Events') }}</a>
-        <a href="{{ $sectionBase }}#community" class="hover:text-white transition-colors">{{ __('Community') }}</a>
+        <a href="{{ $sectionBase }}#audiences" class="hover:text-white transition-colors">{{ __('Who it is for') }}</a>
         <a href="{{ $sectionBase }}#partners" class="hover:text-white transition-colors">{{ __('Partners') }}</a>
         <a href="{{ $sectionBase }}#contact" class="hover:text-white transition-colors">{{ __('Contact') }}</a>
     </nav>
@@ -33,7 +33,7 @@
         <a href="{{ $sectionBase }}#hero" class="py-3.5 border-b border-white/10 font-semibold transition-colors hover:text-hub-purple-light" @click="open = false">{{ __('Home') }}</a>
         <a href="{{ $sectionBase }}#about" class="py-3.5 border-b border-white/10 font-semibold transition-colors hover:text-hub-purple-light" @click="open = false">{{ __('About') }}</a>
         <a href="{{ route('events.index') }}" class="py-3.5 border-b border-white/10 font-semibold transition-colors hover:text-hub-purple-light" @click="open = false">{{ __('Events') }}</a>
-        <a href="{{ $sectionBase }}#community" class="py-3.5 border-b border-white/10 font-semibold transition-colors hover:text-hub-purple-light" @click="open = false">{{ __('Community') }}</a>
+        <a href="{{ $sectionBase }}#audiences" class="py-3.5 border-b border-white/10 font-semibold transition-colors hover:text-hub-purple-light" @click="open = false">{{ __('Who it is for') }}</a>
         <a href="{{ $sectionBase }}#partners" class="py-3.5 border-b border-white/10 font-semibold transition-colors hover:text-hub-purple-light" @click="open = false">{{ __('Partners') }}</a>
         <a href="{{ $sectionBase }}#contact" class="py-3.5 font-semibold transition-colors hover:text-hub-purple-light" @click="open = false">{{ __('Contact') }}</a>
         <a href="{{ route('events.index') }}" class="mt-4 px-5 py-3 rounded-md hub-btn-primary text-sm font-bold text-center">{{ __('Explore Events') }}</a>

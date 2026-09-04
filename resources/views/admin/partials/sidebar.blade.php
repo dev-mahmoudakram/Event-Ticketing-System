@@ -21,6 +21,19 @@
             {{ __('Events') }}
         </a>
 
+        <a href="{{ route('admin.site-content.edit') }}" class="flex items-center gap-2 px-3 py-2 rounded {{ request()->routeIs('admin.site-content.*') ? 'bg-gray-900' : 'hover:bg-gray-900' }}">
+            @if(request()->routeIs('admin.site-content.*'))
+                <span class="ccs-flag-accent" style="width:4px;height:16px;"></span>
+            @endif
+            {{ __('Creators Hub Content') }}
+        </a>
+        <a href="{{ route('admin.site-faqs.index') }}" class="flex items-center gap-2 px-3 py-2 rounded {{ request()->routeIs('admin.site-faqs.*') ? 'bg-gray-900' : 'hover:bg-gray-900' }}">
+            @if(request()->routeIs('admin.site-faqs.*'))
+                <span class="ccs-flag-accent" style="width:4px;height:16px;"></span>
+            @endif
+            {{ __('Creators Hub FAQs') }}
+        </a>
+
         @if(isset($event) && $event->exists)
             <div class="mt-6 pt-6 border-t border-gray-800">
                 <p class="text-xs uppercase tracking-wide text-gray-500 px-3 mb-2">{{ $event->name_en }}</p>

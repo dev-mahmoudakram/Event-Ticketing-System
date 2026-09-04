@@ -10,6 +10,8 @@ use App\Http\Controllers\Admin\GalleryPhotoController;
 use App\Http\Controllers\Admin\LandingPageContentController;
 use App\Http\Controllers\Admin\NewsletterSubscriberController as AdminNewsletterSubscriberController;
 use App\Http\Controllers\Admin\ReelController;
+use App\Http\Controllers\Admin\SiteContentController;
+use App\Http\Controllers\Admin\SiteFaqController;
 use App\Http\Controllers\Admin\SpeakerController;
 use App\Http\Controllers\Admin\SponsorController;
 use App\Http\Controllers\Admin\TestimonialController;
@@ -46,7 +48,7 @@ Route::prefix('events/{event}')->middleware(EnsureEventIsPublished::class)->grou
     Route::post('/newsletter', [NewsletterSubscriberController::class, 'store'])->name('newsletter.store');
 });
 
-// Payment link route for ticket payment completion 
+// Payment link route for ticket payment completion
 // will be updated once we integrate with payment gateway
 Route::get('tickets/{ticket}/payment', [TicketPaymentController::class, 'complete'])
     ->middleware('signed')
@@ -68,6 +70,12 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
     Route::middleware('auth')->group(function () {
         Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
+
+        // Creators Hub (the site root) is not an event, so its copy lives outside the
+        // per-event content screens.
+        Route::get('site-content', [SiteContentController::class, 'edit'])->name('site-content.edit');
+        Route::put('site-content', [SiteContentController::class, 'update'])->name('site-content.update');
+        Route::resource('site-faqs', SiteFaqController::class)->except('show');
         Route::resource('events', EventController::class)->except('show');
         Route::resource('events.speakers', SpeakerController::class)->except('show');
         Route::resource('events.workshops', AdminWorkshopController::class)->except('show');
