@@ -353,5 +353,16 @@
     "Headline": "Headline",
     "Choose a slide": "Choose a slide",
     "Slide :number": "Slide :number",
-    "Back": "Back"
+    "Back": "Back",
+    "Side 1 button": "Side 1 button",
+    "Side 2 button": "Side 2 button",
+    "Side 1, card 1 image": "Side 1, card 1 image",
+    "Side 1, card 2 image": "Side 1, card 2 image",
+    "Side 1, card 3 image": "Side 1, card 3 image",
+    "Side 1, card 4 image": "Side 1, card 4 image",
+    "Side 2, card 1 image": "Side 2, card 1 image",
+    "Side 2, card 2 image": "Side 2, card 2 image",
+    "Side 2, card 3 image": "Side 2, card 3 image",
+    "Side 2, card 4 image": "Side 2, card 4 image",
+    "Get in touch": "Get in touch"
 }

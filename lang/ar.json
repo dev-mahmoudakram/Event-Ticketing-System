@@ -344,5 +344,16 @@
     "Headline": "العنوان",
     "Choose a slide": "اختر شريحة",
     "Slide :number": "الشريحة :number",
-    "Back": "رجوع"
+    "Back": "رجوع",
+    "Side 1 button": "زر الجانب الأول",
+    "Side 2 button": "زر الجانب الثاني",
+    "Side 1, card 1 image": "صورة البطاقة 1 - الجانب الأول",
+    "Side 1, card 2 image": "صورة البطاقة 2 - الجانب الأول",
+    "Side 1, card 3 image": "صورة البطاقة 3 - الجانب الأول",
+    "Side 1, card 4 image": "صورة البطاقة 4 - الجانب الأول",
+    "Side 2, card 1 image": "صورة البطاقة 1 - الجانب الثاني",
+    "Side 2, card 2 image": "صورة البطاقة 2 - الجانب الثاني",
+    "Side 2, card 3 image": "صورة البطاقة 3 - الجانب الثاني",
+    "Side 2, card 4 image": "صورة البطاقة 4 - الجانب الثاني",
+    "Get in touch": "تواصل معنا"
 }

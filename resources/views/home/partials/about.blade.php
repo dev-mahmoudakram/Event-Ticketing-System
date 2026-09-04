@@ -18,7 +18,7 @@
                 <p class="text-lg leading-relaxed text-hub-dark/70">@site('about.body')</p>
 
                 @if($aboutImage)
-                    <div class="hub-media-well aspect-[16/10]">
+                    <div class="hub-media-well rounded-3xl aspect-[16/10]">
                         <img src="{{ $aboutImage }}" alt="" loading="lazy">
                     </div>
                 @endif

@@ -64,6 +64,14 @@ html {
   scroll-behavior: smooth;
 }
 
+/* Smooth scrolling is motion too: jump straight to the target for anyone who has asked
+   their system to reduce it. */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
 body {
   font-family: 'Inter', sans-serif;
 }
@@ -726,7 +734,6 @@ h1, h2, h3, h4, h5, .font-display {
 /* Media wells stand in for photography the brand does not have yet: an uploaded
    image fills them, otherwise they render as a brand-coloured panel. */
 .hub-media-well {
-  border-radius: 1.5rem;
   overflow: hidden;
   background:
     radial-gradient(120% 90% at 20% 10%, color-mix(in srgb, var(--color-hub-purple-light) 55%, transparent), transparent 70%),
