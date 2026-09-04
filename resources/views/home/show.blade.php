@@ -12,7 +12,7 @@
     <link rel="canonical" href="{{ url('/') }}">
 @endsection
 
-@section('bodyClass', 'hub-page bg-hub-dark text-white')
+@section('bodyClass', 'hub-page hub-page-light')
 
 @section('content')
     @include('home.partials.nav', ['onHomePage' => true])
