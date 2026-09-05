@@ -22,14 +22,16 @@
     ></div>
 
     <div class="flex min-h-screen">
+        {{-- Fixed at every width: the menu stays put while the page beside it scrolls, and the
+             tree scrolls inside its own column when it outgrows the screen. --}}
         <aside
-            class="adm-sidebar fixed inset-y-0 z-40 w-72 shrink-0 flex flex-col transition-transform duration-300 lg:static lg:translate-x-0"
+            class="adm-sidebar fixed inset-y-0 start-0 z-40 w-72 flex flex-col transition-transform duration-300 lg:translate-x-0"
             :class="menu ? 'translate-x-0' : '{{ app()->getLocale() === 'ar' ? 'translate-x-full' : '-translate-x-full' }} lg:translate-x-0'"
         >
             @include('admin.partials.sidebar')
         </aside>
 
-        <div class="flex-1 min-w-0 flex flex-col">
+        <div class="flex-1 min-w-0 flex flex-col lg:ps-72">
             <header class="adm-topbar sticky top-0 z-20 flex items-center justify-between gap-4 px-5 md:px-8 py-3.5">
                 <button
                     type="button"
