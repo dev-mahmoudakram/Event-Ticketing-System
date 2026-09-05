@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Tests\Feature;
 
 use App\Enums\EventStatus;
+use App\Models\AudienceTab;
 use App\Models\Event;
 use App\Models\SiteContent;
 use App\Models\SiteFaq;
@@ -28,8 +29,11 @@ class CreatorsHubRedesignTest extends TestCase
         SiteText::flush();
     }
 
-    public function test_the_audience_switch_renders_both_sides(): void
+    public function test_the_audience_switch_renders_every_tab(): void
     {
+        AudienceTab::factory()->create(['label_en' => 'If you design or build', 'sort_order' => 0]);
+        AudienceTab::factory()->create(['label_en' => 'If you supply or sponsor', 'sort_order' => 1]);
+
         $response = $this->get(route('home').'?lang=en');
 
         $response->assertOk();

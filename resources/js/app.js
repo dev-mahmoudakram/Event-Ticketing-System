@@ -2,6 +2,7 @@ import Alpine from 'alpinejs';
 import initCcsMotion from './ccs-motion';
 import ticketScanner from './ticket-scanner';
 import initCharts from './charts';
+import initSortableLists from './sortable';
 import intlTelInput from 'intl-tel-input/intlTelInputWithUtils';
 import 'intl-tel-input/styles';
 
@@ -178,3 +179,4 @@ if ('IntersectionObserver' in window) {
 
 initCcsMotion();
 initCharts();
+initSortableLists();

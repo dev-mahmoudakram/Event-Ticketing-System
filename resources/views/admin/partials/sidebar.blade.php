@@ -26,7 +26,7 @@
     $currentEventId = $currentEvent instanceof \App\Models\Event ? $currentEvent->id : null;
 
     $inEvents = request()->routeIs('admin.events.*');
-    $inHub = request()->routeIs('admin.site-content.*', 'admin.hero-slides.*', 'admin.hub-partners.*', 'admin.site-faqs.*', 'admin.reports.*');
+    $inHub = request()->routeIs('admin.site-content.*', 'admin.hero-slides.*', 'admin.hub-partners.*', 'admin.site-faqs.*', 'admin.reports.*', 'admin.audience-tabs.*');
 @endphp
 
 <div class="flex items-center gap-2.5 px-5 py-5 border-b border-hub-purple/10">
@@ -116,6 +116,7 @@
             <a href="{{ route('admin.reports.show') }}" class="adm-nav-link adm-nav-sub {{ request()->routeIs('admin.reports.*') ? 'is-active' : '' }}">{{ __('Platform Report') }}</a>
             <a href="{{ route('admin.site-content.index') }}" class="adm-nav-link adm-nav-sub {{ request()->routeIs('admin.site-content.*') ? 'is-active' : '' }}">{{ __('Landing Page Content') }}</a>
             <a href="{{ route('admin.hero-slides.index') }}" class="adm-nav-link adm-nav-sub {{ request()->routeIs('admin.hero-slides.*') ? 'is-active' : '' }}">{{ __('Hero Slides') }}</a>
+            <a href="{{ route('admin.audience-tabs.index') }}" class="adm-nav-link adm-nav-sub {{ request()->routeIs('admin.audience-tabs.*') ? 'is-active' : '' }}">{{ __('Who it is for') }}</a>
             <a href="{{ route('admin.hub-partners.index') }}" class="adm-nav-link adm-nav-sub {{ request()->routeIs('admin.hub-partners.*') ? 'is-active' : '' }}">{{ __('Partners') }}</a>
             <a href="{{ route('admin.site-faqs.index') }}" class="adm-nav-link adm-nav-sub {{ request()->routeIs('admin.site-faqs.*') ? 'is-active' : '' }}">{{ __('FAQs') }}</a>
         </div>

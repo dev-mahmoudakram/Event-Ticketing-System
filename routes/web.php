@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\Admin\AgendaItemController;
+use App\Http\Controllers\Admin\AudienceCardController;
+use App\Http\Controllers\Admin\AudienceTabController;
 use App\Http\Controllers\Admin\AuthController;
 use App\Http\Controllers\Admin\ContactMessageController as AdminContactMessageController;
 use App\Http\Controllers\Admin\DashboardController;
@@ -98,6 +100,14 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::resource('site-faqs', SiteFaqController::class)->except('show');
         Route::resource('hero-slides', HeroSlideController::class)->except('show');
         Route::resource('hub-partners', HubPartnerController::class)->except('show');
+
+        // Who it is for: any number of tabs, each holding any number of cards.
+        Route::post('audience-tabs/reorder', [AudienceTabController::class, 'reorder'])->name('audience-tabs.reorder');
+        Route::resource('audience-tabs', AudienceTabController::class)->except('show');
+        Route::post('audience-tabs/{audience_tab}/cards/reorder', [AudienceCardController::class, 'reorder'])->name('audience-tabs.cards.reorder');
+        Route::resource('audience-tabs.cards', AudienceCardController::class)
+            ->except('show', 'index')
+            ->parameters(['cards' => 'card']);
         Route::resource('events', EventController::class)->except('show');
         Route::resource('events.speakers', SpeakerController::class)->except('show');
         Route::get('events/{event}/workshops/{workshop}/bookings', [AdminWorkshopController::class, 'bookings'])->name('events.workshops.bookings');

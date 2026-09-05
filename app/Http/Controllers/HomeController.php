@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Controllers;
 
 use App\Enums\EventStatus;
+use App\Models\AudienceTab;
 use App\Models\Event;
 use App\Models\HeroSlide;
 use App\Models\HubPartner;
@@ -27,6 +28,7 @@ class HomeController extends Controller
 
         return view('home.show', [
             'heroSlides' => HeroSlide::orderBy('sort_order')->get(),
+            'audienceTabs' => AudienceTab::with('cards')->orderBy('sort_order')->orderBy('id')->get(),
             'featuredEvent' => $events->first(),
             'otherEvents' => $events->slice(1),
             'stats' => $this->stats(),

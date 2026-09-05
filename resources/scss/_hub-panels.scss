@@ -267,3 +267,19 @@ footer .hub-panel-dark {
     margin: 0 auto;
   }
 }
+
+/* With enough tabs the switch would wrap onto a second line and stop reading as
+   one control, so it scrolls sideways instead. */
+.hub-segment-scroll {
+  max-width: 100%;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.hub-segment-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+.hub-segment-scroll .hub-segment-option {
+  white-space: nowrap;
+}
