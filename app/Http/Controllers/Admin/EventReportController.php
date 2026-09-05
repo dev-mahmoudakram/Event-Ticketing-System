@@ -24,6 +24,7 @@ class EventReportController extends Controller
             'ticketTypes' => $report->revenueByTicketType(),
             'checkIns' => $report->checkIns(),
             'coupons' => $report->coupons(),
+            'workshops' => $report->workshops(),
         ]);
     }
 
@@ -66,7 +67,8 @@ class EventReportController extends Controller
     {
         $value = (string) $value;
 
-        return $value !== '' && in_array($value[0], ['=', '+', '-', '@', '	', ''], true)
+        return $value !== '' && in_array($value[0], ['=', '+', '-', '@', '	', '
+'], true)
             ? "'".$value
             : $value;
     }

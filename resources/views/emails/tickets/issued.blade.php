@@ -20,4 +20,21 @@
         <a href="{{ $ticketUrl }}" style="color:#3c3489;font-weight:700;text-decoration:none;">{{ __('Open or print your ticket') }}</a>
         <span style="color:#8b8b8b;"> · {{ __('The QR code is also attached to this email.') }}</span>
     </p>
+
+    {{-- Only tiers that include workshops get a key, and only they get this. --}}
+    @if($ticket->workshop_booking_key)
+        <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="width:100%;margin-top:26px;background:#faf9ff;border:1px solid #e6e4f2;border-radius:12px;">
+            <tr>
+                <td style="padding:20px 22px;">
+                    <p style="margin:0 0 8px;font-size:15px;font-weight:700;color:#171f22;">{{ __('Your ticket includes workshops.') }}</p>
+                    <p style="margin:0 0 16px;font-size:14px;line-height:1.8;color:#4a4a4a;">
+                        {{ __('Choose them with your reference number and the booking key on your ticket. Places are limited, so earlier is better.') }}
+                    </p>
+                    <a href="{{ $workshopUrl }}" style="display:inline-block;padding:12px 26px;font-size:14px;font-weight:700;color:#ffffff;background:#3c3489;text-decoration:none;border-radius:9999px;">
+                        {{ __('Book my workshops') }}
+                    </a>
+                </td>
+            </tr>
+        </table>
+    @endif
 @endsection

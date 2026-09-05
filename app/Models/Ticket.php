@@ -58,15 +58,30 @@ class Ticket extends Model
 
     /**
      * How many workshops this ticket may book, from its ticket type.
+     *
+     * Null is unlimited, as the ticket type form says; zero is a tier with no workshops at all,
+     * which gets no picker.
      */
-    public function workshopSlotAllowance(): int
+    public function workshopSlotAllowance(): ?int
     {
-        return (int) ($this->ticketType?->workshop_slot_count ?? 0);
+        $count = $this->ticketType?->workshop_slot_count;
+
+        return $count === null ? null : (int) $count;
     }
 
-    public function remainingWorkshopSlots(): int
+    public function remainingWorkshopSlots(): ?int
     {
-        return max(0, $this->workshopSlotAllowance() - $this->workshopBookings()->count());
+        $allowance = $this->workshopSlotAllowance();
+
+        return $allowance === null ? null : max(0, $allowance - $this->workshopBookings()->count());
+    }
+
+    /**
+     * Whether this ticket gets a workshop picker at all.
+     */
+    public function canBookWorkshops(): bool
+    {
+        return $this->workshopSlotAllowance() !== 0;
     }
 
     public function answers(): HasMany

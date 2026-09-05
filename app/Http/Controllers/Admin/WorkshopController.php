@@ -16,7 +16,26 @@ class WorkshopController extends Controller
 {
     public function index(Event $event): View
     {
-        return view('admin.workshops.index', ['event' => $event, 'workshops' => $event->workshops]);
+        return view('admin.workshops.index', [
+            'event' => $event,
+            'workshops' => $event->workshops()->withCount('bookings')->get(),
+        ]);
+    }
+
+    /**
+     * Who is coming to this workshop — the list the room needs on the day.
+     */
+    public function bookings(Event $event, Workshop $workshop): View
+    {
+        if ($workshop->event_id !== $event->id) {
+            throw new NotFoundHttpException;
+        }
+
+        return view('admin.workshops.bookings', [
+            'event' => $event,
+            'workshop' => $workshop->loadCount('bookings'),
+            'bookings' => $workshop->bookings()->with('ticket.ticketType')->orderBy('booked_at')->get(),
+        ]);
     }
 
     public function create(Event $event): View

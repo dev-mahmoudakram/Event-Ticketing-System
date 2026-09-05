@@ -11,15 +11,21 @@
     @else
         <x-admin.table>
             <thead>
-                <tr><th>{{ __('Name') }}</th><th>{{ __('Capacity') }}</th><th></th></tr>
+                <tr><th>{{ __('Name') }}</th><th>{{ __('Booked') }}</th><th></th></tr>
             </thead>
             <tbody>
                 @foreach($workshops as $workshop)
                     <tr>
                         <td>{{ $workshop->name_en }}</td>
-                        <td>{{ $workshop->capacity }}</td>
+                        <td>
+                            {{ $workshop->bookings_count }}@if($workshop->capacity > 0) / {{ $workshop->capacity }} @endif
+                            @if($workshop->isFull())
+                                <span class="ms-2 text-xs font-bold text-hub-dark/45">{{ __('Full') }}</span>
+                            @endif
+                        </td>
                         <td class="text-end">
-                            <a href="{{ route('admin.events.workshops.edit', [$event, $workshop]) }}" class="text-hub-purple hover:underline">{{ __('Edit') }}</a>
+                            <a href="{{ route('admin.events.workshops.bookings', [$event, $workshop]) }}" class="text-hub-purple hover:underline">{{ __('Attendees') }}</a>
+                            <a href="{{ route('admin.events.workshops.edit', [$event, $workshop]) }}" class="text-hub-purple hover:underline ms-3">{{ __('Edit') }}</a>
                             <form method="POST" action="{{ route('admin.events.workshops.destroy', [$event, $workshop]) }}" class="inline" onsubmit="return confirm('{{ __('Are you sure? This cannot be undone.') }}')">
                                 @csrf @method('DELETE')
                                 <x-admin.button type="submit" variant="danger" class="ml-2">{{ __('Delete') }}</x-admin.button>

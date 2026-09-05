@@ -7,6 +7,7 @@ namespace App\Http\Controllers;
 use App\Enums\TicketStatus;
 use App\Mail\TicketIssued;
 use App\Models\Ticket;
+use App\Services\WorkshopBooker;
 use Endroid\QrCode\QrCode;
 use Endroid\QrCode\Writer\PngWriter;
 use Illuminate\Http\Response;
@@ -16,7 +17,7 @@ use Illuminate\Support\Str;
 
 class TicketPaymentController extends Controller
 {
-    //will be updated once we integrate with payment gateway
+    // will be updated once we integrate with payment gateway
 
     public function complete(Ticket $ticket): Response
     {
@@ -31,8 +32,12 @@ class TicketPaymentController extends Controller
             'status' => TicketStatus::TicketIssued,
         ]);
 
+        // Issued alongside the QR code, and only for a tier that includes workshops.
+        (new WorkshopBooker)->issueKeyFor($ticket->fresh('ticketType'));
+        $ticket->refresh();
+
         // $ticket->refresh();
-        
+
         $qrData = URL::signedRoute('check-in.scan', [
             'event' => $ticket->event,
             'ticketId' => $ticket->ticket_id,

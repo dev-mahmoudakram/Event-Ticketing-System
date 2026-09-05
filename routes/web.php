@@ -34,6 +34,7 @@ use App\Http\Controllers\NewsletterSubscriberController;
 use App\Http\Controllers\TicketController;
 use App\Http\Controllers\TicketPaymentController;
 use App\Http\Controllers\TicketRequestController;
+use App\Http\Controllers\WorkshopBookingController;
 use App\Http\Controllers\WorkshopController;
 use App\Http\Middleware\EnsureEventIsPublished;
 use Illuminate\Support\Facades\Route;
@@ -47,6 +48,14 @@ Route::prefix('events/{event}')->middleware(EnsureEventIsPublished::class)->grou
     Route::get('/agenda', [AgendaController::class, 'show'])->name('agenda.show');
     Route::get('/awards', [AwardsController::class, 'show'])->name('awards.show');
     Route::get('/workshops', [WorkshopController::class, 'index'])->name('workshops.index');
+
+    // Booking, opened with a ticket reference and the key issued with the ticket — no login.
+    Route::get('/workshops/book', [WorkshopBookingController::class, 'create'])->name('workshops.book');
+    Route::post('/workshops/book', [WorkshopBookingController::class, 'authenticate'])->middleware('throttle:10,1')->name('workshops.authenticate');
+    Route::get('/workshops/picker', [WorkshopBookingController::class, 'picker'])->name('workshops.picker');
+    Route::post('/workshops/picker', [WorkshopBookingController::class, 'store'])->name('workshops.picker.store');
+    Route::post('/workshops/leave', [WorkshopBookingController::class, 'forget'])->name('workshops.forget');
+
     Route::get('/workshops/{workshop}', [WorkshopController::class, 'show'])->name('workshops.show');
     Route::post('/request', [TicketRequestController::class, 'store'])->name('ticket-requests.store');
     Route::post('/contact', [ContactMessageController::class, 'store'])->name('contact.store');
@@ -89,6 +98,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::resource('hub-partners', HubPartnerController::class)->except('show');
         Route::resource('events', EventController::class)->except('show');
         Route::resource('events.speakers', SpeakerController::class)->except('show');
+        Route::get('events/{event}/workshops/{workshop}/bookings', [AdminWorkshopController::class, 'bookings'])->name('events.workshops.bookings');
         Route::resource('events.workshops', AdminWorkshopController::class)->except('show');
         Route::resource('events.sponsors', SponsorController::class)->except('show');
         Route::resource('events.ticket-types', TicketTypeController::class)

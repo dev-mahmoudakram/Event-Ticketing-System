@@ -17,12 +17,12 @@ Last verified: 2026-09-05 (routes, models, controllers, migrations inspected dir
 | 04 | Landing Page | ✅ Done — both brands (CCS event pages and the Creators Hub platform page) |
 | 05 | Ticket Request | ✅ Done — request, review, approve/reject, approval email with a payment link |
 | 06 | Payment | 🟡 Partial — the full flow works on a stub link; no real gateway |
-| 07 | Workshops | 🟡 Partial — browsing built, booking flow missing |
+| 07 | Workshops | ✅ Done — browsing, keyed booking, capacity and slot enforcement |
 | 08 | Awards | 🟡 Partial — teaser and page shell built, voting missing |
 | 09 | QR System | ✅ Done — QR on issuance, signed scan URL, staff check-in portal |
 | 10 | Reports | ✅ Done — per-event report screen and CSV export |
 
-Seven phases complete, three partial (payment gateway, workshop booking, awards voting).
+Eight phases complete, two partial (payment gateway, awards voting).
 
 ## 01 — Project Setup
 
@@ -94,7 +94,7 @@ of the Workshops booking flow (Phase 07).
 - [ ] Real gateway (Kashier — waiting on their approval); `TicketPaymentController` marks a
       ticket paid without taking money
 - [ ] Payment records: gateway reference, refunds
-- [ ] Workshop Booking Key generation on payment success (belongs with Phase 07)
+- [x] Workshop Booking Key generated on payment success
 
 ## 07 — Workshops
 
@@ -102,8 +102,11 @@ of the Workshops booking flow (Phase 07).
 - [x] Public workshop browsing (`workshops.index`, `workshops.show`)
 - [x] Landing page workshops teaser (capacity shown, no fabricated fill %)
 - [x] `WorkshopBooking` model, capacity and slot-allowance helpers
-- [ ] Ticket ID + Workshop Booking Key redemption flow (no login)
-- [ ] Enforce each ticket type's `workshop_slot_count` against booked slots
+- [x] Reference number + Workshop Booking Key opens a picker, with no login
+- [x] The key is issued with the ticket, and only for a tier that includes workshops
+- [x] Each ticket type's `workshop_slot_count` is enforced (blank = unlimited, 0 = no picker)
+- [x] Capacity is enforced under a row lock, so two people cannot take the last place
+- [x] Admin sees who booked each workshop; the report shows how full each one is
 
 ## 08 — Awards
 
@@ -129,7 +132,7 @@ of the Workshops booking flow (Phase 07).
 - [x] Check-in on the day: attendance against issued tickets, and arrivals by hour
 - [x] Coupon use
 - [x] CSV export of the attendee list, BOM-prefixed so Excel reads Arabic names
-- [ ] Workshop attendance — waits on the booking flow (Phase 07)
+- [x] Workshop attendance, and each attendee's workshops in the CSV export
 
 ## Not in any phase, still open
 

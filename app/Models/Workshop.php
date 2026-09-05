@@ -34,6 +34,16 @@ class Workshop extends Model
         return $this->belongsTo(Speaker::class);
     }
 
+    public function name(): string
+    {
+        return app()->getLocale() === 'ar' ? $this->name_ar : $this->name_en;
+    }
+
+    public function description(): ?string
+    {
+        return app()->getLocale() === 'ar' ? $this->description_ar : $this->description_en;
+    }
+
     public function bookings(): HasMany
     {
         return $this->hasMany(WorkshopBooking::class);

@@ -102,6 +102,29 @@
             @endif
         </section>
 
+        @if($workshops->isNotEmpty())
+            <section class="adm-card p-6">
+                <h2 class="font-display font-bold text-lg mb-4">{{ __('Workshops') }}</h2>
+                <ul class="flex flex-col gap-3 text-sm">
+                    @foreach($workshops as $workshop)
+                        <li>
+                            <div class="flex items-center justify-between gap-4 mb-1.5">
+                                <span>{{ $workshop['name'] }}</span>
+                                <span class="font-bold text-hub-purple">
+                                    {{ $workshop['booked'] }}@if($workshop['capacity'] > 0) / {{ $workshop['capacity'] }} @endif
+                                </span>
+                            </div>
+                            @if($workshop['capacity'] > 0)
+                                <span class="block h-2 rounded-full bg-hub-purple/12 overflow-hidden">
+                                    <span class="block h-full rounded-full bg-hub-purple" style="width: {{ min(100, (int) round($workshop['booked'] / $workshop['capacity'] * 100)) }}%"></span>
+                                </span>
+                            @endif
+                        </li>
+                    @endforeach
+                </ul>
+            </section>
+        @endif
+
         @if($coupons->isNotEmpty())
             <section class="adm-card p-6">
                 <h2 class="font-display font-bold text-lg mb-4">{{ __('Coupons used') }}</h2>

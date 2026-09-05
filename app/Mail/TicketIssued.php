@@ -32,6 +32,7 @@ class TicketIssued extends Mailable
                     'ticket' => $this->ticket,
                     'ticketId' => $this->ticket->ticket_id,
                 ]),
+                'workshopUrl' => route('workshops.book', $this->ticket->event),
             ],
         );
     }

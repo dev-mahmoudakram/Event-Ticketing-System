@@ -24,7 +24,7 @@ class NewSchemaTest extends TestCase
 {
     use RefreshDatabase;
 
-    private function ticket(Event $event, int $slots = 2): Ticket
+    private function ticket(Event $event, ?int $slots = 2): Ticket
     {
         return Ticket::create([
             'event_id' => $event->id,
@@ -32,7 +32,7 @@ class NewSchemaTest extends TestCase
             'name' => 'Kareem Al-Sayed',
             'email' => 'kareem@example.com',
             'phone' => '+201001234567',
-            'ticket_number' => 'CCS-1',
+            'ticket_number' => 'CCS-'.fake()->unique()->numberBetween(1, 99999),
             'status' => TicketStatus::TicketIssued,
             'is_paid' => true,
         ]);
@@ -72,6 +72,20 @@ class NewSchemaTest extends TestCase
         WorkshopBooking::create(['ticket_id' => $ticket->id, 'workshop_id' => Workshop::factory()->for($event)->create()->id]);
 
         $this->assertSame(1, $ticket->fresh()->remainingWorkshopSlots());
+    }
+
+    public function test_a_blank_slot_count_means_unlimited_and_zero_means_none(): void
+    {
+        $event = Event::factory()->create();
+
+        $unlimited = $this->ticket($event, slots: null);
+        $this->assertNull($unlimited->workshopSlotAllowance());
+        $this->assertNull($unlimited->remainingWorkshopSlots());
+        $this->assertTrue($unlimited->canBookWorkshops());
+
+        $none = $this->ticket($event, slots: 0);
+        $this->assertSame(0, $none->workshopSlotAllowance());
+        $this->assertFalse($none->canBookWorkshops());
     }
 
     public function test_a_workshop_with_no_capacity_set_is_unlimited(): void

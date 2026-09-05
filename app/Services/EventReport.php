@@ -134,6 +134,21 @@ class EventReport
     }
 
     /**
+     * How full each workshop is.
+     *
+     * @return Collection<int, array{name: string, booked: int, capacity: int, remaining: int|null}>
+     */
+    public function workshops(): Collection
+    {
+        return $this->event->workshops()->withCount('bookings')->get()->map(fn ($workshop) => [
+            'name' => $workshop->name(),
+            'booked' => $workshop->bookings_count,
+            'capacity' => (int) $workshop->capacity,
+            'remaining' => $workshop->remainingCapacity(),
+        ]);
+    }
+
+    /**
      * The attendee list, as rows ready to be written to a spreadsheet.
      *
      * @return Collection<int, array<string, string|int>>
@@ -141,7 +156,7 @@ class EventReport
     public function attendeeRows(): Collection
     {
         return $this->event->tickets()
-            ->with('ticketType', 'discountCoupon')
+            ->with('ticketType', 'discountCoupon', 'workshops')
             ->orderBy('id')
             ->get()
             ->map(fn ($ticket) => [
@@ -155,6 +170,7 @@ class EventReport
                 'discount' => (int) $ticket->discount_amount,
                 'coupon' => (string) ($ticket->discountCoupon?->code ?? ''),
                 'paid' => $ticket->is_paid ? 'yes' : 'no',
+                'workshops' => $ticket->workshops->map(fn ($workshop) => $workshop->name_en)->implode(' | '),
                 'checked_in_at' => $ticket->checked_in_at?->toDateTimeString() ?? '',
             ]);
     }
