@@ -25,7 +25,15 @@ class TicketIssued extends Mailable
 
     public function content(): Content
     {
-        return new Content(view: 'emails.tickets.issued');
+        return new Content(
+            view: 'emails.tickets.issued',
+            with: [
+                'ticketUrl' => route('tickets.show', [
+                    'ticket' => $this->ticket,
+                    'ticketId' => $this->ticket->ticket_id,
+                ]),
+            ],
+        );
     }
 
     public function attachments(): array

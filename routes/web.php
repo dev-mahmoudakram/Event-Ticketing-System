@@ -29,6 +29,7 @@ use App\Http\Controllers\EventsController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LandingPageController;
 use App\Http\Controllers\NewsletterSubscriberController;
+use App\Http\Controllers\TicketController;
 use App\Http\Controllers\TicketPaymentController;
 use App\Http\Controllers\TicketRequestController;
 use App\Http\Controllers\WorkshopController;
@@ -55,6 +56,9 @@ Route::prefix('events/{event}')->middleware(EnsureEventIsPublished::class)->grou
 Route::get('tickets/{ticket}/payment', [TicketPaymentController::class, 'complete'])
     ->middleware('signed')
     ->name('tickets.payment');
+
+// An issued ticket, openable and printable by whoever holds its link
+Route::get('tickets/{ticket}/{ticketId}', [TicketController::class, 'show'])->name('tickets.show');
 
 // Check-in routes for scanning and verifying tickets
 Route::middleware('auth')->prefix('check-in')->name('check-in.')->group(function () {

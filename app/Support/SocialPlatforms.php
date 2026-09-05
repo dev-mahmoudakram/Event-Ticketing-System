@@ -12,18 +12,18 @@ class SocialPlatforms
      * The same list drives the Creators Hub settings, the per-event settings, and both footers,
      * so a network added here shows up everywhere at once.
      *
-     * @return array<string, array{label: string, placeholder: string}>
+     * @return array<string, array{label: string, placeholder: string, icon: string}>
      */
     public static function all(): array
     {
         return [
-            'instagram' => ['label' => 'Instagram', 'placeholder' => 'https://instagram.com/'],
-            'facebook' => ['label' => 'Facebook', 'placeholder' => 'https://facebook.com/'],
-            'x' => ['label' => 'X', 'placeholder' => 'https://x.com/'],
-            'linkedin' => ['label' => 'LinkedIn', 'placeholder' => 'https://linkedin.com/company/'],
-            'youtube' => ['label' => 'YouTube', 'placeholder' => 'https://youtube.com/@'],
-            'tiktok' => ['label' => 'TikTok', 'placeholder' => 'https://tiktok.com/@'],
-            'whatsapp' => ['label' => 'WhatsApp', 'placeholder' => 'https://wa.me/'],
+            'instagram' => ['label' => 'Instagram', 'placeholder' => 'https://instagram.com/', 'icon' => 'bi-instagram'],
+            'facebook' => ['label' => 'Facebook', 'placeholder' => 'https://facebook.com/', 'icon' => 'bi-facebook'],
+            'x' => ['label' => 'X', 'placeholder' => 'https://x.com/', 'icon' => 'bi-twitter-x'],
+            'linkedin' => ['label' => 'LinkedIn', 'placeholder' => 'https://linkedin.com/company/', 'icon' => 'bi-linkedin'],
+            'youtube' => ['label' => 'YouTube', 'placeholder' => 'https://youtube.com/@', 'icon' => 'bi-youtube'],
+            'tiktok' => ['label' => 'TikTok', 'placeholder' => 'https://tiktok.com/@', 'icon' => 'bi-tiktok'],
+            'whatsapp' => ['label' => 'WhatsApp', 'placeholder' => 'https://wa.me/', 'icon' => 'bi-whatsapp'],
         ];
     }
 
@@ -36,6 +36,14 @@ class SocialPlatforms
     public static function label(string $platform): string
     {
         return self::all()[$platform]['label'] ?? ucfirst($platform);
+    }
+
+    /**
+     * The Bootstrap Icons name for a network's mark.
+     */
+    public static function icon(string $platform): ?string
+    {
+        return self::all()[$platform]['icon'] ?? null;
     }
 
     /**

@@ -844,3 +844,20 @@ footer .hub-panel-dark {
 :lang(ar) .swal2-popup.ticket-success .swal2-title {
   font-family: 'Cairo', sans-serif;
 }
+
+/* A ticket is meant to be printed, and browsers drop backgrounds by default. */
+@media print {
+  body {
+    background: #fff !important;
+  }
+
+  .ticket-sheet,
+  .ticket-sheet * {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .ticket-sheet {
+    margin: 0 auto;
+  }
+}
