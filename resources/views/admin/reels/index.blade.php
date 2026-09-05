@@ -4,6 +4,7 @@
 @section('content')
     <x-admin.page-header :title="__('Reels').' — '.$event->name_en">
         <x-admin.button href="{{ route('admin.events.reels.create', $event) }}">{{ __('New Reel') }}</x-admin.button>
+        <x-admin.button href="{{ route('landing.show', $event).'#reel' }}" variant="secondary" target="_blank" rel="noopener">{{ __('View on page') }}</x-admin.button>
     </x-admin.page-header>
 
     <p class="text-sm text-hub-dark/60 mb-6">{{ __('Vertical clips shown in The Reel section, and in the hero cards at the top of the landing page.') }}</p>

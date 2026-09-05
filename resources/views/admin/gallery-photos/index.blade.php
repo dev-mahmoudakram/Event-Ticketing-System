@@ -4,6 +4,7 @@
 @section('content')
     <x-admin.page-header :title="__('Gallery Photos').' — '.$event->name_en">
         <x-admin.button href="{{ route('admin.events.gallery-photos.create', $event) }}">{{ __('New Photo') }}</x-admin.button>
+        <x-admin.button href="{{ route('landing.show', $event).'#gallery' }}" variant="secondary" target="_blank" rel="noopener">{{ __('View on page') }}</x-admin.button>
     </x-admin.page-header>
 
     @if($galleryPhotos->isEmpty())

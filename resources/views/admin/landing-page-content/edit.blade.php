@@ -1,10 +1,26 @@
 {{-- resources/views/admin/landing-page-content/edit.blade.php --}}
 @extends('layouts.admin')
 
-@section('content')
-    <x-admin.page-header :title="__('Landing Page Content').' — '.$event->name_en" />
+@section('title', __('Landing Page Content').' — '.$event->name_en)
 
-    <form method="POST" action="{{ route('admin.events.content.update', $event) }}" enctype="multipart/form-data">
+@section('content')
+    <x-admin.page-header :title="__('Landing Page Content').' — '.$event->name_en">
+        <x-admin.button href="{{ route('landing.show', $event) }}" variant="secondary" target="_blank" rel="noopener">{{ __('View page') }}</x-admin.button>
+    </x-admin.page-header>
+
+    @if(session('status'))
+        <p class="mb-6 text-sm font-bold text-hub-purple">{{ session('status') }}</p>
+    @endif
+
+    <div class="grid grid-cols-1 2xl:grid-cols-[minmax(0,1fr)_28rem] gap-8 items-start">
+    <form
+        method="POST"
+        action="{{ route('admin.events.content.update', $event) }}"
+        enctype="multipart/form-data"
+        class="adm-card p-6"
+        x-data="unsavedGuard(@js(__('You have unsaved changes. Leave without saving?')))"
+        x-bind="form"
+    >
         @csrf
         @method('PUT')
 
@@ -50,4 +66,12 @@
 
         <x-admin.button type="submit" class="mt-4">{{ __('Save') }}</x-admin.button>
     </form>
+
+    <aside class="2xl:sticky 2xl:top-24">
+        <x-admin.live-preview
+            :url="route('landing.show', $event)"
+            :label="__('Open page')"
+        />
+    </aside>
+    </div>
 @endsection

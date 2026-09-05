@@ -13,6 +13,7 @@ use App\Support\SiteText;
 use App\Support\UploadLimit;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use Illuminate\View\View;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -24,9 +25,8 @@ class SiteContentController extends Controller
     {
         return view('admin.site-content.index', [
             'sections' => SiteContentRegistry::sections(),
-            'filled' => SiteContent::all()
-                ->groupBy('section')
-                ->map(fn ($rows) => $rows->filter(fn (SiteContent $row) => trim((string) $row->value_en.$row->value_ar) !== '')->count()),
+            'filled' => $this->filledCounts(),
+            'images' => $this->sectionImages(),
         ]);
     }
 
@@ -39,6 +39,9 @@ class SiteContentController extends Controller
             'definition' => $definition,
             'stored' => SiteContent::where('section', $section)->get()->keyBy('field_key'),
             'uploadLimit' => UploadLimit::label(UploadLimit::effectiveKilobytes((int) config('media.max_image_kb'))),
+            // For the jump-to-section list beside the form.
+            'sections' => SiteContentRegistry::sections(),
+            'filled' => $this->filledCounts(),
         ]);
     }
 
@@ -111,7 +114,49 @@ class SiteContentController extends Controller
     }
 
     /**
-     * @return array{label: string, description: string, fields: array<string, array{label: string, type: string, default?: string}>}
+     * How many fields of each section somebody has actually written into.
+     *
+     * @return Collection<string, int>
+     */
+    private function filledCounts(): Collection
+    {
+        return SiteContent::all()
+            ->groupBy('section')
+            ->map(fn ($rows) => $rows->filter(fn (SiteContent $row) => trim((string) $row->value_en.$row->value_ar) !== '')->count());
+    }
+
+    /**
+     * One image per section for the index, so the list reads as pictures rather than rows.
+     *
+     * @return array<string, string>
+     */
+    private function sectionImages(): array
+    {
+        $images = [];
+
+        foreach (SiteContentRegistry::sections() as $key => $definition) {
+            $imageKeys = array_keys(array_filter(
+                $definition['fields'],
+                fn (array $field) => ($field['type'] ?? 'text') === 'image',
+            ));
+
+            foreach ($imageKeys as $fieldKey) {
+                $record = SiteContent::where('section', $key)->where('field_key', $fieldKey)->first();
+                $url = $record?->urlFor($record->value_en);
+
+                if ($url !== null) {
+                    $images[$key] = $url;
+
+                    break;
+                }
+            }
+        }
+
+        return $images;
+    }
+
+    /**
+     * @return array{label: string, description: string, anchor: ?string, fields: array<string, array{label: string, type: string, default?: string}>}
      */
     private function definitionFor(string $section): array
     {

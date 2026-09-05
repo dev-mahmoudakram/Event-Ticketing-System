@@ -4,6 +4,7 @@
 @section('content')
     <x-admin.page-header :title="__('Agenda Items').' — '.$event->name_en">
         <x-admin.button href="{{ route('admin.events.agenda-items.create', $event) }}">{{ __('New Agenda Item') }}</x-admin.button>
+        <x-admin.button href="{{ route('agenda.show', $event) }}" variant="secondary" target="_blank" rel="noopener">{{ __('View agenda') }}</x-admin.button>
     </x-admin.page-header>
 
     @if($items->isEmpty())

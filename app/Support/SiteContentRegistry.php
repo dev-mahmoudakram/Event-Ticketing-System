@@ -14,11 +14,14 @@ namespace App\Support;
  * someone supplies their own wording.
  *
  * Adding a field is one entry here — no migration, no new form markup.
+ *
+ * 'anchor' names the element the section renders as on the live page, so the editor can show
+ * that part of the real site beside the form. Null means the section has no block of its own.
  */
 class SiteContentRegistry
 {
     /**
-     * @return array<string, array{label: string, description: string, fields: array<string, array{label: string, type: string, default?: string}>}>
+     * @return array<string, array{label: string, description: string, anchor: ?string, fields: array<string, array{label: string, type: string, default?: string}>}>
      */
     public static function sections(): array
     {
@@ -26,6 +29,7 @@ class SiteContentRegistry
             'hero' => [
                 'label' => __('Hero'),
                 'description' => __('The first screen of the page.'),
+                'anchor' => 'hero',
                 'fields' => [
                     'headline' => ['label' => __('Headline'), 'type' => 'textarea', 'default' => 'Where the people who design and build Egypt actually meet.'],
                     'body' => ['label' => __('Supporting text'), 'type' => 'textarea', 'default' => 'Creators Hub runs the events that bring interior designers, architects, contractors and the brands supplying them into the same room.'],
@@ -38,6 +42,7 @@ class SiteContentRegistry
             'stats' => [
                 'label' => __('Headline Figures'),
                 'description' => __('Three figures shown under the hero. Each needs both a figure and a label to appear; the band hides entirely when none are filled in.'),
+                'anchor' => 'hero',
                 'fields' => [
                     'figure_one' => ['label' => __('First figure'), 'type' => 'text'],
                     'label_one' => ['label' => __('First label'), 'type' => 'text'],
@@ -51,6 +56,7 @@ class SiteContentRegistry
             'about' => [
                 'label' => __('About'),
                 'description' => __('Who Creators Hub is for.'),
+                'anchor' => 'about',
                 'fields' => [
                     'eyebrow' => ['label' => __('Small label'), 'type' => 'text', 'default' => 'About Creators Hub'],
                     'heading' => ['label' => __('Heading'), 'type' => 'textarea', 'default' => 'A hub for the people shaping spaces.'],
@@ -64,6 +70,7 @@ class SiteContentRegistry
             'audiences' => [
                 'label' => __('Who it is for'),
                 'description' => __('The heading above the audience switch. The tabs and their cards are managed under Audience Tabs.'),
+                'anchor' => 'audiences',
                 'fields' => [
                     'heading' => ['label' => __('Heading'), 'type' => 'textarea', 'default' => 'Two sides of the same room.'],
                     'body' => ['label' => __('Body'), 'type' => 'textarea', 'default' => 'An event only works when both halves of the industry turn up. Pick your side to see what Creators Hub is for.'],
@@ -73,6 +80,7 @@ class SiteContentRegistry
             'events' => [
                 'label' => __('Events'),
                 'description' => __('Wording around the event listing. The events themselves are managed under Events.'),
+                'anchor' => 'events',
                 'fields' => [
                     'heading' => ['label' => __('Heading'), 'type' => 'textarea', 'default' => 'Events that bring the industry together.'],
                     'view_all' => ['label' => __('View all link'), 'type' => 'text', 'default' => 'View All Events'],
@@ -84,6 +92,7 @@ class SiteContentRegistry
             'community' => [
                 'label' => __('Community'),
                 'description' => __('The relationships-beyond-events section.'),
+                'anchor' => 'community',
                 'fields' => [
                     'eyebrow' => ['label' => __('Small label'), 'type' => 'text', 'default' => 'Community'],
                     'heading' => ['label' => __('Heading'), 'type' => 'textarea', 'default' => 'More than events. It is a community.'],
@@ -96,6 +105,7 @@ class SiteContentRegistry
             'why_egypt' => [
                 'label' => __('Why Egypt'),
                 'description' => __('Reasons to build here. Hidden until the heading and at least one point are filled in.'),
+                'anchor' => 'why-egypt',
                 'fields' => [
                     'heading' => ['label' => __('Heading'), 'type' => 'textarea'],
                     'body' => ['label' => __('Body'), 'type' => 'textarea'],
@@ -112,6 +122,7 @@ class SiteContentRegistry
             'partners' => [
                 'label' => __('Partners'),
                 'description' => __('The partnership invitation.'),
+                'anchor' => 'partners',
                 'fields' => [
                     'heading' => ['label' => __('Heading'), 'type' => 'textarea', 'default' => 'Built through collaboration.'],
                     'body' => ['label' => __('Body'), 'type' => 'textarea', 'default' => 'Creators Hub is founded on partnerships with the brands and organizations that supply, build, and shape the industry.'],
@@ -122,6 +133,7 @@ class SiteContentRegistry
             'faq' => [
                 'label' => __('FAQ heading'),
                 'description' => __('The questions themselves are managed under Creators Hub FAQs.'),
+                'anchor' => 'faq',
                 'fields' => [
                     'heading' => ['label' => __('Heading'), 'type' => 'textarea', 'default' => 'Questions people ask us.'],
                     'image' => ['label' => __('Image beside the questions'), 'type' => 'image'],
@@ -131,6 +143,7 @@ class SiteContentRegistry
             'cta' => [
                 'label' => __('Closing call to action'),
                 'description' => __('The band above the contact form.'),
+                'anchor' => 'contact',
                 'fields' => [
                     'heading' => ['label' => __('Heading'), 'type' => 'textarea', 'default' => 'Be part of what is next.'],
                     'body' => ['label' => __('Body'), 'type' => 'textarea', 'default' => 'Join the community shaping the future of interior design and construction.'],
@@ -142,6 +155,7 @@ class SiteContentRegistry
             'contact' => [
                 'label' => __('Contact'),
                 'description' => __('The contact form introduction.'),
+                'anchor' => 'contact',
                 'fields' => [
                     'eyebrow' => ['label' => __('Small label'), 'type' => 'text', 'default' => 'Contact'],
                     'heading' => ['label' => __('Heading'), 'type' => 'textarea', 'default' => 'Get in touch.'],
@@ -153,6 +167,7 @@ class SiteContentRegistry
             'footer' => [
                 'label' => __('Footer'),
                 'description' => __('The bottom of the page.'),
+                'anchor' => null,
                 'fields' => [
                     'blurb' => ['label' => __('Description under the logo'), 'type' => 'textarea', 'default' => 'Connecting the interior design and construction industry through events, community, and collaboration.'],
                 ],
@@ -161,6 +176,7 @@ class SiteContentRegistry
             'branding' => [
                 'label' => __('Logo'),
                 'description' => __('The Creators Hub mark in the navigation bar and the footer. Leave a slot empty to keep the logo the site ships with.'),
+                'anchor' => null,
                 'fields' => [
                     'nav_logo' => ['label' => __('Navigation bar logo'), 'type' => 'image'],
                     'footer_logo' => ['label' => __('Footer logo'), 'type' => 'image'],
@@ -170,6 +186,7 @@ class SiteContentRegistry
             'contact_details' => [
                 'label' => __('Contact and social links'),
                 'description' => __('Shown in the footer. Anything left empty is simply not shown, and an event keeps its own details under that event.'),
+                'anchor' => null,
                 'fields' => [
                     'email' => ['label' => __('Email address'), 'type' => 'single', 'input' => 'email'],
                     'phone' => ['label' => __('Phone number'), 'type' => 'single', 'input' => 'tel'],
@@ -181,6 +198,7 @@ class SiteContentRegistry
             'sharing' => [
                 'label' => __('Search results and link previews'),
                 'description' => __('What people see when the site appears in search results or is shared on social media. A preview image works best at 1200 by 630 pixels.'),
+                'anchor' => null,
                 'fields' => [
                     'title' => ['label' => __('Page title'), 'type' => 'text', 'default' => 'Interior Design & Construction Events'],
                     'description' => ['label' => __('Description'), 'type' => 'textarea', 'default' => 'Creators Hub connects the interior design and construction industry through events, community, and collaboration.'],

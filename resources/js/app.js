@@ -3,12 +3,14 @@ import initCcsMotion from './ccs-motion';
 import ticketScanner from './ticket-scanner';
 import initCharts from './charts';
 import initSortableLists from './sortable';
+import unsavedGuard from './unsaved-guard';
 import intlTelInput from 'intl-tel-input/intlTelInputWithUtils';
 import 'intl-tel-input/styles';
 
 window.Alpine = Alpine;
 
 Alpine.data('ticketScanner', ticketScanner);
+Alpine.data('unsavedGuard', unsavedGuard);
 
 Alpine.store('ticketRequest', {
     open: false,
