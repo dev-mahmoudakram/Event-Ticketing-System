@@ -10,6 +10,7 @@
         ['prefix' => 'admin.events.ticket-requests', 'route' => 'admin.events.ticket-requests.index', 'label' => __('Ticket Requests')],
         ['prefix' => 'admin.events.discount-coupons', 'route' => 'admin.events.discount-coupons.index', 'label' => __('Discount Coupons')],
         ['prefix' => 'admin.events.reports', 'route' => 'admin.events.reports.show', 'label' => __('Report')],
+        ['prefix' => 'check-in', 'route' => 'check-in.index', 'label' => __('Registration Desk')],
         ['prefix' => 'admin.events.workshops', 'route' => 'admin.events.workshops.index', 'label' => __('Workshops')],
         ['prefix' => 'admin.events.agenda-items', 'route' => 'admin.events.agenda-items.index', 'label' => __('Agenda')],
         ['prefix' => 'admin.events.reels', 'route' => 'admin.events.reels.index', 'label' => __('Reels')],
@@ -25,7 +26,7 @@
     $currentEventId = $currentEvent instanceof \App\Models\Event ? $currentEvent->id : null;
 
     $inEvents = request()->routeIs('admin.events.*');
-    $inHub = request()->routeIs('admin.site-content.*', 'admin.hero-slides.*', 'admin.hub-partners.*', 'admin.site-faqs.*');
+    $inHub = request()->routeIs('admin.site-content.*', 'admin.hero-slides.*', 'admin.hub-partners.*', 'admin.site-faqs.*', 'admin.reports.*');
 @endphp
 
 <div class="flex items-center gap-2.5 px-5 py-5 border-b border-hub-purple/10">
@@ -112,6 +113,7 @@
         <div class="grid transition-[grid-template-rows] duration-200 ease-out motion-reduce:transition-none" :class="open ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'">
         <div class="overflow-hidden">
         <div class="adm-nav-branch mt-1 flex flex-col gap-0.5">
+            <a href="{{ route('admin.reports.show') }}" class="adm-nav-link adm-nav-sub {{ request()->routeIs('admin.reports.*') ? 'is-active' : '' }}">{{ __('Platform Report') }}</a>
             <a href="{{ route('admin.site-content.index') }}" class="adm-nav-link adm-nav-sub {{ request()->routeIs('admin.site-content.*') ? 'is-active' : '' }}">{{ __('Landing Page Content') }}</a>
             <a href="{{ route('admin.hero-slides.index') }}" class="adm-nav-link adm-nav-sub {{ request()->routeIs('admin.hero-slides.*') ? 'is-active' : '' }}">{{ __('Hero Slides') }}</a>
             <a href="{{ route('admin.hub-partners.index') }}" class="adm-nav-link adm-nav-sub {{ request()->routeIs('admin.hub-partners.*') ? 'is-active' : '' }}">{{ __('Partners') }}</a>

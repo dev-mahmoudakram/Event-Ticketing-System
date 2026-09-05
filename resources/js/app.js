@@ -1,9 +1,13 @@
 import Alpine from 'alpinejs';
 import initCcsMotion from './ccs-motion';
+import ticketScanner from './ticket-scanner';
+import initCharts from './charts';
 import intlTelInput from 'intl-tel-input/intlTelInputWithUtils';
 import 'intl-tel-input/styles';
 
 window.Alpine = Alpine;
+
+Alpine.data('ticketScanner', ticketScanner);
 
 Alpine.store('ticketRequest', {
     open: false,
@@ -173,3 +177,4 @@ if ('IntersectionObserver' in window) {
 }
 
 initCcsMotion();
+initCharts();

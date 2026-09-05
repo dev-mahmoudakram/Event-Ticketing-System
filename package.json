@@ -19,7 +19,9 @@
         "vite": "^7.0.7"
     },
     "dependencies": {
+        "apexcharts": "^7.1.0",
         "gsap": "^3.15.0",
+        "html5-qrcode": "^2.3.8",
         "intl-tel-input": "^29.1.2",
         "sweetalert2": "^11.26.25"
     }

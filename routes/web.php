@@ -13,6 +13,7 @@ use App\Http\Controllers\Admin\HeroSlideController;
 use App\Http\Controllers\Admin\HubPartnerController;
 use App\Http\Controllers\Admin\LandingPageContentController;
 use App\Http\Controllers\Admin\NewsletterSubscriberController as AdminNewsletterSubscriberController;
+use App\Http\Controllers\Admin\PlatformReportController;
 use App\Http\Controllers\Admin\ReelController;
 use App\Http\Controllers\Admin\SiteContentController;
 use App\Http\Controllers\Admin\SiteFaqController;
@@ -71,12 +72,11 @@ Route::get('tickets/{ticket}/payment', [TicketPaymentController::class, 'complet
 // An issued ticket, openable and printable by whoever holds its link
 Route::get('tickets/{ticket}/{ticketId}', [TicketController::class, 'show'])->name('tickets.show');
 
-// Check-in routes for scanning and verifying tickets
+// The registration desk. Checking somebody in changes their ticket, so every route here is
+// a POST behind a login — a QR code alone can never admit anyone.
 Route::middleware('auth')->prefix('check-in')->name('check-in.')->group(function () {
     Route::get('{event}', [TicketCheckInController::class, 'index'])->name('index');
-    Route::get('{event}/{ticketId}', [TicketCheckInController::class, 'scan'])
-        ->middleware('signed')
-        ->name('scan');
+    Route::post('{event}/scan', [TicketCheckInController::class, 'scan'])->name('scan');
     Route::post('{event}', [TicketCheckInController::class, 'store'])->name('store');
 });
 
@@ -90,6 +90,8 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
         // Creators Hub (the site root) is not an event, so its copy lives outside the
         // per-event content screens.
+        // The platform's own numbers, across every event it has hosted.
+        Route::get('reports', [PlatformReportController::class, 'show'])->name('reports.show');
         Route::get('site-content', [SiteContentController::class, 'index'])->name('site-content.index');
         Route::get('site-content/{section}', [SiteContentController::class, 'edit'])->name('site-content.edit');
         Route::put('site-content/{section}', [SiteContentController::class, 'update'])->name('site-content.update');

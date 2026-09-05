@@ -6,9 +6,7 @@ namespace App\Http\Controllers;
 
 use App\Enums\TicketStatus;
 use App\Models\Ticket;
-use Endroid\QrCode\QrCode;
-use Endroid\QrCode\Writer\PngWriter;
-use Illuminate\Support\Facades\URL;
+use App\Services\TicketQrCode;
 use Illuminate\View\View;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -33,22 +31,7 @@ class TicketController extends Controller
 
         return view('tickets.show', [
             'ticket' => $ticket->load('event', 'ticketType'),
-            'qrSrc' => $this->qrDataUri($ticket),
+            'qrSrc' => (new TicketQrCode)->dataUriFor($ticket),
         ]);
-    }
-
-    /**
-     * The check-in code, inlined so the page prints and saves as one file.
-     */
-    private function qrDataUri(Ticket $ticket): string
-    {
-        $target = URL::signedRoute('check-in.scan', [
-            'event' => $ticket->event,
-            'ticketId' => $ticket->ticket_id,
-        ]);
-
-        return 'data:image/png;base64,'.base64_encode(
-            (new PngWriter)->write(new QrCode(data: $target))->getString()
-        );
     }
 }

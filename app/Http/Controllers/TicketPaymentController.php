@@ -7,12 +7,10 @@ namespace App\Http\Controllers;
 use App\Enums\TicketStatus;
 use App\Mail\TicketIssued;
 use App\Models\Ticket;
+use App\Services\TicketQrCode;
 use App\Services\WorkshopBooker;
-use Endroid\QrCode\QrCode;
-use Endroid\QrCode\Writer\PngWriter;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Str;
 
 class TicketPaymentController extends Controller
@@ -36,13 +34,7 @@ class TicketPaymentController extends Controller
         (new WorkshopBooker)->issueKeyFor($ticket->fresh('ticketType'));
         $ticket->refresh();
 
-        // $ticket->refresh();
-
-        $qrData = URL::signedRoute('check-in.scan', [
-            'event' => $ticket->event,
-            'ticketId' => $ticket->ticket_id,
-        ]);
-        $qrImage = (new PngWriter)->write(new QrCode(data: $qrData))->getString();
+        $qrImage = (new TicketQrCode)->pngFor($ticket);
 
         Mail::to($ticket->email)->send(new TicketIssued($ticket, $qrImage));
 

@@ -4,119 +4,70 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Admin;
 
-use App\Enums\TicketStatus;
 use App\Http\Controllers\Controller;
 use App\Models\Event;
-use App\Models\Ticket;
+use App\Services\TicketCheckIn;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 
 class TicketCheckInController extends Controller
 {
+    public function __construct(private readonly TicketCheckIn $checkIn) {}
+
     public function index(Event $event): View
     {
-        return view('check-in.index', compact('event'));
-    }
-
-    public function scan(Event $event, string $ticketId): View
-    {
-        $ticket = Ticket::query()
-            ->where('event_id', $event->id)
-            ->where('ticket_id', $ticketId)
-            ->first();
-
-        if ($ticket === null) {
-            return view('check-in.result', [
-                'event' => $event,
-                'ticket' => null,
-                'result' => 'invalid',
-            ]);
-        }
-
-        if (! $ticket->is_paid) {
-            return view('check-in.result', compact('event', 'ticket') + ['result' => 'unpaid']);
-        }
-
-        if ($ticket->checked_in_at !== null || $ticket->status === TicketStatus::CheckedIn) {
-            return view('check-in.result', compact('event', 'ticket') + ['result' => 'used']);
-        }
-
-        $checkedIn = DB::transaction(fn (): int => Ticket::query()
-            ->whereKey($ticket->id)
-            ->where('event_id', $event->id)
-            ->where('is_paid', true)
-            ->where('status', TicketStatus::TicketIssued)
-            ->whereNull('checked_in_at')
-            ->update([
-                'status' => TicketStatus::CheckedIn,
-                'checked_in_at' => now(),
-            ]));
-
-        $ticket->refresh();
-
-        return view('check-in.result', compact('event', 'ticket') + [
-            'result' => $checkedIn === 1
-                ? 'verified'
-                : ($ticket->checked_in_at !== null ? 'used' : 'invalid'),
+        return view('check-in.index', [
+            'event' => $event,
+            'arrived' => $event->tickets()->whereNotNull('checked_in_at')->count(),
+            'expected' => $event->tickets()->where('is_paid', true)->count(),
         ]);
     }
 
+    /**
+     * The camera's endpoint: one scan in, one verdict out, page never reloads.
+     */
+    public function scan(Event $event, Request $request): JsonResponse
+    {
+        $validated = $request->validate([
+            'qr_code' => ['required', 'string', 'max:4096'],
+        ]);
+
+        ['result' => $result, 'ticket' => $ticket] = $this->checkIn->admit($event, $validated['qr_code']);
+
+        return response()->json([
+            'result' => $result,
+            'message' => $this->checkIn->message($result),
+            'ticket' => $ticket === null ? null : [
+                'name' => $ticket->name,
+                'reference' => $ticket->ticket_number,
+                'type' => app()->getLocale() === 'ar'
+                    ? $ticket->ticketType?->name_ar
+                    : $ticket->ticketType?->name_en,
+                'checked_in_at' => $ticket->checked_in_at?->format('H:i'),
+            ],
+        ]);
+    }
+
+    /**
+     * The same decision without JavaScript, for a hardware scanner typing into the box or a
+     * code too damaged for the camera to read.
+     */
     public function store(Event $event, Request $request): RedirectResponse
     {
         $validated = $request->validate([
             'qr_code' => ['required', 'string', 'max:4096'],
         ]);
-        $ticketId = $this->ticketIdFromCode($validated['qr_code']);
 
-        if ($ticketId === null) {
-            return back()->withInput()->with('error', __('Invalid QR code. Entry denied.'));
-        }
+        ['result' => $result, 'ticket' => $ticket] = $this->checkIn->admit($event, $validated['qr_code']);
 
-        $ticket = Ticket::query()
-            ->where('event_id', $event->id)
-            ->where('ticket_id', $ticketId)
-            ->first();
-
-        if ($ticket === null) {
-            return back()->withInput()->with('error', __('Invalid QR code. Entry denied.'));
-        }
-
-        $checkedIn = DB::transaction(fn (): int => Ticket::query()
-            ->where('event_id', $event->id)
-            ->whereKey($ticket->id)
-            ->where('is_paid', true)
-            ->where('status', TicketStatus::TicketIssued)
-            ->whereNull('checked_in_at')
-            ->update([
-                'status' => TicketStatus::CheckedIn,
-                'checked_in_at' => now(),
-            ]));
-
-        if ($checkedIn === 0) {
-            return back()->withInput()->with(
-                'error',
-                $ticket->checked_in_at
-                    ? __('This ticket has already been used. Entry denied.')
-                    : __('Invalid or unpaid ticket. Entry denied.'),
-            );
+        if ($result !== 'verified') {
+            return back()->withInput()->with('error', $this->checkIn->message($result));
         }
 
         return redirect()->route('check-in.index', $event)
-            ->with('success', __('Ticket verified. Entry allowed.'));
-    }
-
-    private function ticketIdFromCode(string $qrCode): ?string
-    {
-        $path = parse_url($qrCode, PHP_URL_PATH);
-        $segments = is_string($path) ? explode('/', trim($path, '/')) : [];
-        $ticketId = end($segments);
-
-        if (is_string($ticketId) && preg_match('/^[A-Za-z0-9]{40}$/', $ticketId) === 1) {
-            return $ticketId;
-        }
-
-        return null;
+            ->with('success', $this->checkIn->message($result))
+            ->with('checked_in_name', $ticket?->name);
     }
 }

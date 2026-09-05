@@ -29,6 +29,19 @@
     <div class="grid grid-cols-1 xl:grid-cols-2 gap-6">
         <section class="adm-card p-6">
             <h2 class="font-display font-bold text-lg mb-4">{{ __('Tickets by status') }}</h2>
+
+            {{-- The shape at a glance; the list below stays, because a donut cannot show a
+                 status sitting at zero and "nobody was rejected" is worth reading. --}}
+            @php $present = $statuses->filter(fn (array $row) => $row['count'] > 0); @endphp
+            @if($present->isNotEmpty())
+                <div data-chart="{{ json_encode([
+                    'type' => 'donut',
+                    'height' => 260,
+                    'categories' => $present->pluck('label')->values(),
+                    'series' => $present->pluck('count')->values(),
+                ]) }}" class="mb-4"></div>
+            @endif
+
             <ul class="flex flex-col gap-2.5">
                 @foreach($statuses as $row)
                     <li class="flex items-center justify-between gap-4 text-sm">
@@ -59,6 +72,16 @@
 
             @if($ticketTypes->isNotEmpty())
                 <h3 class="text-sm font-bold text-hub-dark/70 mb-2">{{ __('By ticket type') }}</h3>
+                @if($ticketTypes->sum('revenue') > 0)
+                    <div data-chart="{{ json_encode([
+                        'type' => 'bar',
+                        'horizontal' => true,
+                        'height' => 200,
+                        'currency' => $revenue['currency'],
+                        'categories' => $ticketTypes->pluck('name'),
+                        'series' => [['name' => __('Revenue'), 'data' => $ticketTypes->pluck('revenue')]],
+                    ]) }}" class="mb-2"></div>
+                @endif
                 <ul class="flex flex-col gap-2 text-sm">
                     @foreach($ticketTypes as $type)
                         <li class="flex items-center justify-between gap-4">
@@ -85,18 +108,12 @@
 
             @if($checkIns['by_hour']->isNotEmpty())
                 <h3 class="text-sm font-bold text-hub-dark/70 mb-2">{{ __('Arrivals by hour') }}</h3>
-                @php $busiest = $checkIns['by_hour']->max('count'); @endphp
-                <ul class="flex flex-col gap-2">
-                    @foreach($checkIns['by_hour'] as $slot)
-                        <li class="flex items-center gap-3 text-sm">
-                            <span class="w-32 shrink-0 text-hub-dark/60" dir="ltr">{{ $slot['hour'] }}</span>
-                            <span class="flex-1 h-2 rounded-full bg-hub-purple/12 overflow-hidden">
-                                <span class="block h-full rounded-full bg-hub-purple" style="width: {{ (int) round($slot['count'] / $busiest * 100) }}%"></span>
-                            </span>
-                            <span class="w-10 text-end font-bold">{{ $slot['count'] }}</span>
-                        </li>
-                    @endforeach
-                </ul>
+                <div data-chart="{{ json_encode([
+                    'type' => 'bar',
+                    'height' => 240,
+                    'categories' => $checkIns['by_hour']->pluck('hour'),
+                    'series' => [['name' => __('Arrivals'), 'data' => $checkIns['by_hour']->pluck('count')]],
+                ]) }}"></div>
             @elseif($issued > 0)
                 <p class="text-sm text-hub-dark/45">{{ __('Nobody has been checked in yet.') }}</p>
             @endif
