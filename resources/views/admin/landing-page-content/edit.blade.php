@@ -4,7 +4,7 @@
 @section('content')
     <x-admin.page-header :title="__('Landing Page Content').' — '.$event->name_en" />
 
-    <form method="POST" action="{{ route('admin.events.content.update', $event) }}">
+    <form method="POST" action="{{ route('admin.events.content.update', $event) }}" enctype="multipart/form-data">
         @csrf
         @method('PUT')
 
@@ -13,6 +13,19 @@
 
         <h2 class="font-display text-lg font-bold mt-6 mb-2">{{ __('About Body') }}</h2>
         <x-admin.bilingual-field type="textarea" name="about_body" :value-ar="old('about_body_ar', $values['about_body_ar'])" :value-en="old('about_body_en', $values['about_body_en'])" />
+
+        <x-admin.media-upload
+            name="about_image"
+            :label="__('About Image')"
+            :current="$aboutImage"
+            :hint="__('Shown beside the About text on the event page. Up to :limit.', ['limit' => $uploadLimit])"
+        />
+        @if($aboutImage)
+            <label class="flex items-center gap-2 text-sm text-gray-300 -mt-3 mb-5">
+                <input type="checkbox" name="remove_about_image" value="1" class="rounded border-gray-600 bg-gray-900">
+                {{ __('Remove the current image') }}
+            </label>
+        @endif
 
         <h2 class="font-display text-lg font-bold mt-6 mb-2">{{ __('Location Intro') }}</h2>
         <x-admin.bilingual-field type="textarea" name="location_intro" :value-ar="old('location_intro_ar', $values['location_intro_ar'])" :value-en="old('location_intro_en', $values['location_intro_en'])" />

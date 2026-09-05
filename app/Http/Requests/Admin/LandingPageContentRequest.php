@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Requests\Admin;
 
 use App\Models\Event;
+use App\Support\UploadLimit;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -30,8 +31,15 @@ class LandingPageContentRequest extends FormRequest
             'stats_attendees_count_en' => ['nullable', 'string', 'max:50'],
             'stats_countries_count_ar' => ['nullable', 'string', 'max:50'],
             'stats_countries_count_en' => ['nullable', 'string', 'max:50'],
+            'about_image' => ['nullable', 'image', 'max:'.UploadLimit::effectiveKilobytes((int) config('media.max_image_kb'))],
+            'remove_about_image' => ['nullable', 'boolean'],
             'visible_sections' => ['nullable', 'array'],
             'visible_sections.*' => [Rule::in(Event::TOGGLEABLE_SECTIONS)],
         ];
+    }
+
+    public function attributes(): array
+    {
+        return ['about_image' => __('About Image')];
     }
 }

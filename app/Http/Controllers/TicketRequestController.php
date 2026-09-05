@@ -43,7 +43,7 @@ class TicketRequestController extends Controller
         $message = __('Request received! Your reference number is :number.', ['number' => $ticket->ticket_number]);
 
         if ($request->wantsJson()) {
-            return response()->json(['message' => $message]);
+            return response()->json(['message' => $message, 'reference' => $ticket->ticket_number]);
         }
 
         return redirect()->to(route('landing.show', $event).'#tickets')->with('ticket_request_success', $ticket->ticket_number);

@@ -48,6 +48,10 @@
                     enctype="multipart/form-data"
                     class="flex flex-col gap-4"
                     data-generic-error="{{ __('Something went wrong. Please try again.') }}"
+                    data-success-title="{{ __('Ticket requested') }}"
+                    data-success-reference-label="{{ __('Your reference number') }}"
+                    data-success-note="{{ __('Keep your reference number. We review every request and email you the next step.') }}"
+                    data-success-confirm="{{ __('Done') }}"
                     novalidate
                 >
                     @csrf

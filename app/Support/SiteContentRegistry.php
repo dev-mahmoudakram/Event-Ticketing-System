@@ -156,6 +156,7 @@ class SiteContentRegistry
                 'description' => __('The questions themselves are managed under Creators Hub FAQs.'),
                 'fields' => [
                     'heading' => ['label' => __('Heading'), 'type' => 'textarea', 'default' => 'Questions people ask us.'],
+                    'image' => ['label' => __('Image beside the questions'), 'type' => 'image'],
                 ],
             ],
 

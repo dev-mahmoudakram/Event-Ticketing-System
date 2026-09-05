@@ -374,5 +374,13 @@
     "Search results and link previews": "نتائج البحث ومعاينات الروابط",
     "What people see when the site appears in search results or is shared on social media. A preview image works best at 1200 by 630 pixels.": "ما يظهر للناس عندما يظهر الموقع في نتائج البحث أو عند مشاركته على وسائل التواصل. أفضل مقاس لصورة المعاينة هو 1200 × 630 بكسل.",
     "Page title": "عنوان الصفحة",
-    "Preview image": "صورة المعاينة"
+    "Preview image": "صورة المعاينة",
+    "Ticket requested": "تم طلب التذكرة",
+    "Your reference number": "رقمك المرجعي",
+    "Keep your reference number. We review every request and email you the next step.": "احتفظ برقمك المرجعي. نراجع كل طلب ونرسل لك الخطوة التالية بالبريد الإلكتروني.",
+    "Done": "تم",
+    "About Image": "صورة قسم عن الحدث",
+    "Shown beside the About text on the event page. Up to :limit.": "تظهر بجانب نص «عن الحدث» في صفحة الفعالية. حتى :limit.",
+    "Remove the current image": "إزالة الصورة الحالية",
+    "Image beside the questions": "الصورة بجانب الأسئلة"
 }

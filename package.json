@@ -20,6 +20,7 @@
     },
     "dependencies": {
         "gsap": "^3.15.0",
-        "intl-tel-input": "^29.1.2"
+        "intl-tel-input": "^29.1.2",
+        "sweetalert2": "^11.26.25"
     }
 }

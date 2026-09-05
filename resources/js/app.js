@@ -67,6 +67,36 @@ if (emailInput) {
     filterInputCharacters(emailInput, /[^a-zA-Z0-9@._%+\-]/g);
 }
 
+/**
+ * Confirm a ticket request with a popup rather than a line of text, so the moment the visitor
+ * has been waiting through the form for actually lands. SweetAlert2 is fetched only once a
+ * request succeeds, which keeps it out of the bundle every other page loads.
+ */
+async function announceTicketRequested(form, { message, reference }) {
+    const { default: Swal } = await import('sweetalert2');
+    const stillMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    window.Alpine.store('ticketRequest').open = false;
+
+    await Swal.fire({
+        icon: 'success',
+        title: form.dataset.successTitle,
+        html: reference
+            // <bdi> keeps a Latin reference number intact inside an Arabic paragraph.
+            ? `<p class="ticket-success-label">${form.dataset.successReferenceLabel}</p>
+               <p class="ticket-success-reference"><bdi>${reference}</bdi></p>
+               <p class="ticket-success-note">${form.dataset.successNote}</p>`
+            : `<p class="ticket-success-note">${message}</p>`,
+        confirmButtonText: form.dataset.successConfirm,
+        buttonsStyling: false,
+        customClass: {
+            popup: 'ticket-success',
+            confirmButton: 'ticket-success-confirm',
+        },
+        ...(stillMotion && { showClass: { popup: '' }, hideClass: { popup: '' } }),
+    });
+}
+
 const ticketRequestForm = document.getElementById('ticket-request-form');
 if (ticketRequestForm) {
     ticketRequestForm.addEventListener('submit', async (event) => {
@@ -107,11 +137,8 @@ if (ticketRequestForm) {
                     }
                 });
             } else if (response.ok) {
-                if (feedback) {
-                    feedback.textContent = data.message || '';
-                    feedback.className = 'text-sm font-bold mb-4 text-ccs-teal-light';
-                }
                 ticketRequestForm.reset();
+                await announceTicketRequested(ticketRequestForm, { message: data.message || '', reference: data.reference });
             } else {
                 if (feedback) {
                     feedback.textContent = data.message || genericError;

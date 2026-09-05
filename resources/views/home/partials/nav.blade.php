@@ -9,8 +9,8 @@
     class="fixed top-0 inset-x-0 z-50 hub-shell pt-0"
 >
     <div
-        class="mx-auto flex items-center justify-between gap-6 bg-white px-5 md:px-8 py-4 rounded-b-3xl transition-shadow duration-300"
-        :class="scrolled ? 'shadow-lg shadow-hub-purple/10' : ''"
+        class="mx-auto flex items-center justify-between gap-6 bg-white px-5 md:px-8 py-4 transition-shadow duration-300"
+        :class="{ 'shadow-lg shadow-hub-purple/10': scrolled && ! open, 'rounded-b-3xl': ! open }"
     >
         <a href="{{ $sectionBase }}#hero" class="flex items-center gap-2.5 shrink-0">
             <img src="{{ asset('images/creators-hub/mark.png') }}" alt="" aria-hidden="true" class="h-8 w-auto">
@@ -26,12 +26,12 @@
         </nav>
 
         <div class="flex items-center gap-3 shrink-0">
-            <div class="hidden sm:flex items-center text-xs font-bold rounded-full border border-hub-purple/20 overflow-hidden">
+            <div class="flex items-center text-xs font-bold rounded-full border border-hub-purple/20 overflow-hidden">
                 <a href="{{ request()->fullUrlWithQuery(['lang' => 'en']) }}" class="px-3 py-1.5 transition-colors {{ app()->getLocale() === 'en' ? 'bg-hub-purple text-white' : 'text-hub-dark/60 hover:text-hub-purple' }}">EN</a>
                 <a href="{{ request()->fullUrlWithQuery(['lang' => 'ar']) }}" class="px-3 py-1.5 transition-colors {{ app()->getLocale() === 'ar' ? 'bg-hub-purple text-white' : 'text-hub-dark/60 hover:text-hub-purple' }}">AR</a>
             </div>
-            <a href="{{ $sectionBase }}#contact" class="hidden sm:inline-flex hub-pill hub-pill-outline text-sm !py-2.5 !px-5">{{ __('Contact') }}</a>
-            <a href="{{ route('events.index') }}" class="hidden sm:inline-flex hub-pill hub-pill-solid text-sm !py-2.5 !px-5">{{ __('Explore Events') }}</a>
+            <a href="{{ $sectionBase }}#contact" class="hidden lg:inline-flex hub-pill hub-pill-outline text-sm !py-2.5 !px-5">{{ __('Contact') }}</a>
+            <a href="{{ route('events.index') }}" class="hidden lg:inline-flex hub-pill hub-pill-solid text-sm !py-2.5 !px-5">{{ __('Explore Events') }}</a>
             <button type="button" aria-label="{{ __('Menu') }}" class="lg:hidden w-11 h-11 rounded-full border border-hub-purple/20 text-hub-purple transition-colors hover:bg-hub-purple/5" @click="open = !open">&#9776;</button>
         </div>
     </div>
@@ -42,10 +42,7 @@
         <a href="{{ route('events.index') }}" class="py-3.5 border-b border-hub-purple/10 font-semibold text-hub-dark" @click="open = false">{{ __('Events') }}</a>
         <a href="{{ $sectionBase }}#partners" class="py-3.5 border-b border-hub-purple/10 font-semibold text-hub-dark" @click="open = false">{{ __('Partners') }}</a>
         <a href="{{ $sectionBase }}#faq" class="py-3.5 font-semibold text-hub-dark" @click="open = false">{{ __('FAQs') }}</a>
-        <a href="{{ route('events.index') }}" class="mt-4 hub-pill hub-pill-solid text-sm">{{ __('Explore Events') }}</a>
-        <div class="sm:hidden flex items-center text-xs font-bold rounded-full border border-hub-purple/20 overflow-hidden mt-4 w-fit">
-            <a href="{{ request()->fullUrlWithQuery(['lang' => 'en']) }}" class="px-3 py-2 transition-colors {{ app()->getLocale() === 'en' ? 'bg-hub-purple text-white' : 'text-hub-dark/60' }}">EN</a>
-            <a href="{{ request()->fullUrlWithQuery(['lang' => 'ar']) }}" class="px-3 py-2 transition-colors {{ app()->getLocale() === 'ar' ? 'bg-hub-purple text-white' : 'text-hub-dark/60' }}">AR</a>
-        </div>
+        <a href="{{ $sectionBase }}#contact" class="mt-5 hub-pill hub-pill-outline text-sm" @click="open = false">{{ __('Contact') }}</a>
+        <a href="{{ route('events.index') }}" class="mt-3 hub-pill hub-pill-solid text-sm">{{ __('Explore Events') }}</a>
     </div>
 </header>

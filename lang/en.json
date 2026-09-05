@@ -383,5 +383,13 @@
     "Search results and link previews": "Search results and link previews",
     "What people see when the site appears in search results or is shared on social media. A preview image works best at 1200 by 630 pixels.": "What people see when the site appears in search results or is shared on social media. A preview image works best at 1200 by 630 pixels.",
     "Page title": "Page title",
-    "Preview image": "Preview image"
+    "Preview image": "Preview image",
+    "Ticket requested": "Ticket requested",
+    "Your reference number": "Your reference number",
+    "Keep your reference number. We review every request and email you the next step.": "Keep your reference number. We review every request and email you the next step.",
+    "Done": "Done",
+    "About Image": "About Image",
+    "Shown beside the About text on the event page. Up to :limit.": "Shown beside the About text on the event page. Up to :limit.",
+    "Remove the current image": "Remove the current image",
+    "Image beside the questions": "Image beside the questions"
 }

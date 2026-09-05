@@ -5,14 +5,18 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Admin;
 
 use App\Enums\LandingPageSection;
+use App\Http\Controllers\Concerns\HandlesMediaUploads;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\LandingPageContentRequest;
 use App\Models\Event;
+use App\Support\UploadLimit;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
 
 class LandingPageContentController extends Controller
 {
+    use HandlesMediaUploads;
+
     /** @var array<string, array{section: LandingPageSection, field_key: string}> */
     private const FIELDS = [
         'hero_headline' => ['section' => LandingPageSection::Hero, 'field_key' => 'headline'],
@@ -40,6 +44,8 @@ class LandingPageContentController extends Controller
         return view('admin.landing-page-content.edit', [
             'event' => $event,
             'values' => $values,
+            'aboutImage' => $event->contentFor(LandingPageSection::About, 'image')?->mediaUrl(),
+            'uploadLimit' => UploadLimit::label(UploadLimit::effectiveKilobytes((int) config('media.max_image_kb'))),
             'sections' => Event::TOGGLEABLE_SECTIONS,
             'visibleSections' => $visibleSections,
         ]);
@@ -56,6 +62,8 @@ class LandingPageContentController extends Controller
             );
         }
 
+        $this->saveAboutImage($request, $event);
+
         $checkedSections = $data['visible_sections'] ?? [];
         $visibleSections = [];
         foreach (Event::TOGGLEABLE_SECTIONS as $section) {
@@ -64,5 +72,36 @@ class LandingPageContentController extends Controller
         $event->update(['visible_sections' => $visibleSections]);
 
         return redirect()->route('admin.events.content.edit', $event);
+    }
+
+    /**
+     * Add, replace or remove the picture beside the About text.
+     *
+     * It lives in the same content table as the rest of the section, keyed 'image', with the
+     * stored path in both languages because a file is not translated.
+     */
+    private function saveAboutImage(LandingPageContentRequest $request, Event $event): void
+    {
+        $stored = $event->contentFor(LandingPageSection::About, 'image');
+
+        if ($request->boolean('remove_about_image')) {
+            $this->deleteStoredMedia($stored?->value_en);
+            $stored?->delete();
+
+            return;
+        }
+
+        $path = $this->storeUploadedMedia($request, 'about_image', 'landing/about');
+
+        if ($path === null) {
+            return;
+        }
+
+        $this->deleteStoredMedia($stored?->value_en);
+
+        $event->landingPageContent()->updateOrCreate(
+            ['section' => LandingPageSection::About, 'field_key' => 'image'],
+            ['value_ar' => $path, 'value_en' => $path],
+        );
     }
 }

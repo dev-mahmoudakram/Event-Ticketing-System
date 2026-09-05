@@ -777,3 +777,70 @@ footer .hub-panel-dark {
   background: var(--color-hub-purple);
   color: #fff;
 }
+/* The ticket request confirmation. SweetAlert2 injects its own stylesheet at runtime, so these
+   rules carry an extra class to outrank it, and dress the popup as part of the event page. */
+.swal2-popup.ticket-success {
+  background: var(--color-ccs-black);
+  color: #fff;
+  border: 1px solid rgb(255 255 255 / 0.1);
+  border-radius: 1.25rem;
+  padding: 2.25rem 2rem 2rem;
+}
+
+.swal2-popup.ticket-success .swal2-title {
+  color: #fff;
+  font-family: 'Manrope', sans-serif;
+  font-weight: 800;
+  font-size: 1.5rem;
+}
+
+.swal2-popup.ticket-success .swal2-icon.swal2-success {
+  border-color: color-mix(in srgb, var(--color-ccs-teal-light) 45%, transparent);
+}
+
+.swal2-popup.ticket-success .swal2-icon.swal2-success [class^='swal2-success-line'] {
+  background-color: var(--color-ccs-teal-light);
+}
+
+.swal2-popup.ticket-success .swal2-icon.swal2-success .swal2-success-ring {
+  border-color: color-mix(in srgb, var(--color-ccs-teal-light) 30%, transparent);
+}
+
+.ticket-success-label {
+  color: rgb(255 255 255 / 0.5);
+  font-size: 0.85rem;
+  margin-bottom: 0.35rem;
+}
+
+.ticket-success-reference {
+  font-weight: 800;
+  font-size: 1.5rem;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+  color: var(--color-ccs-teal-light);
+  margin-bottom: 1rem;
+}
+
+.ticket-success-note {
+  color: rgb(255 255 255 / 0.65);
+  font-size: 0.95rem;
+  line-height: 1.75;
+}
+
+.ticket-success-confirm {
+  margin-top: 0.5rem;
+  padding: 0.85rem 2.25rem;
+  border-radius: 9999px;
+  font-weight: 700;
+  color: #fff;
+  background: var(--color-ccs-teal);
+  transition: background-color 0.25s ease;
+}
+
+.ticket-success-confirm:hover {
+  background: color-mix(in srgb, var(--color-ccs-teal) 85%, #fff);
+}
+
+:lang(ar) .swal2-popup.ticket-success .swal2-title {
+  font-family: 'Cairo', sans-serif;
+}
