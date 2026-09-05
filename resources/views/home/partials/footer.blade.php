@@ -1,9 +1,17 @@
 {{-- resources/views/home/partials/footer.blade.php --}}
-@php $sectionBase = ($onHomePage ?? true) ? '' : route('home'); @endphp
+@php
+    use App\Support\SiteText;
+
+    $sectionBase = ($onHomePage ?? true) ? '' : route('home');
+    $email = SiteText::stored('contact_details', 'email');
+    $phone = SiteText::stored('contact_details', 'phone');
+    $address = SiteText::stored('contact_details', 'address');
+    $socialLinks = SiteText::socialLinks();
+@endphp
 
 <footer class="hub-shell pt-2">
     <div class="hub-panel-dark hub-pad">
-        <div class="grid grid-cols-1 md:grid-cols-[1.4fr_1fr_1fr] gap-12 mb-14">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr_1.2fr] gap-12 mb-14">
             <div>
                 <div class="flex items-center gap-2.5 mb-5">
                     <img src="{{ asset('images/creators-hub/mark-white.png') }}" alt="" aria-hidden="true" class="h-8 w-auto">
@@ -26,10 +34,28 @@
                 <a href="{{ $sectionBase }}#faq" class="text-sm text-white/75 hover:text-white transition-colors">{{ __('FAQs') }}</a>
                 <a href="{{ $sectionBase }}#contact" class="text-sm text-white/75 hover:text-white transition-colors">{{ __('Contact') }}</a>
             </div>
+
+            {{-- Details the platform keeps for itself; an event lists its own instead. Each line
+                 appears only once someone has filled it in. --}}
+            @if($email || $phone || $address)
+                <div class="flex flex-col gap-3">
+                    <span class="text-xs font-bold uppercase tracking-[0.18em] text-white/40 mb-1">{{ __('Reach us') }}</span>
+                    @if($email)
+                        <a href="mailto:{{ $email }}" class="text-sm text-white/75 hover:text-white transition-colors break-all">{{ $email }}</a>
+                    @endif
+                    @if($phone)
+                        <a href="tel:{{ preg_replace('/[^0-9+]/', '', $phone) }}" class="text-sm text-white/75 hover:text-white transition-colors" dir="ltr">{{ $phone }}</a>
+                    @endif
+                    @if($address)
+                        <p class="text-sm text-white/60 leading-relaxed">{{ $address }}</p>
+                    @endif
+                </div>
+            @endif
         </div>
 
-        <div class="flex flex-wrap justify-between items-center gap-4 pt-8 border-t border-white/15 text-xs text-white/50">
+        <div class="flex flex-wrap justify-between items-center gap-6 pt-8 border-t border-white/15 text-xs text-white/50">
             <span>&copy; {{ now()->year }} Creators Hub. {{ __('All rights reserved.') }}</span>
+            <x-social-links :links="$socialLinks" :label="__('Creators Hub on social media')" />
         </div>
     </div>
 </footer>

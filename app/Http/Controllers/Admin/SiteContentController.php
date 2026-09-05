@@ -49,12 +49,29 @@ class SiteContentController extends Controller
             'fields' => ['array'],
             'fields.*.ar' => ['nullable', 'string', 'max:2000'],
             'fields.*.en' => ['nullable', 'string', 'max:2000'],
-            'images.*' => ['nullable', 'image', 'max:'.UploadLimit::effectiveKilobytes((int) config('media.max_image_kb'))],
+            'single' => ['array'],
+            'single.*' => ['nullable', 'string', 'max:255'],
+            // SVG is allowed here so an illustration can be swapped for another drawing, not
+            // only a photograph. Only signed-in admins reach this form.
+            'images.*' => ['nullable', 'image:allow_svg', 'max:'.UploadLimit::effectiveKilobytes((int) config('media.max_image_kb'))],
         ]);
 
         foreach ($definition['fields'] as $fieldKey => $field) {
             if (($field['type'] ?? 'text') === 'image') {
                 $this->saveImage($request, $section, $fieldKey);
+
+                continue;
+            }
+
+            // A link, an email address or a phone number is the same in both languages, so it is
+            // entered once and stored in both columns.
+            if (($field['type'] ?? 'text') === 'single') {
+                $value = trim((string) $request->input("single.{$fieldKey}")) ?: null;
+
+                SiteContent::updateOrCreate(
+                    ['section' => $section, 'field_key' => $fieldKey],
+                    ['value_ar' => $value, 'value_en' => $value],
+                );
 
                 continue;
             }

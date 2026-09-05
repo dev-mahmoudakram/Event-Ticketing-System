@@ -11,7 +11,7 @@
     <x-social-meta
         :title="$eventName"
         :description="$eventTagline"
-        :image="$event->coverImageUrl()"
+        :image="$event->shareImageUrl()"
     />
 @endsection
 

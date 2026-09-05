@@ -24,7 +24,16 @@
                     :name="'images['.$fieldKey.']'"
                     :label="$field['label']"
                     :current="$record?->urlFor($record->value_en)"
-                    :hint="__('Optional. Leave empty to keep the current look. Up to :limit.', ['limit' => $uploadLimit])"
+                    accept="image/*,.svg"
+                    :hint="__('Optional. Leave empty to keep the current look. A PNG, JPG or SVG up to :limit.', ['limit' => $uploadLimit])"
+                />
+            @elseif(($field['type'] ?? 'text') === 'single')
+                <x-admin.field
+                    :type="$field['input'] ?? 'text'"
+                    :name="'single['.$fieldKey.']'"
+                    :label="$field['label']"
+                    :value="old('single.'.$fieldKey, $record?->value_en)"
+                    :placeholder="$field['placeholder'] ?? null"
                 />
             @else
                 <x-admin.bilingual-field

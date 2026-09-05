@@ -18,6 +18,7 @@ class EventRequest extends FormRequest
     public function rules(): array
     {
         $eventId = $this->route('event')?->id;
+        $imageLimit = UploadLimit::effectiveKilobytes((int) config('media.max_image_kb'));
 
         return [
             'slug' => ['required', 'string', 'max:255', Rule::unique('events', 'slug')->ignore($eventId)],
@@ -25,7 +26,14 @@ class EventRequest extends FormRequest
             'name_en' => ['required', 'string', 'max:255'],
             'tagline_ar' => ['nullable', 'string', 'max:255'],
             'tagline_en' => ['nullable', 'string', 'max:255'],
-            'cover_image' => ['nullable', 'image', 'max:'.UploadLimit::effectiveKilobytes((int) config('media.max_image_kb'))],
+            'cover_image' => ['nullable', 'image', 'max:'.$imageLimit],
+            'favicon' => ['nullable', 'image:allow_svg', 'max:'.$imageLimit],
+            'apple_touch_icon' => ['nullable', 'image', 'max:'.$imageLimit],
+            'share_image' => ['nullable', 'image', 'max:'.$imageLimit],
+            'contact_email' => ['nullable', 'email', 'max:255'],
+            'contact_phone' => ['nullable', 'string', 'max:50'],
+            'social_links' => ['nullable', 'array'],
+            'social_links.*' => ['nullable', 'url', 'max:2048'],
             'start_date' => ['required', 'date'],
             'end_date' => ['required', 'date', 'after_or_equal:start_date'],
             'venue_name_ar' => ['nullable', 'string', 'max:255'],
@@ -39,6 +47,11 @@ class EventRequest extends FormRequest
 
     public function attributes(): array
     {
-        return ['cover_image' => __('Cover Image')];
+        return [
+            'cover_image' => __('Cover Image'),
+            'favicon' => __('Favicon'),
+            'apple_touch_icon' => __('Apple Touch Icon'),
+            'share_image' => __('Link Preview Image'),
+        ];
     }
 }

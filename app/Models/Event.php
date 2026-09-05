@@ -7,6 +7,7 @@ namespace App\Models;
 use App\Enums\EventStatus;
 use App\Enums\LandingPageSection;
 use App\Models\Concerns\ResolvesStoredMedia;
+use App\Support\SocialPlatforms;
 use Database\Factories\EventFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -25,6 +26,8 @@ class Event extends Model
 
     protected $fillable = [
         'slug', 'name_ar', 'name_en', 'tagline_ar', 'tagline_en', 'cover_image_path',
+        'favicon_path', 'apple_touch_icon_path', 'share_image_path',
+        'contact_email', 'contact_phone', 'social_links',
         'start_date', 'end_date',
         'venue_name_ar', 'venue_name_en', 'venue_address_ar', 'venue_address_en',
         'map_embed_url', 'status', 'visible_sections',
@@ -35,6 +38,7 @@ class Event extends Model
         'end_date' => 'date',
         'status' => EventStatus::class,
         'visible_sections' => 'array',
+        'social_links' => 'array',
     ];
 
     /**
@@ -44,6 +48,38 @@ class Event extends Model
     public function coverImageUrl(): ?string
     {
         return $this->storedMediaUrl($this->cover_image_path);
+    }
+
+    /**
+     * The tab icon for this event's pages, when it has one of its own.
+     */
+    public function faviconUrl(): ?string
+    {
+        return $this->storedMediaUrl($this->favicon_path);
+    }
+
+    public function appleTouchIconUrl(): ?string
+    {
+        return $this->storedMediaUrl($this->apple_touch_icon_path);
+    }
+
+    /**
+     * The picture a shared link shows. An event that has not been given one falls back to its
+     * cover image, which is already chosen to represent it.
+     */
+    public function shareImageUrl(): ?string
+    {
+        return $this->storedMediaUrl($this->share_image_path) ?? $this->coverImageUrl();
+    }
+
+    /**
+     * The event's own social accounts, in the platform's canonical order, without the blanks.
+     *
+     * @return array<string, string>
+     */
+    public function socialLinks(): array
+    {
+        return SocialPlatforms::filled($this->social_links ?? []);
     }
 
     public function getRouteKeyName(): string

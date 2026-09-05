@@ -8,6 +8,7 @@ use App\Http\Controllers\Concerns\HandlesMediaUploads;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\EventRequest;
 use App\Models\Event;
+use App\Support\SocialPlatforms;
 use App\Support\UploadLimit;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
@@ -15,6 +16,14 @@ use Illuminate\View\View;
 class EventController extends Controller
 {
     use HandlesMediaUploads;
+
+    /** @var array<string, string> The file inputs on the event form, and the column each one fills. */
+    private const UPLOADS = [
+        'cover_image' => 'cover_image_path',
+        'favicon' => 'favicon_path',
+        'apple_touch_icon' => 'apple_touch_icon_path',
+        'share_image' => 'share_image_path',
+    ];
 
     public function index(): View
     {
@@ -28,7 +37,7 @@ class EventController extends Controller
 
     public function store(EventRequest $request): RedirectResponse
     {
-        $data = $this->withUploadedMedia($request->safe()->except('cover_image'), $request, 'cover_image', 'cover_image_path', 'events');
+        $data = $this->withBranding($request->safe()->except(self::UPLOADS), $request);
 
         Event::create($data);
 
@@ -42,7 +51,7 @@ class EventController extends Controller
 
     public function update(EventRequest $request, Event $event): RedirectResponse
     {
-        $data = $this->withUploadedMedia($request->safe()->except('cover_image'), $request, 'cover_image', 'cover_image_path', 'events', $event->cover_image_path);
+        $data = $this->withBranding($request->safe()->except(self::UPLOADS), $request, $event);
 
         $event->update($data);
 
@@ -51,10 +60,39 @@ class EventController extends Controller
 
     public function destroy(Event $event): RedirectResponse
     {
-        $this->deleteStoredMedia($event->cover_image_path);
+        foreach (self::UPLOADS as $input => $column) {
+            $this->deleteStoredMedia($event->{$column});
+        }
+
         $event->delete();
 
         return redirect()->route('admin.events.index');
+    }
+
+    /**
+     * Fold the uploaded files and the social links into the data being saved.
+     *
+     * @param  array<string, mixed>  $data
+     * @return array<string, mixed>
+     */
+    private function withBranding(array $data, EventRequest $request, ?Event $event = null): array
+    {
+        foreach (self::UPLOADS as $input => $column) {
+            $data = $this->withUploadedMedia($data, $request, $input, $column, 'events', $event?->{$column});
+        }
+
+        $links = [];
+        foreach (SocialPlatforms::keys() as $platform) {
+            $url = trim((string) $request->input("social_links.{$platform}"));
+
+            if ($url !== '') {
+                $links[$platform] = $url;
+            }
+        }
+
+        $data['social_links'] = $links;
+
+        return $data;
     }
 
     private function uploadLimitLabel(): string

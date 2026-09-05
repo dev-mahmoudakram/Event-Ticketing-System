@@ -30,8 +30,12 @@
                 <a href="{{ request()->fullUrlWithQuery(['lang' => 'en']) }}" class="px-3 py-1.5 transition-colors {{ app()->getLocale() === 'en' ? 'bg-hub-purple text-white' : 'text-hub-dark/60 hover:text-hub-purple' }}">EN</a>
                 <a href="{{ request()->fullUrlWithQuery(['lang' => 'ar']) }}" class="px-3 py-1.5 transition-colors {{ app()->getLocale() === 'ar' ? 'bg-hub-purple text-white' : 'text-hub-dark/60 hover:text-hub-purple' }}">AR</a>
             </div>
-            <a href="{{ $sectionBase }}#contact" class="hidden lg:inline-flex hub-pill hub-pill-outline text-sm !py-2.5 !px-5">{{ __('Contact') }}</a>
-            <a href="{{ route('events.index') }}" class="hidden lg:inline-flex hub-pill hub-pill-solid text-sm !py-2.5 !px-5">{{ __('Explore Events') }}</a>
+            {{-- Wrapped, because .hub-pill sets its own display and would outrank `hidden` on the
+                 links themselves, leaving both buttons in the bar on mobile as well as the menu. --}}
+            <div class="hidden lg:flex items-center gap-3">
+                <a href="{{ $sectionBase }}#contact" class="hub-pill hub-pill-outline text-sm !py-2.5 !px-5">{{ __('Contact') }}</a>
+                <a href="{{ route('events.index') }}" class="hub-pill hub-pill-solid text-sm !py-2.5 !px-5">{{ __('Explore Events') }}</a>
+            </div>
             <button type="button" aria-label="{{ __('Menu') }}" class="lg:hidden w-11 h-11 rounded-full border border-hub-purple/20 text-hub-purple transition-colors hover:bg-hub-purple/5" @click="open = !open">&#9776;</button>
         </div>
     </div>

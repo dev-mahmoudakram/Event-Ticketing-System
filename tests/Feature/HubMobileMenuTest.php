@@ -30,9 +30,10 @@ class HubMobileMenuTest extends TestCase
 
         $this->assertStringContainsString('Contact', $menu);
         $this->assertStringContainsString('Explore Events', $menu);
-        // In the bar they only appear once there is no menu button to hold them.
-        $this->assertStringContainsString('hidden lg:inline-flex hub-pill hub-pill-outline', $html);
-        $this->assertStringContainsString('hidden lg:inline-flex hub-pill hub-pill-solid', $html);
+        // In the bar they only appear once there is no menu button to hold them. The wrapper
+        // carries the hiding, since .hub-pill sets its own display and would outrank `hidden`.
+        $bar = substr($html, 0, strpos($html, 'x-show="open"'));
+        $this->assertStringContainsString('<div class="hidden lg:flex items-center gap-3">', $bar);
     }
 
     public function test_the_bar_squares_off_while_the_menu_is_open(): void

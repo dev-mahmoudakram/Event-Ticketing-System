@@ -190,6 +190,17 @@ class SiteContentRegistry
                 ],
             ],
 
+            'contact_details' => [
+                'label' => __('Contact and social links'),
+                'description' => __('Shown in the footer. Anything left empty is simply not shown, and an event keeps its own details under that event.'),
+                'fields' => [
+                    'email' => ['label' => __('Email address'), 'type' => 'single', 'input' => 'email'],
+                    'phone' => ['label' => __('Phone number'), 'type' => 'single', 'input' => 'tel'],
+                    'address' => ['label' => __('Address'), 'type' => 'text'],
+                    ...self::socialFields(),
+                ],
+            ],
+
             'sharing' => [
                 'label' => __('Search results and link previews'),
                 'description' => __('What people see when the site appears in search results or is shared on social media. A preview image works best at 1200 by 630 pixels.'),
@@ -200,6 +211,27 @@ class SiteContentRegistry
                 ],
             ],
         ];
+    }
+
+    /**
+     * One URL field per network, so the list only has to be maintained in one place.
+     *
+     * @return array<string, array{label: string, type: string, input: string, placeholder: string}>
+     */
+    private static function socialFields(): array
+    {
+        $fields = [];
+
+        foreach (SocialPlatforms::all() as $platform => $meta) {
+            $fields[$platform] = [
+                'label' => $meta['label'],
+                'type' => 'single',
+                'input' => 'url',
+                'placeholder' => $meta['placeholder'],
+            ];
+        }
+
+        return $fields;
     }
 
     /**

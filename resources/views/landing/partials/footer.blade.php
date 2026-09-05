@@ -36,11 +36,25 @@
             <a href="{{ $sectionBase }}#tickets" class="text-sm text-gray-300 hover:text-white transition-colors">{{ __('Tickets') }}</a>
             <a href="{{ $sectionBase }}#faq" class="text-sm text-gray-300 hover:text-white transition-colors">{{ __('FAQs') }}</a>
         </div>
+        {{-- This event's own details, kept apart from the platform's. Each line shows only once
+             it has been filled in under the event. --}}
         <div class="flex flex-col gap-3">
             <span class="text-xs font-bold uppercase tracking-wide text-gray-400 mb-1">{{ __('Connect') }}</span>
-            <a href="#" class="text-sm text-gray-300 hover:text-white transition-colors">Instagram</a>
-            <a href="#" class="text-sm text-gray-300 hover:text-white transition-colors">LinkedIn</a>
-            <a href="#" class="text-sm text-gray-300 hover:text-white transition-colors">YouTube</a>
+            @if($event->contact_email)
+                <a href="mailto:{{ $event->contact_email }}" class="text-sm text-gray-300 hover:text-white transition-colors break-all">{{ $event->contact_email }}</a>
+            @endif
+            @if($event->contact_phone)
+                <a href="tel:{{ preg_replace('/[^0-9+]/', '', $event->contact_phone) }}" class="text-sm text-gray-300 hover:text-white transition-colors" dir="ltr">{{ $event->contact_phone }}</a>
+            @endif
+            @if($event->venue_name_en || $event->venue_name_ar)
+                <p class="text-sm text-gray-400 leading-relaxed">{{ app()->getLocale() === 'ar' ? $event->venue_name_ar : $event->venue_name_en }}</p>
+            @endif
+            <x-social-links
+                :links="$event->socialLinks()"
+                :label="__('This event on social media')"
+                link-class="border-white/20 text-gray-300 hover:text-white hover:border-white/60"
+                class="mt-2"
+            />
         </div>
     </div>
     <div class="flex flex-wrap justify-between items-center gap-4 pt-8 border-t border-white/10 text-xs text-gray-400">

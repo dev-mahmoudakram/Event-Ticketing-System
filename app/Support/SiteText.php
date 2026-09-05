@@ -81,6 +81,22 @@ class SiteText
     /**
      * @return Collection<string, SiteContent>
      */
+    /**
+     * The platform's own social accounts, in the canonical order, without the blanks.
+     *
+     * @return array<string, string>
+     */
+    public static function socialLinks(): array
+    {
+        $links = [];
+
+        foreach (SocialPlatforms::keys() as $platform) {
+            $links[$platform] = self::stored('contact_details', $platform);
+        }
+
+        return SocialPlatforms::filled($links);
+    }
+
     public static function all(): Collection
     {
         return self::$cache ??= SiteContent::all()

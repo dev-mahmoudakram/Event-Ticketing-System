@@ -34,6 +34,51 @@
             <option value="published" @selected(old('status', $event->status?->value) === 'published')>{{ __('Published') }}</option>
         </x-admin.field>
 
+        <h2 class="font-display text-lg font-bold mt-8 mb-1">{{ __('Branding') }}</h2>
+        <p class="text-sm text-gray-400 mb-4 max-w-2xl">{{ __('This event carries its own icon and link preview, separate from the platform. Leave a field empty to use the Creators Hub one.') }}</p>
+
+        <x-admin.media-upload
+            name="favicon"
+            :label="__('Favicon')"
+            accept="image/png,image/svg+xml,image/x-icon"
+            :current="$event->faviconUrl()"
+            :hint="__('The small icon in the browser tab. A square PNG or SVG.')"
+        />
+
+        <x-admin.media-upload
+            name="apple_touch_icon"
+            :label="__('Apple Touch Icon')"
+            :current="$event->appleTouchIconUrl()"
+            :hint="__('The icon iPhones and iPads use when the page is added to the home screen. A 180 by 180 pixel PNG.')"
+        />
+
+        <x-admin.media-upload
+            name="share_image"
+            :label="__('Link Preview Image')"
+            :current="$event->shareImageUrl()"
+            :hint="__('Shown when a link to this event is shared. Works best at 1200 by 630 pixels. Falls back to the cover image.')"
+        />
+
+        <h2 class="font-display text-lg font-bold mt-8 mb-1">{{ __('Contact and social links') }}</h2>
+        <p class="text-sm text-gray-400 mb-4 max-w-2xl">{{ __("Shown in this event's footer. Anything left empty is simply not shown.") }}</p>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <x-admin.field type="email" name="contact_email" :label="__('Email address')" :value="old('contact_email', $event->contact_email)" />
+            <x-admin.field type="tel" name="contact_phone" :label="__('Phone number')" :value="old('contact_phone', $event->contact_phone)" />
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            @foreach(\App\Support\SocialPlatforms::all() as $platform => $meta)
+                <x-admin.field
+                    type="url"
+                    :name="'social_links['.$platform.']'"
+                    :label="$meta['label']"
+                    :value="old('social_links.'.$platform, $event->social_links[$platform] ?? null)"
+                    :placeholder="$meta['placeholder']"
+                />
+            @endforeach
+        </div>
+
         <x-admin.button type="submit">{{ __('Save') }}</x-admin.button>
     </form>
 @endsection
