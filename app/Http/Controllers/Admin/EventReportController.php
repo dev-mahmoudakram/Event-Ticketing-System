@@ -47,10 +47,27 @@ class EventReportController extends Controller
             }
 
             foreach ($rows as $row) {
-                fputcsv($handle, $row);
+                fputcsv($handle, array_map($this->defuseFormula(...), $row));
             }
 
             fclose($handle);
         }, $filename, ['Content-Type' => 'text/csv; charset=UTF-8']);
+    }
+
+    /**
+     * Stop a spreadsheet treating a cell as a formula.
+     *
+     * Names, emails and phone numbers are typed by the public on the request form, and a value
+     * starting with =, +, - or @ is executed by Excel and Sheets when the file is opened — a
+     * way to attack whoever downloads the list rather than the site. A leading apostrophe makes
+     * the cell literal text; it is not shown by the spreadsheet.
+     */
+    private function defuseFormula(string|int|null $value): string
+    {
+        $value = (string) $value;
+
+        return $value !== '' && in_array($value[0], ['=', '+', '-', '@', '	', ''], true)
+            ? "'".$value
+            : $value;
     }
 }

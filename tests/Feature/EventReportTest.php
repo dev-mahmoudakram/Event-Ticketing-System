@@ -165,6 +165,35 @@ class EventReportTest extends TestCase
         $this->assertStringContainsString('كريم السيد', $csv);
     }
 
+    public function test_a_name_that_looks_like_a_formula_is_not_executed_by_a_spreadsheet(): void
+    {
+        // Names come from a public form; Excel runs a cell starting with =, +, - or @.
+        $this->ticket(['name' => '=HYPERLINK("http://evil.test","click")', 'is_paid' => true]);
+        $this->ticket(['name' => '+1 555 0000']);
+        $this->ticket(['name' => '@someone']);
+
+        $csv = $this->actingAs(User::factory()->create())
+            ->get(route('admin.events.reports.export', $this->event))
+            ->streamedContent();
+
+        $this->assertStringNotContainsString(',=HYPERLINK', $csv);
+        $this->assertStringContainsString("'=HYPERLINK", $csv);
+        $this->assertStringContainsString("'+1 555 0000", $csv);
+        $this->assertStringContainsString("'@someone", $csv);
+    }
+
+    public function test_an_ordinary_name_is_left_alone(): void
+    {
+        $this->ticket(['name' => 'Kareem Al-Sayed', 'is_paid' => true]);
+
+        $csv = $this->actingAs(User::factory()->create())
+            ->get(route('admin.events.reports.export', $this->event))
+            ->streamedContent();
+
+        $this->assertStringContainsString('Kareem Al-Sayed', $csv);
+        $this->assertStringNotContainsString("'Kareem", $csv);
+    }
+
     public function test_guests_cannot_read_the_report(): void
     {
         $this->get(route('admin.events.reports.show', $this->event))->assertRedirect(route('admin.login'));
