@@ -1,7 +1,21 @@
 {{-- resources/views/events/index.blade.php --}}
 @extends('layouts.app')
 
-@section('title', 'Creators Hub — '.__('Events'))
+@php
+    use App\Support\SiteText;
+
+    $shareTitle = 'Creators Hub — '.__('Events');
+@endphp
+
+@section('title', $shareTitle)
+
+@section('meta')
+    <x-social-meta
+        :title="$shareTitle"
+        :description="SiteText::get('sharing', 'description')"
+        :image="SiteText::image('sharing', 'image') ?? asset('images/creators-hub/Logo.png')"
+    />
+@endsection
 
 @section('bodyClass', 'hub-page hub-page-light')
 
@@ -38,7 +52,7 @@
                                 {{-- Keeps the date readable whatever the photograph is. --}}
                                 <span class="absolute inset-0 bg-hub-dark/40" aria-hidden="true"></span>
                             @endif
-                            <span class="relative text-xs font-bold uppercase tracking-[0.18em] text-white/70">{{ $event->start_date->format('M j') }}&ndash;{{ $event->end_date->format('j, Y') }}</span>
+                            <span class="relative text-xs font-bold uppercase tracking-[0.18em] text-white/70">{{ $event->start_date->translatedFormat('j M') }} &ndash; {{ $event->end_date->translatedFormat('j M Y') }}</span>
                         </div>
                         <div class="p-6">
                             <h2 class="font-display text-xl font-bold mb-2 transition-colors group-hover:text-hub-purple">

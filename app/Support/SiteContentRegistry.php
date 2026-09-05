@@ -188,6 +188,16 @@ class SiteContentRegistry
                     'blurb' => ['label' => __('Description under the logo'), 'type' => 'textarea', 'default' => 'Connecting the interior design and construction industry through events, community, and collaboration.'],
                 ],
             ],
+
+            'sharing' => [
+                'label' => __('Search results and link previews'),
+                'description' => __('What people see when the site appears in search results or is shared on social media. A preview image works best at 1200 by 630 pixels.'),
+                'fields' => [
+                    'title' => ['label' => __('Page title'), 'type' => 'text', 'default' => 'Interior Design & Construction Events'],
+                    'description' => ['label' => __('Description'), 'type' => 'textarea', 'default' => 'Creators Hub connects the interior design and construction industry through events, community, and collaboration.'],
+                    'image' => ['label' => __('Preview image'), 'type' => 'image'],
+                ],
+            ],
         ];
     }
 

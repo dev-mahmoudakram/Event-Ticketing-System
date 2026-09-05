@@ -1,6 +1,19 @@
 @extends('layouts.app')
 
-@section('title', app()->getLocale() === 'ar' ? $event->name_ar : $event->name_en)
+@php
+    $eventName = app()->getLocale() === 'ar' ? $event->name_ar : $event->name_en;
+    $eventTagline = app()->getLocale() === 'ar' ? $event->tagline_ar : $event->tagline_en;
+@endphp
+
+@section('title', $eventName)
+
+@section('meta')
+    <x-social-meta
+        :title="$eventName"
+        :description="$eventTagline"
+        :image="$event->coverImageUrl()"
+    />
+@endsection
 
 @section('content')
     @include('landing.partials.nav', ['event' => $event, 'onLandingPage' => true])

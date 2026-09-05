@@ -76,7 +76,7 @@
             <div class="flex flex-col gap-8">
                 @foreach($audience['cards'] as $index => $card)
                     <div class="lg:sticky" style="top: calc(10rem + {{ $index * 1.75 }}rem)">
-                        <div class="rounded-[2rem] border border-hub-purple/15 bg-hub-lavender overflow-hidden">
+                        <div class="hub-stack-card rounded-[2rem] overflow-hidden">
                             <div class="grid grid-cols-1 lg:grid-cols-2 items-center gap-8 lg:gap-12 p-8 md:p-12">
                                 <div>
                                     <h3 class="font-display text-[clamp(1.6rem,3vw,2.6rem)] font-extrabold leading-tight tracking-tight text-hub-purple mb-5">

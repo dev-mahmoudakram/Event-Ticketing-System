@@ -31,7 +31,7 @@
                         {{ app()->getLocale() === 'ar' ? $featuredEvent->name_ar : $featuredEvent->name_en }}
                     </h3>
                     <p class="text-hub-dark/60 mb-8">
-                        {{ $featuredEvent->start_date->format('j M') }} &ndash; {{ $featuredEvent->end_date->format('j M Y') }}
+                        {{ $featuredEvent->start_date->translatedFormat('j M') }} &ndash; {{ $featuredEvent->end_date->translatedFormat('j M Y') }}
                         @if($featuredEvent->venue_name_en)
                             &middot; {{ app()->getLocale() === 'ar' ? $featuredEvent->venue_name_ar : $featuredEvent->venue_name_en }}
                         @endif
@@ -81,7 +81,7 @@
                                 </div>
                             @endif
                             <div class="p-7">
-                                <p class="text-sm text-hub-dark/50 mb-2">{{ $event->start_date->format('j M Y') }}</p>
+                                <p class="text-sm text-hub-dark/50 mb-2">{{ $event->start_date->translatedFormat('j M Y') }}</p>
                                 <h3 class="font-display text-xl font-bold text-hub-purple">
                                     {{ app()->getLocale() === 'ar' ? $event->name_ar : $event->name_en }}
                                 </h3>

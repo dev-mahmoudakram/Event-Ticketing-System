@@ -701,6 +701,16 @@ h1, h2, h3, h4, h5, .font-display {
   color: #fff;
 }
 
+/* Cards in the audience deck. Each one comes to rest on the pile above it, so it needs a
+   coloured edge and a lift to read as a separate sheet rather than one long panel. */
+.hub-stack-card {
+  background: #fff;
+  border: 2px solid color-mix(in srgb, var(--color-hub-purple-light) 85%, transparent);
+  box-shadow:
+    0 6px 16px -8px color-mix(in srgb, var(--color-hub-purple) 35%, transparent),
+    0 30px 60px -26px color-mix(in srgb, var(--color-hub-purple) 70%, transparent);
+}
+
 /* A deck of panels, with the ones behind peeking out above. Purely decorative,
    so the stacked layers are hidden from assistive tech. */
 .hub-deck {

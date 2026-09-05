@@ -1,15 +1,20 @@
 @extends('layouts.app')
 
-@section('title', 'Creators Hub — '.__('Interior Design & Construction Events'))
+@php
+    use App\Support\SiteText;
+
+    $shareTitle = 'Creators Hub — '.SiteText::get('sharing', 'title');
+    $shareImage = SiteText::image('sharing', 'image') ?? asset('images/creators-hub/Logo.png');
+@endphp
+
+@section('title', $shareTitle)
 
 @section('meta')
-    <meta name="description" content="{{ __('Creators Hub connects the interior design and construction industry through events, community, and collaboration.') }}">
-    <meta property="og:title" content="Creators Hub — {{ __('Interior Design & Construction Events') }}">
-    <meta property="og:description" content="{{ __('Creators Hub connects the interior design and construction industry through events, community, and collaboration.') }}">
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="{{ url('/') }}">
-    <meta name="twitter:card" content="summary_large_image">
-    <link rel="canonical" href="{{ url('/') }}">
+    <x-social-meta
+        :title="$shareTitle"
+        :description="SiteText::get('sharing', 'description')"
+        :image="$shareImage"
+    />
 @endsection
 
 @section('bodyClass', 'hub-page hub-page-light')
