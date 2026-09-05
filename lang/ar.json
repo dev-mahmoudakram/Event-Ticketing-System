@@ -400,5 +400,12 @@
     "Reach us": "للتواصل",
     "Creators Hub on social media": "Creators Hub على وسائل التواصل",
     "This event on social media": "الفعالية على وسائل التواصل",
-    "Optional. Leave empty to keep the current look. A PNG, JPG or SVG up to :limit.": "اختياري. اتركه فارغًا للإبقاء على الشكل الحالي. ملف PNG أو JPG أو SVG حتى :limit."
+    "Optional. Leave empty to keep the current look. A PNG, JPG or SVG up to :limit.": "اختياري. اتركه فارغًا للإبقاء على الشكل الحالي. ملف PNG أو JPG أو SVG حتى :limit.",
+    "The Creators Hub mark in the navigation bar and the footer. Leave a slot empty to keep the logo the site ships with.": "شعار Creators Hub في شريط التنقل والتذييل. اترك الحقل فارغًا للإبقاء على الشعار الأساسي للموقع.",
+    "Navigation bar logo": "شعار شريط التنقل",
+    "Footer logo": "شعار التذييل",
+    "Footer Logo": "شعار التذييل",
+    "Shown in the navigation bar in place of the event name. A PNG or SVG with a transparent background.": "يظهر في شريط التنقل بدلًا من اسم الفعالية. ملف PNG أو SVG بخلفية شفافة.",
+    "The footer sits on a dark panel, so a light version reads best. Falls back to the logo above.": "التذييل على خلفية داكنة، لذا النسخة الفاتحة هي الأوضح. وإن تُرك فارغًا يُستخدم الشعار أعلاه.",
+    "This SVG contains scripting, so it was not uploaded. Export it again without scripts, or upload a PNG.": "يحتوي ملف SVG على أكواد برمجية، لذا لم يتم رفعه. صدّره مرة أخرى بدون أكواد، أو ارفع ملف PNG."
 }

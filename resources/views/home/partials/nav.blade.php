@@ -1,5 +1,9 @@
 {{-- resources/views/home/partials/nav.blade.php --}}
-@php $sectionBase = ($onHomePage ?? true) ? '' : route('home'); @endphp
+@php
+    $sectionBase = ($onHomePage ?? true) ? '' : route('home');
+    // The shipped mark stands in until someone uploads one.
+    $navLogo = \App\Support\SiteText::image('branding', 'nav_logo');
+@endphp
 
 {{-- A floating white bar that sits over the hero rather than spanning the viewport,
      matching the reference's detached nav card. --}}
@@ -12,9 +16,13 @@
         class="mx-auto flex items-center justify-between gap-6 bg-white px-5 md:px-8 py-4 transition-shadow duration-300"
         :class="{ 'shadow-lg shadow-hub-purple/10': scrolled && ! open, 'rounded-b-3xl': ! open }"
     >
-        <a href="{{ $sectionBase }}#hero" class="flex items-center gap-2.5 shrink-0">
-            <img src="{{ asset('images/creators-hub/mark.png') }}" alt="" aria-hidden="true" class="h-8 w-auto">
-            <span class="font-display font-extrabold text-lg tracking-tight text-hub-purple">Creators Hub</span>
+        <a href="{{ $sectionBase }}#hero" class="flex items-center gap-2.5 shrink-0" aria-label="Creators Hub">
+            @if($navLogo)
+                <img src="{{ $navLogo }}" alt="Creators Hub" class="h-9 w-auto max-w-[200px] object-contain">
+            @else
+                <img src="{{ asset('images/creators-hub/mark.png') }}" alt="" aria-hidden="true" class="h-8 w-auto">
+                <span class="font-display font-extrabold text-lg tracking-tight text-hub-purple">Creators Hub</span>
+            @endif
         </a>
 
         <nav class="hidden lg:flex items-center gap-7 text-sm font-semibold text-hub-dark/70">

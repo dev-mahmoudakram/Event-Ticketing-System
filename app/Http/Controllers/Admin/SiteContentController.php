@@ -7,6 +7,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Concerns\HandlesMediaUploads;
 use App\Http\Controllers\Controller;
 use App\Models\SiteContent;
+use App\Rules\SafeSvg;
 use App\Support\SiteContentRegistry;
 use App\Support\SiteText;
 use App\Support\UploadLimit;
@@ -53,7 +54,7 @@ class SiteContentController extends Controller
             'single.*' => ['nullable', 'string', 'max:255'],
             // SVG is allowed here so an illustration can be swapped for another drawing, not
             // only a photograph. Only signed-in admins reach this form.
-            'images.*' => ['nullable', 'image:allow_svg', 'max:'.UploadLimit::effectiveKilobytes((int) config('media.max_image_kb'))],
+            'images.*' => ['nullable', 'image:allow_svg', new SafeSvg, 'max:'.UploadLimit::effectiveKilobytes((int) config('media.max_image_kb'))],
         ]);
 
         foreach ($definition['fields'] as $fieldKey => $field) {

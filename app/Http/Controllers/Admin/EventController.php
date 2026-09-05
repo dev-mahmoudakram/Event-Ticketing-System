@@ -20,6 +20,8 @@ class EventController extends Controller
     /** @var array<string, string> The file inputs on the event form, and the column each one fills. */
     private const UPLOADS = [
         'cover_image' => 'cover_image_path',
+        'logo' => 'logo_path',
+        'footer_logo' => 'footer_logo_path',
         'favicon' => 'favicon_path',
         'apple_touch_icon' => 'apple_touch_icon_path',
         'share_image' => 'share_image_path',

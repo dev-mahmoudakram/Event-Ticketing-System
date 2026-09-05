@@ -409,5 +409,12 @@
     "Reach us": "Reach us",
     "Creators Hub on social media": "Creators Hub on social media",
     "This event on social media": "This event on social media",
-    "Optional. Leave empty to keep the current look. A PNG, JPG or SVG up to :limit.": "Optional. Leave empty to keep the current look. A PNG, JPG or SVG up to :limit."
+    "Optional. Leave empty to keep the current look. A PNG, JPG or SVG up to :limit.": "Optional. Leave empty to keep the current look. A PNG, JPG or SVG up to :limit.",
+    "The Creators Hub mark in the navigation bar and the footer. Leave a slot empty to keep the logo the site ships with.": "The Creators Hub mark in the navigation bar and the footer. Leave a slot empty to keep the logo the site ships with.",
+    "Navigation bar logo": "Navigation bar logo",
+    "Footer logo": "Footer logo",
+    "Footer Logo": "Footer Logo",
+    "Shown in the navigation bar in place of the event name. A PNG or SVG with a transparent background.": "Shown in the navigation bar in place of the event name. A PNG or SVG with a transparent background.",
+    "The footer sits on a dark panel, so a light version reads best. Falls back to the logo above.": "The footer sits on a dark panel, so a light version reads best. Falls back to the logo above.",
+    "This SVG contains scripting, so it was not uploaded. Export it again without scripts, or upload a PNG.": "This SVG contains scripting, so it was not uploaded. Export it again without scripts, or upload a PNG."
 }

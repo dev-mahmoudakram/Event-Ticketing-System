@@ -26,7 +26,7 @@ class Event extends Model
 
     protected $fillable = [
         'slug', 'name_ar', 'name_en', 'tagline_ar', 'tagline_en', 'cover_image_path',
-        'favicon_path', 'apple_touch_icon_path', 'share_image_path',
+        'logo_path', 'footer_logo_path', 'favicon_path', 'apple_touch_icon_path', 'share_image_path',
         'contact_email', 'contact_phone', 'social_links',
         'start_date', 'end_date',
         'venue_name_ar', 'venue_name_en', 'venue_address_ar', 'venue_address_en',
@@ -48,6 +48,23 @@ class Event extends Model
     public function coverImageUrl(): ?string
     {
         return $this->storedMediaUrl($this->cover_image_path);
+    }
+
+    /**
+     * The event's logo in the navigation bar, when it has been given one.
+     */
+    public function logoUrl(): ?string
+    {
+        return $this->storedMediaUrl($this->logo_path);
+    }
+
+    /**
+     * The footer sits on a dark panel and usually needs a lighter version of the mark, so it
+     * has its own slot and only falls back to the navigation logo when empty.
+     */
+    public function footerLogoUrl(): ?string
+    {
+        return $this->storedMediaUrl($this->footer_logo_path) ?? $this->logoUrl();
     }
 
     /**

@@ -19,7 +19,11 @@
 
     <div class="grid grid-cols-2 md:grid-cols-4 gap-10 mb-16">
         <div>
-            <div class="font-display font-extrabold text-xl mb-4">CCS <span class="text-ccs-coral">{{ $event->start_date->format('Y') }}</span></div>
+            @if($event->footerLogoUrl())
+                <img src="{{ $event->footerLogoUrl() }}" alt="{{ app()->getLocale() === 'ar' ? $event->name_ar : $event->name_en }}" class="h-10 w-auto max-w-[200px] object-contain mb-4">
+            @else
+                <div class="font-display font-extrabold text-xl mb-4">CCS <span class="text-ccs-coral">{{ $event->start_date->format('Y') }}</span></div>
+            @endif
             <p class="text-sm text-gray-400 max-w-[220px]">{{ app()->getLocale() === 'ar' ? $event->name_ar : $event->name_en }}</p>
         </div>
         <div class="flex flex-col gap-3">

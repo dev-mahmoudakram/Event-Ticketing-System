@@ -2,7 +2,14 @@
 @php $sectionBase = ($onLandingPage ?? false) ? '' : route('landing.show', $event); @endphp
 <div class="ccs-scroll-progress" data-scroll-progress role="presentation"></div>
 <header x-data="{ open: false }" class="fixed top-[3px] inset-x-0 z-50 flex items-center justify-between gap-4 px-5 md:px-16 py-5 bg-ccs-black/80 backdrop-blur border-b border-white/10">
-    <a href="{{ $sectionBase }}#hero" class="font-display font-extrabold text-xl shrink-0">CCS <span class="text-ccs-coral">{{ $event->start_date->format('Y') }}</span></a>
+    {{-- An uploaded logo stands in for the wordmark; until there is one, the name is the mark. --}}
+    <a href="{{ $sectionBase }}#hero" class="shrink-0" aria-label="{{ app()->getLocale() === 'ar' ? $event->name_ar : $event->name_en }}">
+        @if($event->logoUrl())
+            <img src="{{ $event->logoUrl() }}" alt="{{ app()->getLocale() === 'ar' ? $event->name_ar : $event->name_en }}" class="h-9 w-auto max-w-[190px] object-contain">
+        @else
+            <span class="font-display font-extrabold text-xl">CCS <span class="text-ccs-coral">{{ $event->start_date->format('Y') }}</span></span>
+        @endif
+    </a>
 
     <nav class="hidden lg:flex items-center gap-6 text-sm font-semibold text-gray-300">
         <a href="{{ $sectionBase }}#about" class="hover:text-white transition-colors">{{ __('About') }}</a>

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Requests\Admin;
 
+use App\Rules\SafeSvg;
 use App\Support\UploadLimit;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
@@ -27,7 +28,9 @@ class EventRequest extends FormRequest
             'tagline_ar' => ['nullable', 'string', 'max:255'],
             'tagline_en' => ['nullable', 'string', 'max:255'],
             'cover_image' => ['nullable', 'image', 'max:'.$imageLimit],
-            'favicon' => ['nullable', 'image:allow_svg', 'max:'.$imageLimit],
+            'logo' => ['nullable', 'image:allow_svg', new SafeSvg, 'max:'.$imageLimit],
+            'footer_logo' => ['nullable', 'image:allow_svg', new SafeSvg, 'max:'.$imageLimit],
+            'favicon' => ['nullable', 'image:allow_svg', new SafeSvg, 'max:'.$imageLimit],
             'apple_touch_icon' => ['nullable', 'image', 'max:'.$imageLimit],
             'share_image' => ['nullable', 'image', 'max:'.$imageLimit],
             'contact_email' => ['nullable', 'email', 'max:255'],
@@ -49,6 +52,8 @@ class EventRequest extends FormRequest
     {
         return [
             'cover_image' => __('Cover Image'),
+            'logo' => __('Logo'),
+            'footer_logo' => __('Footer Logo'),
             'favicon' => __('Favicon'),
             'apple_touch_icon' => __('Apple Touch Icon'),
             'share_image' => __('Link Preview Image'),

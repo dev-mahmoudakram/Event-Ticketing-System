@@ -38,6 +38,22 @@
         <p class="text-sm text-gray-400 mb-4 max-w-2xl">{{ __('This event carries its own icon and link preview, separate from the platform. Leave a field empty to use the Creators Hub one.') }}</p>
 
         <x-admin.media-upload
+            name="logo"
+            :label="__('Logo')"
+            accept="image/*,.svg"
+            :current="$event->logoUrl()"
+            :hint="__('Shown in the navigation bar in place of the event name. A PNG or SVG with a transparent background.')"
+        />
+
+        <x-admin.media-upload
+            name="footer_logo"
+            :label="__('Footer Logo')"
+            accept="image/*,.svg"
+            :current="$event->footerLogoUrl()"
+            :hint="__('The footer sits on a dark panel, so a light version reads best. Falls back to the logo above.')"
+        />
+
+        <x-admin.media-upload
             name="favicon"
             :label="__('Favicon')"
             accept="image/png,image/svg+xml,image/x-icon"

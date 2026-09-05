@@ -190,6 +190,15 @@ class SiteContentRegistry
                 ],
             ],
 
+            'branding' => [
+                'label' => __('Logo'),
+                'description' => __('The Creators Hub mark in the navigation bar and the footer. Leave a slot empty to keep the logo the site ships with.'),
+                'fields' => [
+                    'nav_logo' => ['label' => __('Navigation bar logo'), 'type' => 'image'],
+                    'footer_logo' => ['label' => __('Footer logo'), 'type' => 'image'],
+                ],
+            ],
+
             'contact_details' => [
                 'label' => __('Contact and social links'),
                 'description' => __('Shown in the footer. Anything left empty is simply not shown, and an event keeps its own details under that event.'),

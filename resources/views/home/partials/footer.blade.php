@@ -7,6 +7,7 @@
     $phone = SiteText::stored('contact_details', 'phone');
     $address = SiteText::stored('contact_details', 'address');
     $socialLinks = SiteText::socialLinks();
+    $footerLogo = SiteText::image('branding', 'footer_logo') ?? SiteText::image('branding', 'nav_logo');
 @endphp
 
 <footer class="hub-shell pt-2">
@@ -14,8 +15,12 @@
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr_1.2fr] gap-12 mb-14">
             <div>
                 <div class="flex items-center gap-2.5 mb-5">
-                    <img src="{{ asset('images/creators-hub/mark-white.png') }}" alt="" aria-hidden="true" class="h-8 w-auto">
-                    <span class="font-display font-extrabold text-xl tracking-tight">Creators Hub</span>
+                    @if($footerLogo)
+                        <img src="{{ $footerLogo }}" alt="Creators Hub" class="h-10 w-auto max-w-[220px] object-contain">
+                    @else
+                        <img src="{{ asset('images/creators-hub/mark-white.png') }}" alt="" aria-hidden="true" class="h-8 w-auto">
+                        <span class="font-display font-extrabold text-xl tracking-tight">Creators Hub</span>
+                    @endif
                 </div>
                 <p class="text-sm text-white/60 leading-relaxed max-w-xs">@site('footer.blurb')</p>
             </div>
