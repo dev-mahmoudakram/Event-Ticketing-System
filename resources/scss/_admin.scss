@@ -1,0 +1,211 @@
+/* ---------------------------------------------------------------------------
+   Admin panel — the Creators Hub identity applied to the tools behind the site:
+   a light lavender ground, white panels, purple as the only accent.
+   --------------------------------------------------------------------------- */
+
+.adm-body {
+  background: #f1f0fa;
+  color: var(--color-hub-dark);
+  font-family: 'Manrope', sans-serif;
+}
+
+.adm-body:lang(ar) {
+  font-family: 'Cairo', sans-serif;
+}
+
+.adm-sidebar {
+  background: #ffffff;
+  border-inline-end: 1px solid rgba(60, 52, 137, 0.12);
+  border-inline-end: 1px solid color-mix(in srgb, var(--color-hub-purple) 12%, transparent);
+}
+
+.adm-topbar {
+  background: rgba(255, 255, 255, 0.75);
+  background: color-mix(in srgb, #ffffff 75%, transparent);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(60, 52, 137, 0.1);
+  border-bottom: 1px solid color-mix(in srgb, var(--color-hub-purple) 10%, transparent);
+}
+
+/* Navigation */
+.adm-nav-link {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.55rem 0.75rem;
+  border-radius: 0.75rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: rgba(29, 29, 29, 0.72);
+  color: color-mix(in srgb, var(--color-hub-dark) 72%, transparent);
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.adm-nav-link:hover {
+  background: var(--color-hub-lavender);
+  color: var(--color-hub-purple);
+}
+
+.adm-nav-link.is-active {
+  background: var(--color-hub-purple);
+  color: #ffffff;
+}
+
+.adm-nav-sub {
+  font-size: 0.82rem;
+  font-weight: 500;
+  padding-block: 0.4rem;
+}
+
+.adm-nav-sub.is-active {
+  background: var(--color-hub-lavender);
+  color: var(--color-hub-purple);
+  font-weight: 700;
+}
+
+.adm-nav-branch {
+  margin-inline-start: 0.85rem;
+  padding-inline-start: 0.7rem;
+  border-inline-start: 1px solid rgba(60, 52, 137, 0.15);
+  border-inline-start: 1px solid color-mix(in srgb, var(--color-hub-purple) 15%, transparent);
+}
+
+.adm-group-label {
+  padding-inline: 0.75rem;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: rgba(29, 29, 29, 0.4);
+  color: color-mix(in srgb, var(--color-hub-dark) 40%, transparent);
+}
+
+/* Surfaces */
+.adm-card {
+  background: #ffffff;
+  border: 1px solid rgba(60, 52, 137, 0.1);
+  border: 1px solid color-mix(in srgb, var(--color-hub-purple) 10%, transparent);
+  border-radius: 1rem;
+}
+
+.adm-empty {
+  border: 1px dashed rgba(60, 52, 137, 0.25);
+  border: 1px dashed color-mix(in srgb, var(--color-hub-purple) 25%, transparent);
+  border-radius: 1rem;
+  background: rgba(255, 255, 255, 0.6);
+  background: color-mix(in srgb, #ffffff 60%, transparent);
+  color: rgba(29, 29, 29, 0.55);
+  color: color-mix(in srgb, var(--color-hub-dark) 55%, transparent);
+}
+
+/* Forms */
+.adm-label {
+  display: block;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: rgba(29, 29, 29, 0.75);
+  color: color-mix(in srgb, var(--color-hub-dark) 75%, transparent);
+  margin-bottom: 0.35rem;
+}
+
+.adm-input {
+  width: 100%;
+  background: #ffffff;
+  color: var(--color-hub-dark);
+  border: 1px solid rgba(60, 52, 137, 0.22);
+  border: 1px solid color-mix(in srgb, var(--color-hub-purple) 22%, transparent);
+  border-radius: 0.7rem;
+  padding: 0.6rem 0.85rem;
+  font-size: 0.9rem;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.adm-input:focus {
+  outline: none;
+  border-color: var(--color-hub-purple);
+  box-shadow: 0 0 0 3px rgba(60, 52, 137, 0.18);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-hub-purple) 18%, transparent);
+}
+
+.adm-input::placeholder {
+  color: rgba(29, 29, 29, 0.35);
+  color: color-mix(in srgb, var(--color-hub-dark) 35%, transparent);
+}
+
+/* Buttons */
+.adm-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.6rem 1.25rem;
+  border-radius: 9999px;
+  font-size: 0.875rem;
+  font-weight: 700;
+  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+.adm-btn-primary {
+  background: var(--color-hub-purple);
+  color: #ffffff;
+}
+
+.adm-btn-primary:hover {
+  background: #332c74;
+  background: color-mix(in srgb, var(--color-hub-purple) 85%, #000);
+}
+
+.adm-btn-secondary {
+  border: 1px solid rgba(60, 52, 137, 0.25);
+  border: 1px solid color-mix(in srgb, var(--color-hub-purple) 25%, transparent);
+  color: var(--color-hub-purple);
+  background: #ffffff;
+}
+
+.adm-btn-secondary:hover {
+  background: var(--color-hub-lavender);
+}
+
+.adm-btn-danger {
+  color: #b42318;
+  font-weight: 700;
+  font-size: 0.85rem;
+}
+
+.adm-btn-danger:hover {
+  text-decoration: underline;
+}
+
+/* Tables */
+.adm-table {
+  width: 100%;
+  text-align: start;
+  border-collapse: collapse;
+}
+
+.adm-table thead th {
+  text-align: start;
+  padding: 0.75rem 0.9rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: rgba(29, 29, 29, 0.5);
+  color: color-mix(in srgb, var(--color-hub-dark) 50%, transparent);
+  border-bottom: 1px solid rgba(60, 52, 137, 0.12);
+  border-bottom: 1px solid color-mix(in srgb, var(--color-hub-purple) 12%, transparent);
+}
+
+.adm-table tbody td {
+  padding: 0.85rem 0.9rem;
+  font-size: 0.9rem;
+  border-bottom: 1px solid rgba(60, 52, 137, 0.08);
+  border-bottom: 1px solid color-mix(in srgb, var(--color-hub-purple) 8%, transparent);
+}
+
+.adm-table tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.adm-table tbody tr:hover {
+  background: rgba(238, 237, 254, 0.55);
+  background: color-mix(in srgb, var(--color-hub-lavender) 55%, transparent);
+}

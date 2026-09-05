@@ -1,0 +1,166 @@
+/* ── CCS landing redesign ─────────────────────────────────────────────────────
+   Hero, Reel coverflow and scroll progress. Motion is driven from
+   resources/js/ccs-motion.js; the rules here define resting state and the
+   reduced-motion fallbacks. */
+
+.ccs-scroll-progress {
+  position: fixed;
+  inset-block-start: 0;
+  inset-inline-start: 0;
+  height: 3px;
+  width: 100%;
+  transform: scaleX(0);
+  transform-origin: left center;
+  background: linear-gradient(90deg, var(--color-ccs-coral), var(--color-ccs-gold), var(--color-ccs-teal-light));
+  z-index: 60;
+}
+
+[dir="rtl"] .ccs-scroll-progress {
+  transform-origin: right center;
+}
+
+/* Hero ---------------------------------------------------------------------- */
+
+.ccs-hero-bloom {
+  background:
+    radial-gradient(60% 55% at 50% 12%, rgba(255, 126, 113, 0.34), transparent 70%),
+    radial-gradient(45% 45% at 85% 70%, rgba(42, 118, 117, 0.30), transparent 70%),
+    radial-gradient(45% 45% at 12% 62%, rgba(67, 13, 20, 0.75), transparent 70%);
+}
+
+.ccs-wordmark {
+  font-family: 'Manrope', sans-serif;
+  font-weight: 800;
+  letter-spacing: -0.025em;
+  line-height: 1.04;
+  text-transform: uppercase;
+}
+
+:lang(ar) .ccs-wordmark {
+  font-family: 'Cairo', sans-serif;
+  letter-spacing: 0;
+  line-height: 1.4;
+  font-size: clamp(1.9rem, 4.4vw, 3.9rem);
+}
+
+/* Each wordmark line is masked so the entrance can wipe it up into view. The mask has to
+   clear ascenders and descenders, so the line box gets a little breathing room that the
+   negative margin then takes back out of the stack. */
+.ccs-wordmark-line {
+  display: block;
+  overflow: hidden;
+  padding-block: 0.08em;
+  margin-block: -0.02em;
+}
+
+.ccs-ribbon {
+  display: inline-block;
+  transform: rotate(-2.4deg);
+  background: var(--color-ccs-coral);
+  color: var(--color-ccs-red);
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 0.55rem 1.5rem;
+  clip-path: polygon(2% 0, 100% 0, 98% 100%, 0 100%);
+}
+
+.ccs-track-pill {
+  background: var(--color-ccs-red);
+  clip-path: polygon(1.4% 0, 100% 0, 98.6% 100%, 0 100%);
+}
+
+/* Phone-frame cards flanking the hero wordmark. */
+.ccs-phone {
+  position: relative;
+  aspect-ratio: 9 / 16;
+  border-radius: 1.75rem;
+  overflow: hidden;
+  border: 2px solid rgba(255, 255, 255, 0.5);
+  background: var(--color-ccs-black);
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.55);
+  will-change: transform;
+}
+
+.ccs-phone video,
+.ccs-phone img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Reel coverflow ------------------------------------------------------------ */
+
+.ccs-reel-stage {
+  position: relative;
+  perspective: 1600px;
+  height: clamp(360px, 58vh, 620px);
+}
+
+.ccs-reel-card {
+  position: absolute;
+  inset-block-start: 50%;
+  inset-inline-start: 50%;
+  width: clamp(180px, 22vw, 290px);
+  aspect-ratio: 9 / 16;
+  margin-block-start: calc(clamp(180px, 22vw, 290px) * 16 / 9 / -2);
+  margin-inline-start: calc(clamp(180px, 22vw, 290px) / -2);
+  border-radius: 1.5rem;
+  overflow: hidden;
+  border: 2px solid rgba(255, 255, 255, 0.35);
+  background: var(--color-ccs-red);
+  transform-style: preserve-3d;
+  will-change: transform, opacity;
+  cursor: pointer;
+}
+
+.ccs-reel-card video,
+.ccs-reel-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.ccs-reel-card[data-active="true"] {
+  border-color: var(--color-ccs-coral);
+  cursor: default;
+}
+
+.ccs-reel-nav {
+  width: 3rem;
+  height: 3rem;
+  border-radius: 9999px;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  display: grid;
+  place-items: center;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.ccs-reel-nav:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: var(--color-ccs-coral);
+}
+
+/* Without JS (or before it runs) the cards would stack on top of each other, so
+   lay them out as a plain scroller until the coverflow takes over. */
+.ccs-reel-stage:not([data-enhanced="true"]) {
+  display: flex;
+  gap: 1rem;
+  height: auto;
+  overflow-x: auto;
+  perspective: none;
+  padding-bottom: 1rem;
+}
+
+.ccs-reel-stage:not([data-enhanced="true"]) .ccs-reel-card {
+  position: relative;
+  inset: auto;
+  margin: 0;
+  flex: 0 0 auto;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ccs-scroll-progress {
+    transition: none;
+  }
+}

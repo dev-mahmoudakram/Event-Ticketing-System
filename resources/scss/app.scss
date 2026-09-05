@@ -1,0 +1,20 @@
+// resources/scss/app.scss
+//
+// The platform's hand-written styles.
+//
+// Tailwind keeps its own entry (resources/css/app.css): Tailwind v4 processes
+// @import "tailwindcss" and @theme with its own engine, which Sass cannot parse. The two
+// stylesheets load side by side — Tailwind's reset, utilities and design tokens first, then
+// these component styles, which read the same --color-* custom properties @theme defines.
+//
+// Every colour below is still expressed as a custom property at runtime, so re-theming
+// through @theme continues to work. Where a rule tints one of those colours it carries a
+// static rgba() line first: color-mix() only arrived in Chrome 111 and iOS Safari 16.2, and
+// a browser older than that ignores the declaration it cannot parse and keeps the fallback.
+
+@use 'base';
+@use 'hub-editorial';
+@use 'ccs-landing';
+@use 'hub-panels';
+@use 'admin';
+@use 'check-in';

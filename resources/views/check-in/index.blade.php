@@ -15,7 +15,12 @@
             labels: {
                 start: @js(__('Start camera')),
                 stop: @js(__('Stop camera')),
-                blocked: @js(__('The camera could not be opened. Check the browser permission, or type the code below.')),
+                insecure: @js(__('This page is not on a secure address, so the browser will not open a camera here. Open the desk over https (or on localhost), or type codes below.')),
+                denied: @js(__('The browser blocked the camera. Allow camera access for this site, then start it again.')),
+                noCamera: @js(__('No camera was found on this device.')),
+                busy: @js(__('The camera is already in use by another program. Close it and try again.')),
+                unsupported: @js(__('This browser does not offer a camera to the page. Try Chrome or Edge, or type codes below.')),
+                blocked: @js(__('The camera could not be opened.')),
                 offline: @js(__('The scan could not be sent. Check the connection and try again.')),
             },
         })"
@@ -23,7 +28,24 @@
         <section class="adm-card p-6">
             <div class="flex flex-wrap items-center justify-between gap-3 mb-5">
                 <h2 class="font-display font-bold text-lg">{{ __('Scan a ticket') }}</h2>
-                <button type="button" class="adm-btn adm-btn-primary" @click="toggle()" x-text="running ? labels.stop : labels.start"></button>
+
+                <div class="flex flex-wrap items-center gap-3">
+                    {{-- Only worth showing once there is a choice to make. --}}
+                    <select
+                        class="adm-input py-2 text-sm"
+                        x-show="cameras.length > 1"
+                        x-cloak
+                        x-model="cameraId"
+                        @change="useCamera($event.target.value)"
+                        aria-label="{{ __('Camera') }}"
+                    >
+                        <template x-for="camera in cameras" :key="camera.id">
+                            <option :value="camera.id" x-text="camera.label"></option>
+                        </template>
+                    </select>
+
+                    <button type="button" class="adm-btn adm-btn-primary" @click="toggle()" x-text="running ? labels.stop : labels.start"></button>
+                </div>
             </div>
 
             {{-- html5-qrcode paints the camera into this element; it stays empty until asked. --}}

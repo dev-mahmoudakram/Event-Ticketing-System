@@ -10,7 +10,7 @@
     <link rel="shortcut icon" href="/favicon.ico">
     {{-- The admin panel is a tool, not a page to share, so it carries the icon and nothing else. --}}
     <meta name="robots" content="noindex, nofollow">
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @vite(['resources/css/app.css', 'resources/scss/app.scss', 'resources/js/app.js'])
 </head>
 <body class="adm-body min-h-screen" x-data="{ menu: false }">
     {{-- The sidebar slides in on small screens and is simply always there on large ones. --}}

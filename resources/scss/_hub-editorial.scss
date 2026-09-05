@@ -1,0 +1,56 @@
+/* Creators Hub — editorial design system for the platform's root landing page (resources/views/home) */
+
+.hub-section {
+  padding-inline: clamp(20px, 6vw, 96px);
+  padding-block: clamp(72px, 9vw, 140px);
+  max-width: 1520px;
+  margin-inline: auto;
+}
+
+.hub-eyebrow {
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+
+.hub-blueprint-grid {
+  background-image:
+    linear-gradient(to right, rgba(127, 119, 221, 0.16) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(127, 119, 221, 0.16) 1px, transparent 1px);
+  background-size: 48px 48px;
+}
+
+.hub-btn-primary {
+  background: linear-gradient(135deg, var(--color-hub-purple-light), var(--color-hub-purple));
+}
+
+@keyframes hub-fade-up {
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes hub-draw-line {
+  from { stroke-dashoffset: var(--hub-line-length, 1000); }
+  to { stroke-dashoffset: 0; }
+}
+
+.hub-fade-up {
+  animation: hub-fade-up 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.hub-draw-line {
+  stroke-dasharray: var(--hub-line-length, 1000);
+  animation: hub-draw-line 1.6s cubic-bezier(0.16, 1, 0.3, 1) 0.2s both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hub-fade-up {
+    animation: none;
+  }
+
+  .hub-draw-line {
+    stroke-dasharray: none;
+    animation: none;
+  }
+}

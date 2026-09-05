@@ -1,0 +1,39 @@
+/* ---------------------------------------------------------------------------
+   Registration desk
+   The camera stage and the verdict shown to whoever is working the door.
+   --------------------------------------------------------------------------- */
+
+.scanner-stage {
+  position: relative;
+  display: grid;
+  place-items: center;
+  aspect-ratio: 4 / 3;
+  border-radius: 1rem;
+  overflow: hidden;
+  background: rgba(29, 29, 29, 0.92);
+  background: color-mix(in srgb, var(--color-hub-dark) 92%, transparent);
+  border: 1px solid rgba(60, 52, 137, 0.15);
+  border: 1px solid color-mix(in srgb, var(--color-hub-purple) 15%, transparent);
+}
+
+.scanner-view {
+  width: 100%;
+}
+
+/* html5-qrcode injects its own video element; make it fill the stage rather than
+   sit at whatever intrinsic size the camera reports. */
+.scanner-view video {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover;
+  display: block;
+}
+
+.scanner-idle {
+  position: absolute;
+  padding: 0 2rem;
+  text-align: center;
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.65);
+  color: color-mix(in srgb, white 65%, transparent);
+}

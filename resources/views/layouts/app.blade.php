@@ -16,7 +16,7 @@
     ] as $fontSource)
         <link rel="preload" as="font" type="font/woff2" href="{{ \Illuminate\Support\Facades\Vite::asset($fontSource) }}" crossorigin>
     @endforeach
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @vite(['resources/css/app.css', 'resources/scss/app.scss', 'resources/js/app.js'])
 </head>
 <body class="@yield('bodyClass', 'bg-ccs-red text-white')">
     @yield('content')

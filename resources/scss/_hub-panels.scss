@@ -1,0 +1,269 @@
+/* ── Creators Hub: light panel system ─────────────────────────────────────────
+   The page sits on a pale lavender ground with content in white rounded panels
+   and occasional deep-purple ones, mirroring the reference layout in the hub
+   palette. */
+
+.hub-page-light {
+  background: var(--color-hub-lavender);
+  color: var(--color-hub-dark);
+}
+
+/* Panels are the page's basic unit: a rounded card floating on the ground. */
+.hub-panel {
+  border-radius: 2rem;
+  background: #fff;
+}
+
+.hub-panel-dark {
+  border-radius: 2rem;
+  background: var(--color-hub-purple);
+  color: #fff;
+}
+
+/* Full-bleed sections still inset from the viewport edge, as in the reference. */
+.hub-shell {
+  padding-inline: clamp(12px, 3vw, 40px);
+  max-width: 1600px;
+  margin-inline: auto;
+}
+
+.hub-pad {
+  padding: clamp(2rem, 5vw, 4.5rem);
+}
+
+/* Pill buttons ------------------------------------------------------------- */
+
+.hub-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border-radius: 9999px;
+  font-weight: 700;
+  padding: 0.9rem 2rem;
+  transition: background-color 0.25s ease, color 0.25s ease, border-color 0.25s ease;
+}
+
+.hub-pill-solid {
+  background: var(--color-hub-purple);
+  color: #fff;
+}
+
+.hub-pill-solid:hover {
+  background: var(--color-hub-purple-light);
+}
+
+.hub-pill-light {
+  background: #fff;
+  color: var(--color-hub-purple);
+}
+
+.hub-pill-light:hover {
+  background: var(--color-hub-lavender);
+}
+
+.hub-pill-outline {
+  border: 1px solid rgba(60, 52, 137, 0.35);
+  border: 1px solid color-mix(in srgb, var(--color-hub-purple) 35%, transparent);
+  color: var(--color-hub-purple);
+}
+
+.hub-pill-outline:hover {
+  border-color: var(--color-hub-purple);
+  background: rgba(60, 52, 137, 0.06);
+  background: color-mix(in srgb, var(--color-hub-purple) 6%, transparent);
+}
+
+/* Segmented control, used by the audience switch. */
+.hub-segment {
+  display: inline-flex;
+  padding: 0.35rem;
+  border-radius: 9999px;
+  border: 1px solid rgba(60, 52, 137, 0.25);
+  border: 1px solid color-mix(in srgb, var(--color-hub-purple) 25%, transparent);
+  background: #fff;
+}
+
+.hub-segment-option {
+  border-radius: 9999px;
+  padding: 0.7rem 1.6rem;
+  font-weight: 700;
+  font-size: 0.9rem;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  color: var(--color-hub-dark);
+}
+
+.hub-segment-option[aria-selected="true"] {
+  background: var(--color-hub-purple);
+  color: #fff;
+}
+
+/* Cards in the audience deck. Each one comes to rest on the pile above it, so it needs a
+   coloured edge and a lift to read as a separate sheet rather than one long panel. */
+.hub-stack-card {
+  background: #fff;
+  border: 2px solid rgba(127, 119, 221, 0.85);
+  border: 2px solid color-mix(in srgb, var(--color-hub-purple-light) 85%, transparent);
+  box-shadow:
+    0 6px 16px -8px color-mix(in srgb, var(--color-hub-purple) 35%, transparent),
+    0 30px 60px -26px color-mix(in srgb, var(--color-hub-purple) 70%, transparent);
+}
+
+/* A deck of panels, with the ones behind peeking out above. Purely decorative,
+   so the stacked layers are hidden from assistive tech. */
+.hub-deck {
+  position: relative;
+}
+
+.hub-deck-layer {
+  position: absolute;
+  inset-inline: 0;
+  border-radius: 2rem;
+  border: 1px solid rgba(60, 52, 137, 0.18);
+  border: 1px solid color-mix(in srgb, var(--color-hub-purple) 18%, transparent);
+  background: #fff;
+}
+
+/* Circular icon button, as used by the carousel arrows. */
+.hub-round-btn {
+  width: 3rem;
+  height: 3rem;
+  border-radius: 9999px;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(60, 52, 137, 0.3);
+  border: 1px solid color-mix(in srgb, var(--color-hub-purple) 30%, transparent);
+  transition: background-color 0.25s ease, border-color 0.25s ease;
+}
+
+.hub-round-btn:hover {
+  border-color: var(--color-hub-purple);
+  background: rgba(60, 52, 137, 0.08);
+  background: color-mix(in srgb, var(--color-hub-purple) 8%, transparent);
+}
+
+/* On a dark panel the purple hairline disappears, so the control needs a light
+   edge instead. Geometry stays with .hub-round-btn. */
+.hub-round-btn-light {
+  border-color: rgba(255, 255, 255, 0.45);
+  border-color: color-mix(in srgb, white 45%, transparent);
+  color: #fff;
+}
+
+.hub-round-btn-light:hover {
+  border-color: #fff;
+  background: rgba(255, 255, 255, 0.12);
+  background: color-mix(in srgb, white 12%, transparent);
+}
+
+/* Media wells stand in for photography the brand does not have yet: an uploaded
+   image fills them, otherwise they render as a brand-coloured panel. */
+.hub-media-well {
+  overflow: hidden;
+  background:
+    radial-gradient(120% 90% at 20% 10%, color-mix(in srgb, var(--color-hub-purple-light) 55%, transparent), transparent 70%),
+    var(--color-hub-purple);
+}
+
+.hub-media-well img,
+.hub-media-well video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+footer .hub-panel-dark {
+  border-top-right-radius: 2rem;
+  border-top-left-radius: 2rem;
+  border-bottom-right-radius: 0;
+  border-bottom-left-radius: 0;
+  background: var(--color-hub-purple);
+  color: #fff;
+}
+/* The ticket request confirmation. SweetAlert2 injects its own stylesheet at runtime, so these
+   rules carry an extra class to outrank it, and dress the popup as part of the event page. */
+.swal2-popup.ticket-success {
+  background: var(--color-ccs-black);
+  color: #fff;
+  border: 1px solid rgb(255 255 255 / 0.1);
+  border-radius: 1.25rem;
+  padding: 2.25rem 2rem 2rem;
+}
+
+.swal2-popup.ticket-success .swal2-title {
+  color: #fff;
+  font-family: 'Manrope', sans-serif;
+  font-weight: 800;
+  font-size: 1.5rem;
+}
+
+.swal2-popup.ticket-success .swal2-icon.swal2-success {
+  border-color: rgba(124, 203, 207, 0.45);
+  border-color: color-mix(in srgb, var(--color-ccs-teal-light) 45%, transparent);
+}
+
+.swal2-popup.ticket-success .swal2-icon.swal2-success [class^='swal2-success-line'] {
+  background-color: var(--color-ccs-teal-light);
+}
+
+.swal2-popup.ticket-success .swal2-icon.swal2-success .swal2-success-ring {
+  border-color: rgba(124, 203, 207, 0.3);
+  border-color: color-mix(in srgb, var(--color-ccs-teal-light) 30%, transparent);
+}
+
+.ticket-success-label {
+  color: rgb(255 255 255 / 0.5);
+  font-size: 0.85rem;
+  margin-bottom: 0.35rem;
+}
+
+.ticket-success-reference {
+  font-weight: 800;
+  font-size: 1.5rem;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+  color: var(--color-ccs-teal-light);
+  margin-bottom: 1rem;
+}
+
+.ticket-success-note {
+  color: rgb(255 255 255 / 0.65);
+  font-size: 0.95rem;
+  line-height: 1.75;
+}
+
+.ticket-success-confirm {
+  margin-top: 0.5rem;
+  padding: 0.85rem 2.25rem;
+  border-radius: 9999px;
+  font-weight: 700;
+  color: #fff;
+  background: var(--color-ccs-teal);
+  transition: background-color 0.25s ease;
+}
+
+.ticket-success-confirm:hover {
+  background: #4b8887;
+  background: color-mix(in srgb, var(--color-ccs-teal) 85%, #fff);
+}
+
+:lang(ar) .swal2-popup.ticket-success .swal2-title {
+  font-family: 'Cairo', sans-serif;
+}
+
+/* A ticket is meant to be printed, and browsers drop backgrounds by default. */
+@media print {
+  body {
+    background: #fff !important;
+  }
+
+  .ticket-sheet,
+  .ticket-sheet * {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .ticket-sheet {
+    margin: 0 auto;
+  }
+}
