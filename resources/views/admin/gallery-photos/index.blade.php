@@ -11,19 +11,19 @@
     @else
         <x-admin.table>
             <thead>
-                <tr class="border-b border-gray-700">
-                    <th class="py-2 px-3">{{ __('Photo') }}</th>
-                    <th class="py-2 px-3">{{ __('Caption') }}</th>
-                    <th class="py-2 px-3"></th>
+                <tr>
+                    <th>{{ __('Photo') }}</th>
+                    <th>{{ __('Caption') }}</th>
+                    <th></th>
                 </tr>
             </thead>
             <tbody>
                 @foreach($galleryPhotos as $photo)
-                    <tr class="border-b border-gray-800">
-                        <td class="py-2 px-3"><img src="{{ $photo->imageUrl() }}" class="h-12 w-12 object-cover rounded" alt=""></td>
-                        <td class="py-2 px-3">{{ $photo->caption_en }}</td>
-                        <td class="py-2 px-3 text-right">
-                            <a href="{{ route('admin.events.gallery-photos.edit', [$event, $photo]) }}" class="text-ccs-teal-light hover:underline">{{ __('Edit') }}</a>
+                    <tr>
+                        <td><img src="{{ $photo->imageUrl() }}" class="h-12 w-12 object-cover rounded" alt=""></td>
+                        <td>{{ $photo->caption_en }}</td>
+                        <td class="text-end">
+                            <a href="{{ route('admin.events.gallery-photos.edit', [$event, $photo]) }}" class="text-hub-purple hover:underline">{{ __('Edit') }}</a>
                             <form method="POST" action="{{ route('admin.events.gallery-photos.destroy', [$event, $photo]) }}" class="inline" onsubmit="return confirm('{{ __('Are you sure? This cannot be undone.') }}')">
                                 @csrf @method('DELETE')
                                 <x-admin.button type="submit" variant="danger" class="ml-2">{{ __('Delete') }}</x-admin.button>

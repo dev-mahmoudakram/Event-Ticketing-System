@@ -438,5 +438,13 @@
     "Payment completed": "تم إتمام الدفع",
     "This payment link has already been used": "تم استخدام رابط الدفع هذا من قبل",
     "Your ticket has been issued and sent to your email address.": "تم إصدار تذكرتك وإرسالها إلى بريدك الإلكتروني.",
-    "Your ticket was already processed. Please check your email.": "تمت معالجة تذكرتك بالفعل. يرجى مراجعة بريدك الإلكتروني."
+    "Your ticket was already processed. Please check your email.": "تمت معالجة تذكرتك بالفعل. يرجى مراجعة بريدك الإلكتروني.",
+    "Creators Hub Admin": "لوحة تحكم Creators Hub",
+    "All events": "كل الفعاليات",
+    "Event Details": "بيانات الفعالية",
+    "View site": "عرض الموقع",
+    "Sign in to the admin.": "تسجيل الدخول إلى لوحة التحكم.",
+    "Events, tickets and everything the site shows.": "الفعاليات والتذاكر وكل ما يعرضه الموقع.",
+    "Everything the events and the site show is edited from here.": "كل ما تعرضه الفعاليات والموقع يُحرَّر من هنا.",
+    "Creators Hub": "Creators Hub"
 }

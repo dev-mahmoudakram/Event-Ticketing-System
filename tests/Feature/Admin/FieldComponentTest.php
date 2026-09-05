@@ -62,7 +62,7 @@ class FieldComponentTest extends TestCase
 
         $html = Blade::render('<x-admin.field name="name_en" label="Name" />');
 
-        $this->assertStringContainsString('class="text-red-500 text-sm mt-1"', $html);
+        $this->assertStringContainsString('text-[#b42318]', $html);
         $this->assertStringContainsString('The name en field is required.', $html);
     }
 }

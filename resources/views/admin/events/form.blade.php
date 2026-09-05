@@ -35,7 +35,7 @@
         </x-admin.field>
 
         <h2 class="font-display text-lg font-bold mt-8 mb-1">{{ __('Branding') }}</h2>
-        <p class="text-sm text-gray-400 mb-4 max-w-2xl">{{ __('This event carries its own icon and link preview, separate from the platform. Leave a field empty to use the Creators Hub one.') }}</p>
+        <p class="text-sm text-hub-dark/60 mb-4 max-w-2xl">{{ __('This event carries its own icon and link preview, separate from the platform. Leave a field empty to use the Creators Hub one.') }}</p>
 
         <x-admin.media-upload
             name="logo"
@@ -76,7 +76,7 @@
         />
 
         <h2 class="font-display text-lg font-bold mt-8 mb-1">{{ __('Contact and social links') }}</h2>
-        <p class="text-sm text-gray-400 mb-4 max-w-2xl">{{ __("Shown in this event's footer. Anything left empty is simply not shown.") }}</p>
+        <p class="text-sm text-hub-dark/60 mb-4 max-w-2xl">{{ __("Shown in this event's footer. Anything left empty is simply not shown.") }}</p>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <x-admin.field type="email" name="contact_email" :label="__('Email address')" :value="old('contact_email', $event->contact_email)" />

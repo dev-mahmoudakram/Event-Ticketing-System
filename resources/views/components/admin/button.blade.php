@@ -5,17 +5,15 @@
 ])
 
 @php
-$variantClasses = match($variant) {
-    'primary' => 'bg-ccs-red hover:bg-ccs-maroon text-white',
-    'secondary' => 'border border-gray-600 text-white hover:bg-gray-900',
-    'danger' => 'text-red-500 hover:underline',
-    default => 'bg-ccs-red hover:bg-ccs-maroon text-white',
+$classes = match($variant) {
+    'secondary' => 'adm-btn adm-btn-secondary',
+    'danger' => 'adm-btn-danger',
+    default => 'adm-btn adm-btn-primary',
 };
-$baseClasses = $variant === 'danger' ? $variantClasses : "$variantClasses px-4 py-2 rounded";
 @endphp
 
 @if($href)
-    <a href="{{ $href }}" {{ $attributes->merge(['class' => $baseClasses . ' inline-block']) }}>{{ $slot }}</a>
+    <a href="{{ $href }}" {{ $attributes->merge(['class' => $classes]) }}>{{ $slot }}</a>
 @else
-    <button type="{{ $type }}" {{ $attributes->merge(['class' => $baseClasses]) }}>{{ $slot }}</button>
+    <button type="{{ $type }}" {{ $attributes->merge(['class' => $classes]) }}>{{ $slot }}</button>
 @endif

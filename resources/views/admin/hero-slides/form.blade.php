@@ -18,7 +18,7 @@
             :hint="__('Wide landscape works best, since it fills the whole screen. Up to :limit.', ['limit' => $uploadLimit])"
         />
 
-        <p class="text-sm text-gray-400 mb-4 max-w-2xl">{{ __('Leave the headline and text blank to reuse the hero copy from Creators Hub Content.') }}</p>
+        <p class="text-sm text-hub-dark/60 mb-4 max-w-2xl">{{ __('Leave the headline and text blank to reuse the hero copy from Creators Hub Content.') }}</p>
 
         <x-admin.bilingual-field name="headline" :label="__('Headline')" :value-ar="old('headline_ar', $slide->headline_ar)" :value-en="old('headline_en', $slide->headline_en)" />
         <x-admin.bilingual-field type="textarea" name="body" :label="__('Supporting text')" :value-ar="old('body_ar', $slide->body_ar)" :value-en="old('body_en', $slide->body_en)" />

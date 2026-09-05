@@ -21,8 +21,8 @@
             :hint="__('Shown beside the About text on the event page. Up to :limit.', ['limit' => $uploadLimit])"
         />
         @if($aboutImage)
-            <label class="flex items-center gap-2 text-sm text-gray-300 -mt-3 mb-5">
-                <input type="checkbox" name="remove_about_image" value="1" class="rounded border-gray-600 bg-gray-900">
+            <label class="flex items-center gap-2 text-sm text-hub-dark/75 -mt-3 mb-5">
+                <input type="checkbox" name="remove_about_image" value="1" class="rounded border-hub-purple/20 bg-white">
                 {{ __('Remove the current image') }}
             </label>
         @endif
@@ -38,11 +38,11 @@
         <x-admin.bilingual-field name="stats_countries_count" label="{{ __('Countries') }}" :value-ar="old('stats_countries_count_ar', $values['stats_countries_count_ar'])" :value-en="old('stats_countries_count_en', $values['stats_countries_count_en'])" />
 
         <h2 class="font-display text-lg font-bold mt-6 mb-2">{{ __('Visible Sections') }}</h2>
-        <p class="text-sm text-gray-400 mb-3">{{ __('Uncheck a section to hide it from the public landing page. Hero always shows.') }}</p>
+        <p class="text-sm text-hub-dark/60 mb-3">{{ __('Uncheck a section to hide it from the public landing page. Hero always shows.') }}</p>
         <div class="grid grid-cols-2 md:grid-cols-3 gap-2 mb-4">
             @foreach($sections as $section)
-                <label class="flex items-center gap-2 text-sm text-gray-300">
-                    <input type="checkbox" name="visible_sections[]" value="{{ $section }}" class="rounded border-gray-600 bg-gray-900" @checked(in_array($section, old('visible_sections', $visibleSections), true))>
+                <label class="flex items-center gap-2 text-sm text-hub-dark/75">
+                    <input type="checkbox" name="visible_sections[]" value="{{ $section }}" class="rounded border-hub-purple/20 bg-white" @checked(in_array($section, old('visible_sections', $visibleSections), true))>
                     {{ __(ucwords(str_replace('-', ' ', $section))) }}
                 </label>
             @endforeach

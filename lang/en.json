@@ -445,5 +445,13 @@
     "Payment completed": "Payment completed",
     "This payment link has already been used": "This payment link has already been used",
     "Your ticket has been issued and sent to your email address.": "Your ticket has been issued and sent to your email address.",
-    "Your ticket was already processed. Please check your email.": "Your ticket was already processed. Please check your email."
+    "Your ticket was already processed. Please check your email.": "Your ticket was already processed. Please check your email.",
+    "Creators Hub Admin": "Creators Hub Admin",
+    "All events": "All events",
+    "Event Details": "Event Details",
+    "View site": "View site",
+    "Sign in to the admin.": "Sign in to the admin.",
+    "Events, tickets and everything the site shows.": "Events, tickets and everything the site shows.",
+    "Everything the events and the site show is edited from here.": "Everything the events and the site show is edited from here.",
+    "Creators Hub": "Creators Hub"
 }

@@ -11,21 +11,21 @@
     @else
         <x-admin.table>
             <thead>
-                <tr class="border-b border-gray-700">
-                    <th class="py-2 px-3">{{ __('Name') }}</th>
-                    <th class="py-2 px-3">{{ __('Price') }}</th>
-                    <th class="py-2 px-3">{{ __('Workshop Slots') }}</th>
-                    <th class="py-2 px-3"></th>
+                <tr>
+                    <th>{{ __('Name') }}</th>
+                    <th>{{ __('Price') }}</th>
+                    <th>{{ __('Workshop Slots') }}</th>
+                    <th></th>
                 </tr>
             </thead>
             <tbody>
                 @foreach($ticketTypes as $ticketType)
-                    <tr class="border-b border-gray-800">
-                        <td class="py-2 px-3">{{ $ticketType->name_en }}</td>
-                        <td class="py-2 px-3">{{ $ticketType->price }} {{ $ticketType->currency }}</td>
-                        <td class="py-2 px-3">{{ $ticketType->workshop_slot_count ?? __('Unlimited') }}</td>
-                        <td class="py-2 px-3 text-right">
-                            <a href="{{ route('admin.events.ticket-types.edit', [$event, $ticketType]) }}" class="text-ccs-teal-light hover:underline">{{ __('Edit') }}</a>
+                    <tr>
+                        <td>{{ $ticketType->name_en }}</td>
+                        <td>{{ $ticketType->price }} {{ $ticketType->currency }}</td>
+                        <td>{{ $ticketType->workshop_slot_count ?? __('Unlimited') }}</td>
+                        <td class="text-end">
+                            <a href="{{ route('admin.events.ticket-types.edit', [$event, $ticketType]) }}" class="text-hub-purple hover:underline">{{ __('Edit') }}</a>
                             <form method="POST" action="{{ route('admin.events.ticket-types.destroy', [$event, $ticketType]) }}" class="inline" onsubmit="return confirm('{{ __('Are you sure? This cannot be undone.') }}')">
                                 @csrf @method('DELETE')
                                 <x-admin.button type="submit" variant="danger" class="ml-2">{{ __('Delete') }}</x-admin.button>

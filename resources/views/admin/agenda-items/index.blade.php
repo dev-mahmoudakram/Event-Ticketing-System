@@ -11,21 +11,21 @@
     @else
         <x-admin.table>
             <thead>
-                <tr class="border-b border-gray-700">
-                    <th class="py-2 px-3">{{ __('Day') }}</th>
-                    <th class="py-2 px-3">{{ __('Time') }}</th>
-                    <th class="py-2 px-3">{{ __('Title') }}</th>
-                    <th class="py-2 px-3"></th>
+                <tr>
+                    <th>{{ __('Day') }}</th>
+                    <th>{{ __('Time') }}</th>
+                    <th>{{ __('Title') }}</th>
+                    <th></th>
                 </tr>
             </thead>
             <tbody>
                 @foreach($items as $item)
-                    <tr class="border-b border-gray-800">
-                        <td class="py-2 px-3">{{ $item->day_date->toDateString() }}</td>
-                        <td class="py-2 px-3">{{ $item->start_time->format('H:i') }}–{{ $item->end_time->format('H:i') }}</td>
-                        <td class="py-2 px-3">{{ $item->title_en }}</td>
-                        <td class="py-2 px-3 text-right">
-                            <a href="{{ route('admin.events.agenda-items.edit', [$event, $item]) }}" class="text-ccs-teal-light hover:underline">{{ __('Edit') }}</a>
+                    <tr>
+                        <td>{{ $item->day_date->toDateString() }}</td>
+                        <td>{{ $item->start_time->format('H:i') }}–{{ $item->end_time->format('H:i') }}</td>
+                        <td>{{ $item->title_en }}</td>
+                        <td class="text-end">
+                            <a href="{{ route('admin.events.agenda-items.edit', [$event, $item]) }}" class="text-hub-purple hover:underline">{{ __('Edit') }}</a>
                             <form method="POST" action="{{ route('admin.events.agenda-items.destroy', [$event, $item]) }}" class="inline" onsubmit="return confirm('{{ __('Are you sure? This cannot be undone.') }}')">
                                 @csrf @method('DELETE')
                                 <x-admin.button type="submit" variant="danger" class="ml-2">{{ __('Delete') }}</x-admin.button>

@@ -6,10 +6,10 @@
         <x-admin.button href="{{ route('admin.site-content.index') }}" variant="secondary">{{ __('Back') }}</x-admin.button>
     </x-admin.page-header>
 
-    <p class="text-sm text-gray-400 mb-6 max-w-2xl">{{ $definition['description'] }}</p>
+    <p class="text-sm text-hub-dark/60 mb-6 max-w-2xl">{{ $definition['description'] }}</p>
 
     @if(session('status'))
-        <p class="mb-6 text-sm font-bold text-ccs-teal-light">{{ session('status') }}</p>
+        <p class="mb-6 text-sm font-bold text-hub-purple">{{ session('status') }}</p>
     @endif
 
     <form method="POST" action="{{ route('admin.site-content.update', $section) }}" enctype="multipart/form-data">

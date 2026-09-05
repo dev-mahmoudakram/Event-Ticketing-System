@@ -12,12 +12,13 @@ class PageHeaderComponentTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_renders_title_and_flag_accent(): void
+    public function test_renders_the_title_in_the_hub_heading_style(): void
     {
         $html = Blade::render('<x-admin.page-header title="Speakers" />');
 
         $this->assertStringContainsString('Speakers', $html);
-        $this->assertStringContainsString('ccs-flag-accent', $html);
+        $this->assertStringContainsString('text-hub-purple', $html);
+        $this->assertStringNotContainsString('ccs-flag-accent', $html);
     }
 
     public function test_renders_optional_action_slot(): void

@@ -10,17 +10,17 @@
 ])
 
 <div class="mb-5" x-data="{ fileName: null, preview: null }">
-    <label for="{{ $name }}" class="block text-sm font-semibold text-gray-300 mb-2">
+    <label for="{{ $name }}" class="adm-label">
         {{ $label }}
         @if($required)<span class="text-red-400">*</span>@endif
     </label>
 
     <div
-        class="relative border-2 border-dashed border-gray-600 rounded-lg p-6 text-center transition-colors hover:border-ccs-teal-light focus-within:border-ccs-teal-light"
-        @dragover.prevent="$el.classList.add('border-ccs-teal-light')"
-        @dragleave.prevent="$el.classList.remove('border-ccs-teal-light')"
+        class="relative border-2 border-dashed border-hub-purple/25 bg-white rounded-2xl p-6 text-center transition-colors hover:border-hub-purple focus-within:border-hub-purple"
+        @dragover.prevent="$el.classList.add('border-hub-purple')"
+        @dragleave.prevent="$el.classList.remove('border-hub-purple')"
         @drop.prevent="
-            $el.classList.remove('border-ccs-teal-light');
+            $el.classList.remove('border-hub-purple');
             $refs.input.files = $event.dataTransfer.files;
             $refs.input.dispatchEvent(new Event('change'));
         "
@@ -53,21 +53,21 @@
                 @else
                     <img src="{{ $current }}" alt="" class="mx-auto h-32 w-auto rounded object-contain">
                 @endif
-                <p class="text-xs text-gray-500 mt-2">{{ __('Current file — choosing a new one replaces it.') }}</p>
+                <p class="text-xs text-hub-dark/50 mt-2">{{ __('Current file — choosing a new one replaces it.') }}</p>
             </div>
         @endif
 
-        <button type="button" @click="$refs.input.click()" class="text-sm font-semibold text-ccs-teal-light hover:underline">
+        <button type="button" @click="$refs.input.click()" class="text-sm font-semibold text-hub-purple hover:underline">
             {{ __('Choose a file or drag it here') }}
         </button>
 
-        <p class="text-xs text-gray-500 mt-2" x-show="fileName" x-cloak x-text="fileName"></p>
+        <p class="text-xs text-hub-dark/50 mt-2" x-show="fileName" x-cloak x-text="fileName"></p>
         @if($hint)
-            <p class="text-xs text-gray-500 mt-2">{{ $hint }}</p>
+            <p class="text-xs text-hub-dark/50 mt-2">{{ $hint }}</p>
         @endif
     </div>
 
     @error($name)
-        <p class="text-red-400 text-sm mt-1">{{ $message }}</p>
+        <p class="text-sm mt-1.5 text-[#b42318]">{{ $message }}</p>
     @enderror
 </div>

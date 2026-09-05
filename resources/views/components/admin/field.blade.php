@@ -9,19 +9,19 @@
     'required' => false,
 ])
 
-@php $inputClasses = 'w-full border border-gray-600 bg-gray-900 text-white rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-ccs-red'; @endphp
+@php $inputClasses = 'adm-input'; @endphp
 
 @if($type === 'checkbox')
     <div class="flex items-center gap-2 mb-4">
-        <input type="checkbox" name="{{ $name }}" id="{{ $name }}" value="1" class="rounded border-gray-600 bg-gray-900" @checked($checked)>
+        <input type="checkbox" name="{{ $name }}" id="{{ $name }}" value="1" class="w-4 h-4 rounded border-hub-purple/30 text-hub-purple focus:ring-hub-purple/40" @checked($checked)>
         @if($label)
-            <label for="{{ $name }}" class="text-sm text-gray-300">{{ $label }}</label>
+            <label for="{{ $name }}" class="text-sm text-hub-dark/75">{{ $label }}</label>
         @endif
     </div>
 @else
-    <div class="mb-4">
+    <div class="mb-5">
         @if($label)
-            <label for="{{ $name }}" class="block text-sm text-gray-300 mb-1">{{ $label }}</label>
+            <label for="{{ $name }}" class="adm-label">{{ $label }}</label>
         @endif
 
         @if($type === 'textarea')
@@ -43,7 +43,7 @@
         @endif
 
         @error($name)
-            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+            <p class="text-sm mt-1.5 text-[#b42318]">{{ $message }}</p>
         @enderror
     </div>
 @endif

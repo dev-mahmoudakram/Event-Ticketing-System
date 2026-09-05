@@ -5,17 +5,17 @@
     <x-admin.page-header :title="__('Dashboard')" />
 
     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div class="bg-gray-900 rounded-lg p-6">
+        <div class="adm-card p-6">
             <p class="font-display text-3xl font-bold">{{ $totalEvents }}</p>
-            <p class="text-gray-400 text-sm mt-1">{{ __('Total Events') }}</p>
+            <p class="text-hub-dark/60 text-sm mt-1">{{ __('Total Events') }}</p>
         </div>
-        <div class="bg-gray-900 rounded-lg p-6">
-            <p class="font-display text-3xl font-bold text-ccs-teal-light">{{ $publishedEvents }}</p>
-            <p class="text-gray-400 text-sm mt-1">{{ __('Published') }}</p>
+        <div class="adm-card p-6">
+            <p class="font-display text-3xl font-bold text-hub-purple">{{ $publishedEvents }}</p>
+            <p class="text-hub-dark/60 text-sm mt-1">{{ __('Published') }}</p>
         </div>
-        <div class="bg-gray-900 rounded-lg p-6">
-            <p class="font-display text-3xl font-bold text-gray-400">{{ $draftEvents }}</p>
-            <p class="text-gray-400 text-sm mt-1">{{ __('Draft') }}</p>
+        <div class="adm-card p-6">
+            <p class="font-display text-3xl font-bold text-hub-dark/60">{{ $draftEvents }}</p>
+            <p class="text-hub-dark/60 text-sm mt-1">{{ __('Draft') }}</p>
         </div>
     </div>
 

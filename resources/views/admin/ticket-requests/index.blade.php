@@ -5,7 +5,7 @@
     <x-admin.page-header :title="__('Ticket Requests').' — '.$event->name_en" />
 
     @if(session('success'))
-        <div class="mb-4 rounded border border-ccs-teal-light/40 bg-ccs-teal-light/10 px-4 py-3 text-sm text-ccs-teal-light" role="status">
+        <div class="mb-4 rounded border border-ccs-teal-light/40 bg-hub-purple-light/10 px-4 py-3 text-sm text-hub-purple" role="status">
             {{ session('success') }}
         </div>
     @endif
@@ -19,7 +19,7 @@
     <div class="mb-4 flex gap-2 text-sm">
         @foreach(['pending', 'approved', 'rejected', 'payment_pending', 'all'] as $option)
             <a href="{{ route('admin.events.ticket-requests.index', $event) }}?status={{ $option }}"
-               class="px-3 py-1.5 rounded {{ $status === $option ? 'bg-ccs-red text-white' : 'border border-gray-600 text-gray-300' }}">
+               class="px-3 py-1.5 rounded {{ $status === $option ? 'bg-hub-purple text-hub-dark' : 'border border-hub-purple/20 text-hub-dark/75' }}">
                 {{ ucfirst(str_replace('_', ' ', $option)) }}
             </a>
         @endforeach
@@ -30,35 +30,35 @@
     @else
         <x-admin.table>
             <thead>
-                <tr class="border-b border-gray-700">
-                    <th class="py-2 px-3">{{ __('Name') }}</th>
-                    <th class="py-2 px-3">{{ __('Email') }}</th>
-                    <th class="py-2 px-3">{{ __('Ticket Type') }}</th>
-                    <th class="py-2 px-3">{{ __('Status') }}</th>
-                    <th class="py-2 px-3">{{ __('Answers') }}</th>
-                    <th class="py-2 px-3"></th>
+                <tr>
+                    <th>{{ __('Name') }}</th>
+                    <th>{{ __('Email') }}</th>
+                    <th>{{ __('Ticket Type') }}</th>
+                    <th>{{ __('Status') }}</th>
+                    <th>{{ __('Answers') }}</th>
+                    <th></th>
                 </tr>
             </thead>
             <tbody>
                 @foreach($tickets as $ticket)
-                    <tr class="border-b border-gray-800 align-top">
-                        <td class="py-2 px-3">{{ $ticket->name }}</td>
-                        <td class="py-2 px-3">{{ $ticket->email }}</td>
-                        <td class="py-2 px-3">{{ $ticket->ticketType->name_en }}</td>
-                        <td class="py-2 px-3">{{ ucfirst(str_replace('_', ' ', $ticket->status->value)) }}</td>
-                        <td class="py-2 px-3">
+                    <tr class="align-top">
+                        <td>{{ $ticket->name }}</td>
+                        <td>{{ $ticket->email }}</td>
+                        <td>{{ $ticket->ticketType->name_en }}</td>
+                        <td>{{ ucfirst(str_replace('_', ' ', $ticket->status->value)) }}</td>
+                        <td>
                             @foreach($ticket->answers as $answer)
-                                <div class="text-xs text-gray-400">
+                                <div class="text-xs text-hub-dark/60">
                                     {{ $answer->field->label_en }}:
                                     @if($answer->file_path)
-                                        <a href="{{ route('admin.events.ticket-requests.answers.download', [$event, $ticket, $answer]) }}" class="text-ccs-teal-light hover:underline">{{ __('Download') }}</a>
+                                        <a href="{{ route('admin.events.ticket-requests.answers.download', [$event, $ticket, $answer]) }}" class="text-hub-purple hover:underline">{{ __('Download') }}</a>
                                     @else
                                         {{ $answer->value }}
                                     @endif
                                 </div>
                             @endforeach
                         </td>
-                        <td class="py-2 px-3 text-right">
+                        <td class="text-end">
                             @if($ticket->status === \App\Enums\TicketStatus::Pending)
                                 <form method="POST" action="{{ route('admin.events.ticket-requests.update-status', [$event, $ticket, 'approved']) }}" class="inline">
                                     @csrf @method('PATCH')

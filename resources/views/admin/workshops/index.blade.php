@@ -11,15 +11,15 @@
     @else
         <x-admin.table>
             <thead>
-                <tr class="border-b border-gray-700"><th class="py-2 px-3">{{ __('Name') }}</th><th class="py-2 px-3">{{ __('Capacity') }}</th><th class="py-2 px-3"></th></tr>
+                <tr><th>{{ __('Name') }}</th><th>{{ __('Capacity') }}</th><th></th></tr>
             </thead>
             <tbody>
                 @foreach($workshops as $workshop)
-                    <tr class="border-b border-gray-800">
-                        <td class="py-2 px-3">{{ $workshop->name_en }}</td>
-                        <td class="py-2 px-3">{{ $workshop->capacity }}</td>
-                        <td class="py-2 px-3 text-right">
-                            <a href="{{ route('admin.events.workshops.edit', [$event, $workshop]) }}" class="text-ccs-teal-light hover:underline">{{ __('Edit') }}</a>
+                    <tr>
+                        <td>{{ $workshop->name_en }}</td>
+                        <td>{{ $workshop->capacity }}</td>
+                        <td class="text-end">
+                            <a href="{{ route('admin.events.workshops.edit', [$event, $workshop]) }}" class="text-hub-purple hover:underline">{{ __('Edit') }}</a>
                             <form method="POST" action="{{ route('admin.events.workshops.destroy', [$event, $workshop]) }}" class="inline" onsubmit="return confirm('{{ __('Are you sure? This cannot be undone.') }}')">
                                 @csrf @method('DELETE')
                                 <x-admin.button type="submit" variant="danger" class="ml-2">{{ __('Delete') }}</x-admin.button>

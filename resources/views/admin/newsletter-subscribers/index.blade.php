@@ -9,16 +9,16 @@
     @else
         <x-admin.table>
             <thead>
-                <tr class="border-b border-gray-700">
-                    <th class="py-2 px-3">{{ __('Email') }}</th>
-                    <th class="py-2 px-3">{{ __('Subscribed') }}</th>
+                <tr>
+                    <th>{{ __('Email') }}</th>
+                    <th>{{ __('Subscribed') }}</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach($newsletterSubscribers as $subscriber)
-                    <tr class="border-b border-gray-800">
-                        <td class="py-2 px-3">{{ $subscriber->email }}</td>
-                        <td class="py-2 px-3">{{ $subscriber->created_at->format('M j, Y') }}</td>
+                    <tr>
+                        <td>{{ $subscriber->email }}</td>
+                        <td>{{ $subscriber->created_at->format('M j, Y') }}</td>
                     </tr>
                 @endforeach
             </tbody>
