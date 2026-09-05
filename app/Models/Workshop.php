@@ -34,6 +34,29 @@ class Workshop extends Model
         return $this->belongsTo(Speaker::class);
     }
 
+    public function bookings(): HasMany
+    {
+        return $this->hasMany(WorkshopBooking::class);
+    }
+
+    /**
+     * Places left, counted from the bookings themselves rather than a stored tally, so the
+     * number cannot drift away from reality. A capacity of zero means unlimited.
+     */
+    public function remainingCapacity(): ?int
+    {
+        if ((int) $this->capacity === 0) {
+            return null;
+        }
+
+        return max(0, (int) $this->capacity - $this->bookings()->count());
+    }
+
+    public function isFull(): bool
+    {
+        return $this->remainingCapacity() === 0;
+    }
+
     public function agendaItems(): HasMany
     {
         return $this->hasMany(AgendaItem::class)->orderBy('day_date')->orderBy('start_time');

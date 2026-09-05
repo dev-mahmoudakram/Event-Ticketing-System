@@ -28,6 +28,7 @@ class Event extends Model
         'slug', 'name_ar', 'name_en', 'tagline_ar', 'tagline_en', 'cover_image_path',
         'logo_path', 'footer_logo_path', 'favicon_path', 'apple_touch_icon_path', 'share_image_path',
         'contact_email', 'contact_phone', 'social_links',
+        'voting_opens_at', 'voting_closes_at', 'show_award_results',
         'start_date', 'end_date',
         'venue_name_ar', 'venue_name_en', 'venue_address_ar', 'venue_address_en',
         'map_embed_url', 'status', 'visible_sections',
@@ -39,6 +40,9 @@ class Event extends Model
         'status' => EventStatus::class,
         'visible_sections' => 'array',
         'social_links' => 'array',
+        'voting_opens_at' => 'datetime',
+        'voting_closes_at' => 'datetime',
+        'show_award_results' => 'boolean',
     ];
 
     /**
@@ -102,6 +106,30 @@ class Event extends Model
     public function getRouteKeyName(): string
     {
         return 'slug';
+    }
+
+    public function awards(): HasMany
+    {
+        return $this->hasMany(Award::class)->orderBy('sort_order');
+    }
+
+    public function discountCoupons(): HasMany
+    {
+        return $this->hasMany(DiscountCoupon::class)->orderBy('code');
+    }
+
+    /**
+     * Whether the public can cast a vote right now.
+     *
+     * An event with no window set is not open: voting has to be switched on deliberately.
+     */
+    public function votingIsOpen(): bool
+    {
+        if ($this->voting_opens_at === null || $this->voting_closes_at === null) {
+            return false;
+        }
+
+        return now()->between($this->voting_opens_at, $this->voting_closes_at);
     }
 
     public function speakers(): HasMany

@@ -10,6 +10,8 @@ use App\Http\Requests\TicketRequestStoreRequest;
 use App\Models\Event;
 use App\Models\Ticket;
 use App\Models\TicketRequestField;
+use App\Models\TicketType;
+use App\Services\CouponRedeemer;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -17,19 +19,34 @@ use Illuminate\Support\Facades\DB;
 
 class TicketRequestController extends Controller
 {
+    public function __construct(private readonly CouponRedeemer $coupons) {}
+
     public function store(TicketRequestStoreRequest $request, Event $event): RedirectResponse|JsonResponse
     {
         $validated = $request->validated();
         $fields = $event->ticketRequestFields;
 
         $ticket = DB::transaction(function () use ($validated, $event, $fields, $request) {
+            // The price is settled here and copied onto the ticket: a coupon that expires, or a
+            // ticket type whose price changes, must not rewrite what this attendee was quoted.
+            $ticketType = TicketType::findOrFail($validated['ticket_type_id']);
+            $coupon = $this->coupons->find($event, $validated['coupon_code'] ?? null);
+            $pricing = $this->coupons->priceFor($ticketType, $coupon);
+
             $ticket = $event->tickets()->create([
                 'ticket_type_id' => $validated['ticket_type_id'],
+                'discount_coupon_id' => $pricing['coupon_id'],
+                'price' => $pricing['price'],
+                'discount_amount' => $pricing['discount'],
                 'name' => $validated['name'],
                 'email' => $validated['email'],
                 'phone' => $validated['phone'],
                 'status' => TicketStatus::Pending,
             ]);
+
+            if ($coupon !== null) {
+                $this->coupons->recordUse($coupon);
+            }
 
             $ticket->update(['ticket_number' => $this->generateTicketNumber($event, $ticket)]);
 

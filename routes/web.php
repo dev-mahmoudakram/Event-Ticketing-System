@@ -4,7 +4,9 @@ use App\Http\Controllers\Admin\AgendaItemController;
 use App\Http\Controllers\Admin\AuthController;
 use App\Http\Controllers\Admin\ContactMessageController as AdminContactMessageController;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\DiscountCouponController;
 use App\Http\Controllers\Admin\EventController;
+use App\Http\Controllers\Admin\EventReportController;
 use App\Http\Controllers\Admin\FaqController;
 use App\Http\Controllers\Admin\GalleryPhotoController;
 use App\Http\Controllers\Admin\HeroSlideController;
@@ -92,6 +94,9 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::resource('events.ticket-types', TicketTypeController::class)
             ->except('show')
             ->parameters(['ticket-types' => 'ticketType']);
+        Route::resource('events.discount-coupons', DiscountCouponController::class)
+            ->except('show')
+            ->parameters(['discount-coupons' => 'discountCoupon']);
         Route::resource('events.agenda-items', AgendaItemController::class)
             ->except('show')
             ->parameters(['agenda-items' => 'agendaItem']);
@@ -106,6 +111,8 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::resource('events.request-form-fields', TicketRequestFieldController::class)
             ->except('show')
             ->parameters(['request-form-fields' => 'requestField']);
+        Route::get('events/{event}/reports', [EventReportController::class, 'show'])->name('events.reports.show');
+        Route::get('events/{event}/reports/export', [EventReportController::class, 'export'])->name('events.reports.export');
         Route::get('events/{event}/ticket-requests', [TicketRequestQueueController::class, 'index'])->name('events.ticket-requests.index');
         Route::patch('events/{event}/ticket-requests/{ticket}/{status}', [TicketRequestQueueController::class, 'updateStatus'])
             ->name('events.ticket-requests.update-status');

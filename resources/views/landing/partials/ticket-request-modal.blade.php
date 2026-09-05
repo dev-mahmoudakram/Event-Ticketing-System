@@ -88,6 +88,15 @@
                         <p id="error-phone" class="text-red-400 text-sm mt-1 {{ $errors->has('phone') ? '' : 'hidden' }}">{{ $errors->first('phone') }}</p>
                     </div>
 
+                    {{-- Only offered when this event actually runs codes. --}}
+                    @if($event->discountCoupons()->where('is_active', true)->exists())
+                        <div>
+                            <label for="coupon_code" class="block text-sm text-gray-300 mb-1">{{ __('Discount code') }} <span class="text-gray-500">({{ __('optional') }})</span></label>
+                            <input id="coupon_code" type="text" name="coupon_code" value="{{ old('coupon_code') }}" autocapitalize="characters" class="w-full border border-gray-600 bg-gray-900 text-white rounded px-3 py-2 uppercase">
+                            <p id="error-coupon_code" class="text-red-400 text-sm mt-1 {{ $errors->has('coupon_code') ? '' : 'hidden' }}">{{ $errors->first('coupon_code') }}</p>
+                        </div>
+                    @endif
+
                     @foreach($event->ticketRequestFields as $field)
                         @php $inputKey = 'field_'.$field->id; @endphp
                         <div>

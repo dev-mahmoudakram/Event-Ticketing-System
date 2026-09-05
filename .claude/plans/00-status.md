@@ -12,17 +12,17 @@ Last verified: 2026-09-05 (routes, models, controllers, migrations inspected dir
 | # | Phase | Status |
 |---|-------|--------|
 | 01 | Project Setup | ✅ Done |
-| 02 | Database Design | 🟡 Partial — content, branding and ticket workflow schema done; booking/coupons/awards tables missing |
-| 03 | Admin Panel | 🟡 Partial — every content CRUD and the approval queue done; coupons and reports missing |
+| 02 | Database Design | ✅ Done — every table the ten phases need now exists |
+| 03 | Admin Panel | ✅ Done — content CRUD, approvals, coupons and reports |
 | 04 | Landing Page | ✅ Done — both brands (CCS event pages and the Creators Hub platform page) |
 | 05 | Ticket Request | ✅ Done — request, review, approve/reject, approval email with a payment link |
 | 06 | Payment | 🟡 Partial — the full flow works on a stub link; no real gateway |
 | 07 | Workshops | 🟡 Partial — browsing built, booking flow missing |
 | 08 | Awards | 🟡 Partial — teaser and page shell built, voting missing |
 | 09 | QR System | ✅ Done — QR on issuance, signed scan URL, staff check-in portal |
-| 10 | Reports | ⬜ Not started |
+| 10 | Reports | ✅ Done — per-event report screen and CSV export |
 
-Four phases complete, five partial, one untouched.
+Seven phases complete, three partial (payment gateway, workshop booking, awards voting).
 
 ## 01 — Project Setup
 
@@ -42,12 +42,15 @@ AlpineJS instead (see `.claude/CLAUDE.md`). Doc updated to match reality.
       ContactMessages, NewsletterSubscribers, Reels
 - [x] Platform-side content: SiteContent (registry-driven CMS), SiteFaq, HeroSlide, HubPartner
 - [x] Ticket (attendee ticket + workflow state), `TicketRequestField`, `TicketRequestAnswer`
-- [ ] WorkshopBooking (slot-based booking keyed by Ticket ID + Workshop Booking Key)
-- [ ] DiscountCoupon
-- [ ] Award / AwardVote
+- [x] `workshop_bookings` — which ticket holds which place, unique per ticket per workshop;
+      capacity and slot allowance are counted from these rows rather than stored as tallies
+- [x] `discount_coupons` (+ `tickets.discount_coupon_id`, `price`, `discount_amount`) — the
+      price is copied onto the ticket at request time, so nothing rewrites it afterwards
+- [x] `awards` and `award_votes` (+ the voting window on `events`) — one confirmed vote per
+      email per category, unconfirmed rows are pending rather than cast
 
-The `tickets.workshop_booking_key` column exists but nothing writes to it yet — it is issued as
-part of Workshops (Phase 07).
+The `tickets.workshop_booking_key` column still has nothing writing to it — it is issued as part
+of the Workshops booking flow (Phase 07).
 
 ## 03 — Admin Panel
 
@@ -60,8 +63,9 @@ part of Workshops (Phase 07).
 - [x] Creators Hub CMS: content registry, hero slides, partners, FAQs, logos, sharing, contact
 - [x] Contact Messages and Newsletter Subscribers (read-only indexes)
 - [x] Ticket Request Form field builder; request review/approve/reject queue with emails
-- [ ] Discount Coupons admin
-- [ ] Per-event Reports screen
+- [x] Discount Coupons admin (per event, percentage or fixed, usage limit, validity window)
+- [x] Per-event Report screen: funnel, tickets by status, revenue by type, arrivals by hour,
+      coupon use, and a CSV export of the attendee list
 
 ## 04 — Landing Page
 
@@ -86,9 +90,10 @@ part of Workshops (Phase 07).
 
 - [x] Payment link flow (Payment Pending → Paid → Ticket Issued) behind a signed URL
 - [x] QR code and issued-ticket email on payment success
+- [x] The price and any discount are recorded on the ticket at request time
 - [ ] Real gateway (Kashier — waiting on their approval); `TicketPaymentController` marks a
       ticket paid without taking money
-- [ ] Payment records: amount, currency, gateway reference, refunds
+- [ ] Payment records: gateway reference, refunds
 - [ ] Workshop Booking Key generation on payment success (belongs with Phase 07)
 
 ## 07 — Workshops
@@ -96,7 +101,7 @@ part of Workshops (Phase 07).
 - [x] Admin CRUD for workshops
 - [x] Public workshop browsing (`workshops.index`, `workshops.show`)
 - [x] Landing page workshops teaser (capacity shown, no fabricated fill %)
-- [ ] `WorkshopBooking` model
+- [x] `WorkshopBooking` model, capacity and slot-allowance helpers
 - [ ] Ticket ID + Workshop Booking Key redemption flow (no login)
 - [ ] Enforce each ticket type's `workshop_slot_count` against booked slots
 
@@ -104,9 +109,9 @@ part of Workshops (Phase 07).
 
 - [x] Admin-editable Awards teaser blurb (Landing Page Content CMS)
 - [x] Public awards teaser (landing page) + `/events/{event}/awards` page shell
-- [ ] Voting mechanics decided (who can vote, one vote per category/person, voting window)
 - [ ] Nominee entry (admin)
-- [ ] `Award` / `AwardVote` models
+- [x] `Award` / `AwardVote` models, the voting window, and the one-vote-per-email rule
+- [x] Decided: the public votes, one confirmed email per category
 - [ ] Vote submission flow + results display
 
 ## 09 — QR System
@@ -119,9 +124,12 @@ part of Workshops (Phase 07).
 
 ## 10 — Reports
 
-- [ ] Metrics defined (ticket counts by status, revenue, workshop attendance, check-in rates)
-- [ ] Per-event admin report screens
-- [ ] Export (CSV) for the registration and finance teams
+- [x] Funnel (requested → approved → paid → checked in) and counts for every ticket status
+- [x] Revenue: collected, discounted, outstanding, and a breakdown by ticket type
+- [x] Check-in on the day: attendance against issued tickets, and arrivals by hour
+- [x] Coupon use
+- [x] CSV export of the attendee list, BOM-prefixed so Excel reads Arabic names
+- [ ] Workshop attendance — waits on the booking flow (Phase 07)
 
 ## Not in any phase, still open
 
@@ -129,4 +137,4 @@ part of Workshops (Phase 07).
       (the Creators Hub page was converted; CCS was deferred)
 - [ ] Deployment follow-ups: set `ADMIN_SEED_EMAIL` / `ADMIN_SEED_PASSWORD`, deploy
       `public/.user.ini`, verify with `php artisan media:limits`
-- [ ] 14 commits are unpushed
+- [ ] Commits are unpushed

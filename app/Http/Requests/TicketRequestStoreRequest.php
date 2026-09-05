@@ -31,6 +31,9 @@ class TicketRequestStoreRequest extends FormRequest
             'name' => ['required', 'string', 'max:255', 'regex:/^[\pL\pM\s\'\-\.]+$/u'],
             'email' => ['required', 'email:rfc', 'max:255'],
             'phone' => ['required', (new Phone)->international()],
+            // An unknown or expired code is not a validation failure: the request goes through
+            // at full price, and the form says the code was not applied.
+            'coupon_code' => ['nullable', 'string', 'max:40'],
         ];
 
         foreach ($event->ticketRequestFields as $field) {
