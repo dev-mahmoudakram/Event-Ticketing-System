@@ -5,97 +5,91 @@ directory for scope). Reflects actual code in the repo, not intent — re-verify
 models before trusting this after major work lands, since it goes stale the moment new code
 ships without an update here.
 
-Last verified: 2026-08-01 (routes, models, controllers, migrations inspected directly).
+Last verified: 2026-09-05 (routes, models, controllers, migrations inspected directly).
 
 ## At a glance
 
 | # | Phase | Status |
 |---|-------|--------|
 | 01 | Project Setup | ✅ Done |
-| 02 | Database Design | 🟡 Partial — content + core ticket workflow schema done, booking/coupons/awards schema missing |
-| 03 | Admin Panel | 🟡 Partial — CMS/content CRUD and ticket request approvals done, coupons/reports missing |
-| 04 | Landing Page | ✅ Done |
-| 05 | Ticket Request | 🟡 Partial — request, review, approve/reject built; payment-link email waits on Payment |
-| 06 | Payment | ⬜ Not started |
+| 02 | Database Design | 🟡 Partial — content, branding and ticket workflow schema done; booking/coupons/awards tables missing |
+| 03 | Admin Panel | 🟡 Partial — every content CRUD and the approval queue done; coupons and reports missing |
+| 04 | Landing Page | ✅ Done — both brands (CCS event pages and the Creators Hub platform page) |
+| 05 | Ticket Request | ✅ Done — request, review, approve/reject, approval email with a payment link |
+| 06 | Payment | 🟡 Partial — the full flow works on a stub link; no real gateway |
 | 07 | Workshops | 🟡 Partial — browsing built, booking flow missing |
-| 08 | Awards | 🟡 Partial — teaser/page shell built, voting missing |
-| 09 | QR System | ⬜ Not started |
+| 08 | Awards | 🟡 Partial — teaser and page shell built, voting missing |
+| 09 | QR System | ✅ Done — QR on issuance, signed scan URL, staff check-in portal |
 | 10 | Reports | ⬜ Not started |
+
+Four phases complete, five partial, one untouched.
 
 ## 01 — Project Setup
 
-- [x] Laravel 12 + PHP 8.3
-- [x] MySQL connection
-- [x] Laravel Boost
+- [x] Laravel 12 + PHP 8.3, MySQL, Laravel Boost
 - [x] Base Blade layout with RTL/LTR (Arabic + English) support
 - [x] Bilingual UI string catalog (`lang/ar.json`, `lang/en.json`) covering the whole app
+- [x] A test guards that no landing page default ships without an Arabic translation
 
-Note: the phase doc originally scoped "Bootstrap 5 + SCSS" — the project actually uses
-Tailwind CSS + AlpineJS instead (see `.claude/CLAUDE.md`). Doc updated to match reality.
+Note: the phase doc originally scoped "Bootstrap 5 + SCSS" — the project uses Tailwind CSS +
+AlpineJS instead (see `.claude/CLAUDE.md`). Doc updated to match reality.
 
 ## 02 — Database Design
 
-- [x] Events, Speakers, Sponsors, TicketTypes (+ TicketTypeFeatures), Workshops, AgendaItems,
-      Faqs, LandingPageContent, GalleryPhotos, Testimonials, ContactMessages,
-      NewsletterSubscribers
-- [x] Ticket (attendee ticket + workflow state: Pending → Approved/Rejected → Payment Pending
-      → Paid → Ticket Issued → Checked In → Cancelled — only the first four states are set by
-      anything yet), `TicketRequestField`, `TicketRequestAnswer`
+- [x] Events (including cover image, logo, footer logo, favicon, Apple touch icon, share image,
+      contact email/phone and social links), Speakers, Sponsors, TicketTypes (+ features),
+      Workshops, AgendaItems, Faqs, LandingPageContent, GalleryPhotos, Testimonials,
+      ContactMessages, NewsletterSubscribers, Reels
+- [x] Platform-side content: SiteContent (registry-driven CMS), SiteFaq, HeroSlide, HubPartner
+- [x] Ticket (attendee ticket + workflow state), `TicketRequestField`, `TicketRequestAnswer`
 - [ ] WorkshopBooking (slot-based booking keyed by Ticket ID + Workshop Booking Key)
 - [ ] DiscountCoupon
 - [ ] Award / AwardVote
 
+The `tickets.workshop_booking_key` column exists but nothing writes to it yet — it is issued as
+part of Workshops (Phase 07).
+
 ## 03 — Admin Panel
 
-- [x] Admin auth (login/logout)
-- [x] Events CRUD
-- [x] Ticket Types CRUD (with bilingual feature bullets)
-- [x] Workshops CRUD
-- [x] Speakers CRUD
-- [x] Sponsors CRUD
-- [x] Agenda Items CRUD
-- [x] FAQs CRUD
-- [x] Gallery Photos CRUD
-- [x] Testimonials CRUD
-- [x] Landing Page Content CMS, including per-section show/hide toggles
-- [x] Contact Messages (read-only index)
-- [x] Newsletter Subscribers (read-only index)
-- [x] Ticket Request Form field builder (per-event Instagram/Portfolio/CV toggles)
-- [x] Ticket Request review/approve/reject queue (with rejection email)
+- [x] Admin auth (login/logout), rebuilt in the Creators Hub identity
+- [x] Grouped menu: Events expands to every event, each event onto its own sections
+- [x] Events CRUD, including per-event branding, contact details and social links
+- [x] Ticket Types, Workshops, Speakers, Sponsors, Agenda Items, FAQs, Gallery Photos,
+      Testimonials, Reels CRUD
+- [x] Landing Page Content CMS per event, with per-section show/hide and an About image
+- [x] Creators Hub CMS: content registry, hero slides, partners, FAQs, logos, sharing, contact
+- [x] Contact Messages and Newsletter Subscribers (read-only indexes)
+- [x] Ticket Request Form field builder; request review/approve/reject queue with emails
 - [ ] Discount Coupons admin
 - [ ] Per-event Reports screen
 
 ## 04 — Landing Page
 
-- [x] Full CCS-branded redesign (hero, about, speakers, workshops teaser, tickets, awards
-      teaser, gallery, testimonials, partners, FAQ, location, contact, newsletter/footer)
-- [x] Bilingual (Arabic RTL / English LTR), all copy CMS-editable or catalog-translated
-- [x] Admin-controlled section visibility (show/hide any of the 13 toggleable sections)
-- [x] Standalone Agenda page (moved off the landing page into its own route/page)
-- [x] Scroll-reveal animations, smooth-scroll nav, language switcher
-
-Functionally complete for the current scope. Future landing-page work is additive (new
-sections/content), not foundational.
+- [x] CCS event page (hero, about, speakers, workshops teaser, tickets, awards teaser, gallery,
+      testimonials, partners, FAQ, location, contact, newsletter/footer), reels, GSAP motion
+- [x] Creators Hub platform page at `/` (hero slider, stats, about, audiences deck, events,
+      community, partners, FAQ, contact, footer), every string and image CMS-editable
+- [x] Standalone Agenda page, events index
+- [x] Bilingual throughout, admin-controlled section visibility, scroll-reveal motion
+- [x] Favicons, web manifest, Open Graph and Twitter cards, per-event overrides
 
 ## 05 — Ticket Request
 
-- [x] Public request form UI (`GET /events/{event}/request`), pre-selects a ticket type
-- [x] Dynamic, admin-configurable extra fields (Instagram, Portfolio [URL or PDF], CV upload)
-      alongside fixed Name/Email/Phone, with server-side validation and private file storage
-- [x] `Ticket` model + migration (plus `TicketRequestField`, `TicketRequestAnswer`)
-- [x] Form submission endpoint (`POST`) that creates a Ticket in Pending status
-- [x] Admin review screen with Approve / Reject actions
-- [x] Reject sends a rejection email; Approve moves the ticket to Payment Pending — no email yet
-      since there's no real payment link until Payment (Phase 06) exists
+- [x] Public request form, pre-selects a ticket type, no login
+- [x] Admin-configurable extra fields (Instagram, Portfolio URL/PDF, CV upload) with private
+      file storage
+- [x] Submission endpoint creating a Pending ticket, with an animated confirmation popup
+- [x] Admin review screen with Approve / Reject
+- [x] Approve emails a signed payment link (7 days); Reject emails a decline
 
 ## 06 — Payment
 
-- [ ] Payment gateway selection
-- [ ] Payment link flow (Payment Pending → Paid)
-- [ ] QR code + Workshop Booking Key generation on payment success
-- [ ] Issued-ticket email
-
-Not started.
+- [x] Payment link flow (Payment Pending → Paid → Ticket Issued) behind a signed URL
+- [x] QR code and issued-ticket email on payment success
+- [ ] Real gateway (Kashier — waiting on their approval); `TicketPaymentController` marks a
+      ticket paid without taking money
+- [ ] Payment records: amount, currency, gateway reference, refunds
+- [ ] Workshop Booking Key generation on payment success (belongs with Phase 07)
 
 ## 07 — Workshops
 
@@ -117,16 +111,22 @@ Not started.
 
 ## 09 — QR System
 
-- [ ] QR code generation on ticket issuance
-- [ ] Registration/check-in team portal
-- [ ] Portal access model (staff login vs. shared key) decided
-- [ ] Check-in marks Ticket as Checked In
-
-Not started.
+- [x] QR code generated on ticket issuance (`endroid/qr-code`), emailed and shown on the ticket
+- [x] Signed scan URL, so a QR cannot be forged or replayed from a guessed id
+- [x] Check-in portal for staff (`/check-in/{event}`), behind login
+- [x] Check-in marks the ticket Checked In, and refuses invalid, unpaid or already-used tickets
+- [x] A designed ticket, printable from its own page and embedded in the issued email
 
 ## 10 — Reports
 
 - [ ] Metrics defined (ticket counts by status, revenue, workshop attendance, check-in rates)
 - [ ] Per-event admin report screens
+- [ ] Export (CSV) for the registration and finance teams
 
-Not started.
+## Not in any phase, still open
+
+- [ ] The CCS event page still has hardcoded English strings that are not CMS-editable
+      (the Creators Hub page was converted; CCS was deferred)
+- [ ] Deployment follow-ups: set `ADMIN_SEED_EMAIL` / `ADMIN_SEED_PASSWORD`, deploy
+      `public/.user.ini`, verify with `php artisan media:limits`
+- [ ] 14 commits are unpushed
