@@ -95,8 +95,10 @@ export default function ticketScanner({ endpoint, arrived, labels }) {
                 return cameras[0].id;
             }
 
-            // Nothing enumerated: let the browser pick and report its own failure.
-            return { facingMode: 'environment' };
+            // The browser enumerated nothing at all: the machine has no working camera —
+            // unplugged, or a driver that failed to start. Say so here rather than asking
+            // for a camera that cannot exist and reporting whatever the browser throws.
+            throw Object.assign(new Error('no camera'), { name: 'NotFoundError' });
         },
 
         /**

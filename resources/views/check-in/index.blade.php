@@ -17,7 +17,7 @@
                 stop: @js(__('Stop camera')),
                 insecure: @js(__('This page is not on a secure address, so the browser will not open a camera here. Open the desk over https (or on localhost), or type codes below.')),
                 denied: @js(__('The browser blocked the camera. Allow camera access for this site, then start it again.')),
-                noCamera: @js(__('No camera was found on this device.')),
+                noCamera: @js(__('No working camera was found. Check it is plugged in and not in use, or type codes below.')),
                 busy: @js(__('The camera is already in use by another program. Close it and try again.')),
                 unsupported: @js(__('This browser does not offer a camera to the page. Try Chrome or Edge, or type codes below.')),
                 blocked: @js(__('The camera could not be opened.')),
