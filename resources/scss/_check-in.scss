@@ -5,26 +5,37 @@
 
 .scanner-stage {
   position: relative;
-  display: grid;
-  place-items: center;
-  aspect-ratio: 4 / 3;
-  border-radius: 1rem;
   overflow: hidden;
+  border-radius: 1rem;
   background: rgba(29, 29, 29, 0.92);
   background: color-mix(in srgb, var(--color-hub-dark) 92%, transparent);
   border: 1px solid rgba(60, 52, 137, 0.15);
   border: 1px solid color-mix(in srgb, var(--color-hub-purple) 15%, transparent);
+
+  /* The height comes from the stage itself, not from centering an intrinsically-sized
+     child inside it. Without an explicit height here .scanner-view has none of its own —
+     "width: 100%" alone gives it zero height — so it was collapsing to the video's native
+     size (often tall/portrait on a phone) and getting clipped by overflow: hidden. A fixed
+     height at each breakpoint means the box is never taller than the screen, phone or
+     desktop, which is what "cropped on mobile" was actually describing. */
+  height: 20rem;
 }
 
-.scanner-view {
-  width: 100%;
+@media (min-width: 768px) {
+  .scanner-stage {
+    height: 26rem;
+  }
 }
 
-/* html5-qrcode injects its own video element; make it fill the stage rather than
-   sit at whatever intrinsic size the camera reports. */
+.scanner-view,
 .scanner-view video {
-  width: 100% !important;
-  height: 100% !important;
+  width: 100%;
+  height: 100%;
+}
+
+/* html5-qrcode injects its own video element inside .scanner-view; make it fill the stage
+   rather than sit at whatever intrinsic size the camera reports. */
+.scanner-view video {
   object-fit: cover;
   display: block;
 }
@@ -36,4 +47,86 @@
   font-size: 0.9rem;
   color: rgba(255, 255, 255, 0.65);
   color: color-mix(in srgb, white 65%, transparent);
+}
+
+/* Scan verdict --------------------------------------------------------------
+   What staff read after every scan. Large, and never relying on colour alone
+   — a red/green mix-up here means a used ticket gets waved through. */
+
+.scan-verdict {
+  border-radius: 1rem;
+  padding: 1.1rem 1.3rem;
+  border: 2px solid transparent;
+}
+
+.scan-verdict-headline {
+  font-size: 1.05rem;
+  font-weight: 800;
+  line-height: 1.3;
+}
+
+.scan-verdict-detail {
+  margin-top: 0.5rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.scan-verdict-name {
+  font-weight: 700;
+}
+
+.scan-verdict-meta {
+  font-size: 0.85rem;
+  opacity: 0.75;
+}
+
+/* Verified: admit. The only state without a warning shape, so it reads as
+   unambiguously different from every kind of refusal. */
+.scan-verdict-verified {
+  background: rgba(124, 203, 207, 0.14);
+  background: color-mix(in srgb, var(--color-ccs-teal-light) 14%, transparent);
+  border-color: var(--color-ccs-teal-light);
+  color: var(--color-ccs-teal-light);
+}
+
+.scan-verdict-verified .scan-verdict-name {
+  color: #ffffff;
+}
+
+/* Used: the fraud case — a code already admitted is being shown again. Louder
+   than a plain refusal on purpose: solid fill and a left flag, so it cannot be
+   skimmed as "just another decline" the way unpaid/invalid can. */
+.scan-verdict-used {
+  background: #b42318;
+  border-color: #7a170f;
+  color: #ffffff;
+  border-inline-start-width: 6px;
+  position: relative;
+}
+
+.scan-verdict-used::before {
+  content: '⚠';
+  margin-inline-end: 0.4rem;
+}
+
+.scan-verdict-used .scan-verdict-detail {
+  border-top-color: rgba(255, 255, 255, 0.25);
+}
+
+/* Unpaid / invalid / too early: all "deny", none of them fraud. A quieter
+   amber rather than the alarm red of "used", so staff learn to treat the two
+   differently at a glance. */
+.scan-verdict-unpaid,
+.scan-verdict-invalid,
+.scan-verdict-too_early {
+  background: rgba(250, 212, 139, 0.14);
+  background: color-mix(in srgb, var(--color-ccs-gold) 14%, transparent);
+  border-color: var(--color-ccs-gold-dark);
+  color: var(--color-ccs-gold);
+}
+
+.scan-verdict-unpaid .scan-verdict-name,
+.scan-verdict-invalid .scan-verdict-name,
+.scan-verdict-too_early .scan-verdict-name {
+  color: #ffffff;
 }

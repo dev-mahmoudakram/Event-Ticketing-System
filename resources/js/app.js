@@ -1,5 +1,6 @@
 import Alpine from 'alpinejs';
 import initCcsMotion from './ccs-motion';
+import initAutoplayVideo from './autoplay-video';
 import ticketScanner from './ticket-scanner';
 import initCharts from './charts';
 import initSortableLists from './sortable';
@@ -180,5 +181,6 @@ if ('IntersectionObserver' in window) {
 }
 
 initCcsMotion();
+initAutoplayVideo();
 initCharts();
 initSortableLists();

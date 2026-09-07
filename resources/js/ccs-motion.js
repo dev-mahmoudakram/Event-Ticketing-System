@@ -8,6 +8,7 @@
  */
 import gsap from 'gsap';
 import ScrollTrigger from 'gsap/ScrollTrigger';
+import { attemptPlay } from './autoplay-video';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -166,11 +167,13 @@ function initReel() {
                 overwrite: 'auto',
             });
 
-            // Only the focused clip plays; the rest hold on their poster frame.
+            // Only the focused clip plays; the rest hold on their poster frame. The active
+            // clip's source is attached here too — a card that is never brought to focus is
+            // never fetched at all.
             const video = card.querySelector('video');
             if (video) {
                 if (isActive) {
-                    video.play().catch(() => {});
+                    attemptPlay(video);
                 } else {
                     video.pause();
                 }

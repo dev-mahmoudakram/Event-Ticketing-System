@@ -24,6 +24,14 @@
             <x-admin.field type="date" name="end_date" label="{{ __('End Date') }}" :value="old('end_date', optional($event->end_date)->toDateString())" />
         </div>
 
+        <x-admin.field
+            type="time"
+            name="check_in_starts_at"
+            label="{{ __('Check-in Opens At') }}"
+            :value="old('check_in_starts_at', optional($event->check_in_starts_at)->format('H:i'))"
+        />
+        <p class="text-xs text-hub-dark/45 -mt-3 mb-5">{{ __('The registration desk refuses every ticket before this time, on the day of the event. Leave empty to allow check-in any time on the day.') }}</p>
+
         <x-admin.bilingual-field name="venue_name" label="{{ __('Venue Name') }}" :value-ar="old('venue_name_ar', $event->venue_name_ar)" :value-en="old('venue_name_en', $event->venue_name_en)" />
         <x-admin.bilingual-field name="venue_address" label="{{ __('Venue Address') }}" :value-ar="old('venue_address_ar', $event->venue_address_ar)" :value-en="old('venue_address_en', $event->venue_address_en)" />
 

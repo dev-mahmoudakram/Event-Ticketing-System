@@ -50,9 +50,10 @@
             @foreach($leftReels as $reel)
                 <div class="ccs-phone {{ $loop->first ? 'w-[190px]' : 'w-[160px] ms-10' }}" data-hero-phone data-hero-phone-side="start">
                     <video
-                        src="{{ $reel->videoUrl() }}"
+                        data-src="{{ $reel->videoUrl() }}"
                         @if($reel->posterUrl()) poster="{{ $reel->posterUrl() }}" @endif
-                        muted loop playsinline autoplay preload="metadata"
+                        muted loop playsinline preload="none"
+                        data-autoplay-video
                         aria-label="{{ $reel->caption() ?? __('Event clip') }}"
                     ></video>
                 </div>
@@ -140,9 +141,10 @@
             @foreach($rightReels as $reel)
                 <div class="ccs-phone {{ $loop->first ? 'w-[160px] me-10' : 'w-[190px]' }}" data-hero-phone data-hero-phone-side="end">
                     <video
-                        src="{{ $reel->videoUrl() }}"
+                        data-src="{{ $reel->videoUrl() }}"
                         @if($reel->posterUrl()) poster="{{ $reel->posterUrl() }}" @endif
-                        muted loop playsinline autoplay preload="metadata"
+                        muted loop playsinline preload="none"
+                        data-autoplay-video
                         aria-label="{{ $reel->caption() ?? __('Event clip') }}"
                     ></video>
                 </div>

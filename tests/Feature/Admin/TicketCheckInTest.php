@@ -23,7 +23,14 @@ class TicketCheckInTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->event = Event::factory()->create(['status' => 'published']);
+        // Today, with no configured opening time, so an ordinary scan is not itself testing
+        // the "too early" rule — that gets its own test below.
+        $this->event = Event::factory()->create([
+            'status' => 'published',
+            'start_date' => now()->toDateString(),
+            'end_date' => now()->toDateString(),
+            'check_in_starts_at' => null,
+        ]);
     }
 
     private function ticket(array $attributes = []): Ticket
@@ -162,5 +169,78 @@ class TicketCheckInTest extends TestCase
                 'qr_code' => 'https://example.test/check-in/'.$this->event->id.'/'.$ticket->ticket_id,
             ])
             ->assertJsonPath('result', 'verified');
+    }
+
+    public function test_a_ticket_cannot_be_scanned_before_the_event_has_started(): void
+    {
+        $this->event->update([
+            'start_date' => now()->addDay()->toDateString(),
+            'end_date' => now()->addDay()->toDateString(),
+        ]);
+        $ticket = $this->ticket();
+
+        $this->actingAs(User::factory()->create())
+            ->postJson(route('check-in.scan', $this->event), ['qr_code' => $ticket->ticket_id])
+            ->assertJsonPath('result', 'too_early');
+
+        $this->assertNull($ticket->fresh()->checked_in_at);
+    }
+
+    public function test_a_ticket_cannot_be_scanned_after_a_multi_day_event_has_ended(): void
+    {
+        $this->event->update([
+            'start_date' => now()->subDays(3)->toDateString(),
+            'end_date' => now()->subDay()->toDateString(),
+        ]);
+        $ticket = $this->ticket();
+
+        $this->actingAs(User::factory()->create())
+            ->postJson(route('check-in.scan', $this->event), ['qr_code' => $ticket->ticket_id])
+            ->assertJsonPath('result', 'too_early');
+    }
+
+    public function test_a_multi_day_event_accepts_scans_on_any_of_its_days(): void
+    {
+        $this->event->update([
+            'start_date' => now()->subDay()->toDateString(),
+            'end_date' => now()->addDay()->toDateString(),
+        ]);
+        $ticket = $this->ticket();
+
+        $this->actingAs(User::factory()->create())
+            ->postJson(route('check-in.scan', $this->event), ['qr_code' => $ticket->ticket_id])
+            ->assertJsonPath('result', 'verified');
+    }
+
+    public function test_a_ticket_is_refused_before_the_configured_opening_time(): void
+    {
+        $this->event->update(['check_in_starts_at' => now()->addHour()->format('H:i:s')]);
+        $ticket = $this->ticket();
+
+        $this->actingAs(User::factory()->create())
+            ->postJson(route('check-in.scan', $this->event), ['qr_code' => $ticket->ticket_id])
+            ->assertJsonPath('result', 'too_early');
+    }
+
+    public function test_a_ticket_is_accepted_after_the_configured_opening_time(): void
+    {
+        $this->event->update(['check_in_starts_at' => now()->subHour()->format('H:i:s')]);
+        $ticket = $this->ticket();
+
+        $this->actingAs(User::factory()->create())
+            ->postJson(route('check-in.scan', $this->event), ['qr_code' => $ticket->ticket_id])
+            ->assertJsonPath('result', 'verified');
+    }
+
+    public function test_the_manual_box_also_refuses_a_scan_before_check_in_opens(): void
+    {
+        $this->event->update(['check_in_starts_at' => now()->addHour()->format('H:i:s')]);
+        $ticket = $this->ticket();
+
+        $this->actingAs(User::factory()->create())
+            ->post(route('check-in.store', $this->event), ['qr_code' => $ticket->ticket_id])
+            ->assertSessionHas('error');
+
+        $this->assertNull($ticket->fresh()->checked_in_at);
     }
 }

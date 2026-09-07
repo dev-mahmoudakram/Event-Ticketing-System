@@ -38,4 +38,68 @@ class EventTest extends TestCase
 
         $this->assertSame(EventStatus::Published, $event->status);
     }
+
+    public function test_check_in_is_closed_before_the_event_starts(): void
+    {
+        $event = Event::factory()->create([
+            'start_date' => now()->addDay()->toDateString(),
+            'end_date' => now()->addDay()->toDateString(),
+        ]);
+
+        $this->assertFalse($event->checkInIsOpen());
+    }
+
+    public function test_check_in_is_closed_after_the_event_ends(): void
+    {
+        $event = Event::factory()->create([
+            'start_date' => now()->subDay()->toDateString(),
+            'end_date' => now()->subDay()->toDateString(),
+        ]);
+
+        $this->assertFalse($event->checkInIsOpen());
+    }
+
+    public function test_check_in_is_open_on_any_day_of_a_multi_day_event(): void
+    {
+        $event = Event::factory()->create([
+            'start_date' => now()->subDay()->toDateString(),
+            'end_date' => now()->addDay()->toDateString(),
+            'check_in_starts_at' => null,
+        ]);
+
+        $this->assertTrue($event->checkInIsOpen());
+    }
+
+    public function test_check_in_is_open_all_day_when_no_opening_time_is_set(): void
+    {
+        $event = Event::factory()->create([
+            'start_date' => now()->toDateString(),
+            'end_date' => now()->toDateString(),
+            'check_in_starts_at' => null,
+        ]);
+
+        $this->assertTrue($event->checkInIsOpen());
+    }
+
+    public function test_check_in_is_closed_before_the_configured_opening_time(): void
+    {
+        $event = Event::factory()->create([
+            'start_date' => now()->toDateString(),
+            'end_date' => now()->toDateString(),
+            'check_in_starts_at' => now()->addHour()->format('H:i:s'),
+        ]);
+
+        $this->assertFalse($event->checkInIsOpen());
+    }
+
+    public function test_check_in_is_open_after_the_configured_opening_time(): void
+    {
+        $event = Event::factory()->create([
+            'start_date' => now()->toDateString(),
+            'end_date' => now()->toDateString(),
+            'check_in_starts_at' => now()->subHour()->format('H:i:s'),
+        ]);
+
+        $this->assertTrue($event->checkInIsOpen());
+    }
 }

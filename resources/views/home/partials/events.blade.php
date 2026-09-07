@@ -62,9 +62,11 @@
                         <img src="{{ $featuredEvent->coverImageUrl() }}" alt="{{ app()->getLocale() === 'ar' ? $featuredEvent->name_ar : $featuredEvent->name_en }}" loading="lazy">
                     @elseif($featuredReel)
                         <video
-                            src="{{ $featuredReel->videoUrl() }}"
+                            data-src="{{ $featuredReel->videoUrl() }}"
                             @if($featuredReel->posterUrl()) poster="{{ $featuredReel->posterUrl() }}" @endif
-                            muted loop playsinline autoplay preload="metadata"
+                            muted loop playsinline preload="none"
+                            data-autoplay-video
+                            data-autoplay-visible
                             aria-label="{{ $featuredReel->caption() ?? __('Event clip') }}"
                         ></video>
                     @endif

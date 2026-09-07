@@ -31,9 +31,10 @@
                         aria-label="{{ $reel->caption() ?: __('Event clip :n', ['n' => $loop->iteration]) }}"
                     >
                         <video
-                            src="{{ $reel->videoUrl() }}"
+                            data-src="{{ $reel->videoUrl() }}"
                             @if($reel->posterUrl()) poster="{{ $reel->posterUrl() }}" @endif
-                            muted loop playsinline preload="metadata"
+                            muted loop playsinline preload="none"
+                            data-autoplay-video
                         ></video>
                     </div>
                 @endforeach

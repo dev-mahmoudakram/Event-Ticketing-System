@@ -1,7 +1,7 @@
 {{-- resources/views/landing/partials/footer.blade.php --}}
 @php $sectionBase = ($onLandingPage ?? false) ? '' : route('landing.show', $event); @endphp
 @if($event->isSectionVisible('newsletter'))
-<footer id="newsletter" class="scroll-mt-24 w-full px-[clamp(20px,6vw,80px)] pb-[100px] pt-24 border-t border-white/10" style="background: linear-gradient(160deg, var(--color-ccs-maroon), var(--color-ccs-black));">
+<footer id="newsletter" class="scroll-mt-24 w-full px-[clamp(20px,6vw,80px)] pb-12 md:pb-16 pt-24 border-t border-white/10" style="background: linear-gradient(160deg, var(--color-ccs-maroon), var(--color-ccs-black));">
     <div class="text-center pb-16 mb-16 border-b border-white/10">
         <h2 class="font-display text-2xl md:text-4xl font-extrabold mb-4" data-reveal>{{ __('Stay in the loop.') }}</h2>
         <p class="text-gray-300 mb-8" data-reveal>{{ __('Speaker announcements, agenda updates, and workshop drops — no spam.') }}</p>

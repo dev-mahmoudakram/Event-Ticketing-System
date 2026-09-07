@@ -44,6 +44,41 @@ class EventCrudTest extends TestCase
         $this->assertDatabaseHas('events', ['slug' => 'ccs-2027']);
     }
 
+    public function test_an_admin_sets_when_check_in_opens(): void
+    {
+        $admin = User::factory()->create();
+
+        $this->actingAs($admin)->post(route('admin.events.store'), [
+            'slug' => 'ccs-2027',
+            'name_ar' => 'قمة صناع المحتوى',
+            'name_en' => 'Content Creators Summit 2027',
+            'start_date' => '2027-08-15',
+            'end_date' => '2027-08-16',
+            'check_in_starts_at' => '08:30',
+            'status' => 'draft',
+        ]);
+
+        $event = Event::where('slug', 'ccs-2027')->firstOrFail();
+        $this->assertSame('08:30', $event->check_in_starts_at->format('H:i'));
+    }
+
+    public function test_check_in_time_is_optional(): void
+    {
+        $admin = User::factory()->create();
+
+        $this->actingAs($admin)->post(route('admin.events.store'), [
+            'slug' => 'ccs-2027',
+            'name_ar' => 'قمة صناع المحتوى',
+            'name_en' => 'Content Creators Summit 2027',
+            'start_date' => '2027-08-15',
+            'end_date' => '2027-08-16',
+            'status' => 'draft',
+        ])->assertRedirect(route('admin.events.index'));
+
+        $event = Event::where('slug', 'ccs-2027')->firstOrFail();
+        $this->assertNull($event->check_in_starts_at);
+    }
+
     public function test_creating_an_event_requires_bilingual_name(): void
     {
         $admin = User::factory()->create();

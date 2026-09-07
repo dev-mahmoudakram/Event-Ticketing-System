@@ -39,6 +39,13 @@ class TicketCheckIn
             return ['result' => 'invalid', 'ticket' => null];
         }
 
+        // Checked ahead of the update rather than folded into its WHERE clause: a ticket
+        // scanned before doors open must say "too early", not the same "invalid or unpaid"
+        // a stranger's code gets — the two need different words at the door.
+        if (! $event->checkInIsOpen()) {
+            return ['result' => 'too_early', 'ticket' => $ticket];
+        }
+
         $admitted = DB::transaction(fn (): int => Ticket::query()
             ->whereKey($ticket->id)
             ->where('event_id', $event->id)
@@ -93,6 +100,7 @@ class TicketCheckIn
             'verified' => __('Ticket verified. Entry allowed.'),
             'used' => __('This ticket has already been used. Entry denied.'),
             'unpaid' => __('Invalid or unpaid ticket. Entry denied.'),
+            'too_early' => __('Check-in has not opened yet. Entry denied.'),
             default => __('Invalid QR code. Entry denied.'),
         };
     }

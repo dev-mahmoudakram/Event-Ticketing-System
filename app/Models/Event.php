@@ -29,7 +29,7 @@ class Event extends Model
         'logo_path', 'footer_logo_path', 'favicon_path', 'apple_touch_icon_path', 'share_image_path',
         'contact_email', 'contact_phone', 'social_links',
         'voting_opens_at', 'voting_closes_at', 'show_award_results',
-        'start_date', 'end_date',
+        'start_date', 'end_date', 'check_in_starts_at',
         'venue_name_ar', 'venue_name_en', 'venue_address_ar', 'venue_address_en',
         'map_embed_url', 'status', 'visible_sections',
     ];
@@ -37,6 +37,7 @@ class Event extends Model
     protected $casts = [
         'start_date' => 'date',
         'end_date' => 'date',
+        'check_in_starts_at' => 'datetime:H:i',
         'status' => EventStatus::class,
         'visible_sections' => 'array',
         'social_links' => 'array',
@@ -130,6 +131,31 @@ class Event extends Model
         }
 
         return now()->between($this->voting_opens_at, $this->voting_closes_at);
+    }
+
+    /**
+     * Whether the door should be admitting anyone right now.
+     *
+     * A ticket is issued as soon as it is paid — often days before the event — so its QR
+     * code exists long before there is anywhere to scan it. Check-in is only meaningful on
+     * the event's own date(s), from whatever time the doors actually open. An event with no
+     * configured opening time falls back to "any time on the day", so an admin who hasn't
+     * set one yet is not locked out on the day itself.
+     */
+    public function checkInIsOpen(): bool
+    {
+        $now = now();
+        $today = $now->toDateString();
+
+        if ($today < $this->start_date->toDateString() || $today > $this->end_date->toDateString()) {
+            return false;
+        }
+
+        if ($this->check_in_starts_at === null) {
+            return true;
+        }
+
+        return $now->format('H:i:s') >= $this->check_in_starts_at->format('H:i:s');
     }
 
     public function speakers(): HasMany

@@ -39,6 +39,7 @@ class EventRequest extends FormRequest
             'social_links.*' => ['nullable', 'url', 'max:2048'],
             'start_date' => ['required', 'date'],
             'end_date' => ['required', 'date', 'after_or_equal:start_date'],
+            'check_in_starts_at' => ['nullable', 'date_format:H:i'],
             'venue_name_ar' => ['nullable', 'string', 'max:255'],
             'venue_name_en' => ['nullable', 'string', 'max:255'],
             'venue_address_ar' => ['nullable', 'string', 'max:255'],
