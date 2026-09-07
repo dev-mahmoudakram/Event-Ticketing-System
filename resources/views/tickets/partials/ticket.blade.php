@@ -16,7 +16,9 @@
     $eventLogo = MailImage::embed($message ?? null, $event->logoUrl());
     $hubLogo = MailImage::embed($message ?? null, SiteText::image('branding', 'nav_logo') ?? asset('images/creators-hub/mark.png'));
 
-    $dates = $event->start_date->translatedFormat('j M').' – '.$event->end_date->translatedFormat('j M Y');
+    $dates = $event->isSingleDay()
+        ? $event->start_date->translatedFormat('j M Y')
+        : $event->start_date->translatedFormat('j M').' – '.$event->end_date->translatedFormat('j M Y');
 
     // Inline styles throughout: this same ticket is sent as an email, where stylesheets are
     // unreliable, and printed from the browser, where backgrounds are often dropped.

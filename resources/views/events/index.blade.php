@@ -52,7 +52,13 @@
                                 {{-- Keeps the date readable whatever the photograph is. --}}
                                 <span class="absolute inset-0 bg-hub-dark/40" aria-hidden="true"></span>
                             @endif
-                            <span class="relative text-xs font-bold uppercase tracking-[0.18em] text-white/70">{{ $event->start_date->translatedFormat('j M') }} &ndash; {{ $event->end_date->translatedFormat('j M Y') }}</span>
+                            <span class="relative text-xs font-bold uppercase tracking-[0.18em] text-white/70">
+                                @if($event->isSingleDay())
+                                    {{ $event->start_date->translatedFormat('j M Y') }}
+                                @else
+                                    {{ $event->start_date->translatedFormat('j M') }} &ndash; {{ $event->end_date->translatedFormat('j M Y') }}
+                                @endif
+                            </span>
                         </div>
                         <div class="p-6">
                             <h2 class="font-display text-xl font-bold mb-2 transition-colors group-hover:text-hub-purple">

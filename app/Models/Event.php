@@ -142,6 +142,17 @@ class Event extends Model
      * configured opening time falls back to "any time on the day", so an admin who hasn't
      * set one yet is not locked out on the day itself.
      */
+    /**
+     * Whether this event runs on a single day.
+     *
+     * Most events do — the date range display exists for the ones that do not, and printing
+     * a range for a one-day event reads as a typo ("Dec 26–26") rather than as a duration.
+     */
+    public function isSingleDay(): bool
+    {
+        return $this->start_date->isSameDay($this->end_date);
+    }
+
     public function checkInIsOpen(): bool
     {
         $now = now();

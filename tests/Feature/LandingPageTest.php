@@ -247,4 +247,33 @@ class LandingPageTest extends TestCase
 
         $response->assertDontSee('id="testimonials"', false);
     }
+
+    public function test_a_one_day_event_shows_a_single_date_not_a_range(): void
+    {
+        $event = Event::factory()->create([
+            'status' => EventStatus::Published,
+            'start_date' => '2026-12-26',
+            'end_date' => '2026-12-26',
+        ]);
+
+        $response = $this->get(route('landing.show', $event).'?lang=en');
+
+        $response->assertSee('Dec 26, 2026');
+        $response->assertDontSee('Dec 26–26', false);
+        $response->assertDontSee('Dec 26&ndash;26', false);
+    }
+
+    public function test_a_multi_day_event_still_shows_a_range(): void
+    {
+        $event = Event::factory()->create([
+            'status' => EventStatus::Published,
+            'start_date' => '2026-12-26',
+            'end_date' => '2026-12-28',
+        ]);
+
+        $response = $this->get(route('landing.show', $event).'?lang=en');
+
+        $response->assertSee('Dec 26', false);
+        $response->assertSee('28, 2026', false);
+    }
 }

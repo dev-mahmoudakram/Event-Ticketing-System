@@ -63,7 +63,11 @@
         {{-- Centre lockup --}}
         <div class="text-center flex flex-col items-center">
             <p class="ccs-eyebrow text-ccs-teal-light mb-4" data-hero-bit>
-                {{ $event->start_date->format('M j') }}&ndash;{{ $event->end_date->format('j, Y') }}
+                @if($event->isSingleDay())
+                    {{ $event->start_date->translatedFormat('M j, Y') }}
+                @else
+                    {{ $event->start_date->translatedFormat('M j') }}&ndash;{{ $event->end_date->translatedFormat('j, Y') }}
+                @endif
                 @if($venueName) &middot; {{ $venueName }} @endif
             </p>
 
@@ -94,7 +98,11 @@
                 </div>
                 <div class="bg-ccs-red px-5 py-3">
                     <span class="font-display text-xl md:text-2xl font-extrabold leading-none">
-                        {{ strtoupper($event->start_date->format('M j')) }}&ndash;{{ $event->end_date->format('j') }}
+                        @if($event->isSingleDay())
+                            {{ mb_strtoupper($event->start_date->translatedFormat('M j'), 'UTF-8') }}
+                        @else
+                            {{ mb_strtoupper($event->start_date->translatedFormat('M j'), 'UTF-8') }}&ndash;{{ $event->end_date->translatedFormat('j') }}
+                        @endif
                     </span>
                 </div>
             </div>

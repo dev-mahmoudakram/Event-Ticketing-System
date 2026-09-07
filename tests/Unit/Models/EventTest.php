@@ -39,6 +39,26 @@ class EventTest extends TestCase
         $this->assertSame(EventStatus::Published, $event->status);
     }
 
+    public function test_a_one_day_event_is_a_single_day(): void
+    {
+        $event = Event::factory()->create([
+            'start_date' => '2026-12-26',
+            'end_date' => '2026-12-26',
+        ]);
+
+        $this->assertTrue($event->isSingleDay());
+    }
+
+    public function test_a_multi_day_event_is_not_a_single_day(): void
+    {
+        $event = Event::factory()->create([
+            'start_date' => '2026-12-26',
+            'end_date' => '2026-12-28',
+        ]);
+
+        $this->assertFalse($event->isSingleDay());
+    }
+
     public function test_check_in_is_closed_before_the_event_starts(): void
     {
         $event = Event::factory()->create([

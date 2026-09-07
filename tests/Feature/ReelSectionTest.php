@@ -63,6 +63,25 @@ class ReelSectionTest extends TestCase
         $response->assertSee('reels/hero-clip.mp4', false);
     }
 
+    /**
+     * The clip ships with no source at all until JS asks it to play — a video that already
+     * carries `src` with preload="metadata" downloads on every visit, including a hero clip
+     * that a phone below the `lg` breakpoint can never even see.
+     */
+    public function test_reel_and_hero_clips_carry_no_source_until_javascript_asks_for_one(): void
+    {
+        $event = $this->publishedEvent();
+        Reel::factory()->for($event)->create(['video_path' => 'reels/hero-clip.mp4']);
+
+        $html = $this->get(route('landing.show', $event))->getContent();
+
+        // "src=" alone would also match inside "data-src=", so the check looks for the
+        // attribute preceded by a space the way the browser parser sees it.
+        $this->assertStringNotContainsString(' src="/storage/reels/hero-clip.mp4"', $html);
+        $this->assertStringContainsString('data-src="/storage/reels/hero-clip.mp4"', $html);
+        $this->assertStringContainsString('preload="none"', $html);
+    }
+
     public function test_landing_page_renders_the_scroll_progress_bar(): void
     {
         $event = $this->publishedEvent();

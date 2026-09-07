@@ -26,17 +26,17 @@ function loadIfNeeded(video) {
 /**
  * Ask a clip to play, tolerating the browser refusing (autoplay policy, not yet buffered,
  * the tab in the background). A rejection here is routine, not an error to report.
+ *
+ * With preload="none", assigning `src` alone does not start fetching the file — Chrome
+ * waits for an explicit load()/play() call before it does anything, so a card sat there
+ * showing nothing at all: readyState stuck at 0, waiting on a `loadeddata` event nothing
+ * had asked the browser to produce. play() itself is what starts the fetch here, so it is
+ * called directly rather than gated behind a readiness check first.
  */
 function attemptPlay(video) {
     loadIfNeeded(video);
 
-    const attempt = () => video.play().catch(() => {});
-
-    if (video.readyState >= 2) {
-        attempt();
-    } else {
-        video.addEventListener('loadeddata', attempt, { once: true });
-    }
+    video.play().catch(() => {});
 }
 
 /**

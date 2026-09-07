@@ -31,7 +31,11 @@
                         {{ app()->getLocale() === 'ar' ? $featuredEvent->name_ar : $featuredEvent->name_en }}
                     </h3>
                     <p class="text-hub-dark/60 mb-8">
-                        {{ $featuredEvent->start_date->translatedFormat('j M') }} &ndash; {{ $featuredEvent->end_date->translatedFormat('j M Y') }}
+                        @if($featuredEvent->isSingleDay())
+                            {{ $featuredEvent->start_date->translatedFormat('j M Y') }}
+                        @else
+                            {{ $featuredEvent->start_date->translatedFormat('j M') }} &ndash; {{ $featuredEvent->end_date->translatedFormat('j M Y') }}
+                        @endif
                         @if($featuredEvent->venue_name_en)
                             &middot; {{ app()->getLocale() === 'ar' ? $featuredEvent->venue_name_ar : $featuredEvent->venue_name_en }}
                         @endif
