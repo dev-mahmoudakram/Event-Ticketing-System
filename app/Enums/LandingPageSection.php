@@ -11,4 +11,5 @@ enum LandingPageSection: string
     case Stats = 'stats';
     case Location = 'location';
     case AwardsTeaser = 'awards_teaser';
+    case Gallery = 'gallery';
 }

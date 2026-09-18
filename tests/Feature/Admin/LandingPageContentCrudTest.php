@@ -24,6 +24,8 @@ class LandingPageContentCrudTest extends TestCase
             'awards_teaser_blurb_ar' => 'الجوائز', 'awards_teaser_blurb_en' => 'Awards blurb',
             'stats_attendees_count_ar' => '٢٠٠+', 'stats_attendees_count_en' => '200+',
             'stats_countries_count_ar' => '١٥', 'stats_countries_count_en' => '15',
+            'gallery_eyebrow_ar' => 'المعرض', 'gallery_eyebrow_en' => 'Gallery',
+            'gallery_heading_ar' => 'لقطات العام الماضي', 'gallery_heading_en' => 'Last year, in frames.',
         ];
     }
 
@@ -35,7 +37,7 @@ class LandingPageContentCrudTest extends TestCase
         $response = $this->actingAs($admin)->put(route('admin.events.content.update', $event), $this->payload());
 
         $response->assertRedirect(route('admin.events.content.edit', $event));
-        $this->assertSame(6, $event->landingPageContent()->count());
+        $this->assertSame(8, $event->landingPageContent()->count());
         $this->assertDatabaseHas('landing_page_content', [
             'event_id' => $event->id,
             'section' => LandingPageSection::Hero->value,
@@ -53,7 +55,7 @@ class LandingPageContentCrudTest extends TestCase
         $updated = array_merge($this->payload(), ['hero_headline_en' => 'Updated Headline']);
         $this->actingAs($admin)->put(route('admin.events.content.update', $event), $updated);
 
-        $this->assertSame(6, $event->landingPageContent()->count());
+        $this->assertSame(8, $event->landingPageContent()->count());
         $this->assertDatabaseHas('landing_page_content', [
             'event_id' => $event->id, 'field_key' => 'headline', 'value_en' => 'Updated Headline',
         ]);

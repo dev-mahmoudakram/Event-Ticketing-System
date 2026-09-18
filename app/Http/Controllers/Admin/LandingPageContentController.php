@@ -32,6 +32,8 @@ class LandingPageContentController extends Controller
         'awards_teaser_blurb' => ['section' => LandingPageSection::AwardsTeaser, 'field_key' => 'blurb', 'richtext' => true],
         'stats_attendees_count' => ['section' => LandingPageSection::Stats, 'field_key' => 'attendees_count'],
         'stats_countries_count' => ['section' => LandingPageSection::Stats, 'field_key' => 'countries_count'],
+        'gallery_eyebrow' => ['section' => LandingPageSection::Gallery, 'field_key' => 'eyebrow'],
+        'gallery_heading' => ['section' => LandingPageSection::Gallery, 'field_key' => 'heading'],
     ];
 
     public function edit(Event $event): View
