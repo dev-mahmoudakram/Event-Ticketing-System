@@ -19,7 +19,7 @@ class SponsorFactory extends Factory
             'name_ar' => $this->faker->company(),
             'name_en' => $this->faker->company(),
             'logo_path' => null,
-            'tier' => $this->faker->randomElement(['platinum', 'gold', 'silver', 'bronze']),
+            'sponsor_tier_id' => null,
             'website_url' => $this->faker->url(),
             'sort_order' => 0,
         ];

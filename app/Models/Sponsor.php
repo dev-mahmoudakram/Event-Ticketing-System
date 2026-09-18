@@ -15,12 +15,17 @@ class Sponsor extends Model
     use HasFactory, ResolvesStoredMedia;
 
     protected $fillable = [
-        'event_id', 'name_ar', 'name_en', 'logo_path', 'tier', 'website_url', 'sort_order',
+        'event_id', 'name_ar', 'name_en', 'logo_path', 'sponsor_tier_id', 'website_url', 'sort_order',
     ];
 
     public function event(): BelongsTo
     {
         return $this->belongsTo(Event::class);
+    }
+
+    public function tier(): BelongsTo
+    {
+        return $this->belongsTo(SponsorTier::class, 'sponsor_tier_id');
     }
 
     public function logoUrl(): ?string

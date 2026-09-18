@@ -184,6 +184,11 @@ class Event extends Model
         return $this->hasMany(Sponsor::class)->orderBy('sort_order');
     }
 
+    public function sponsorTiers(): HasMany
+    {
+        return $this->hasMany(SponsorTier::class)->orderBy('sort_order');
+    }
+
     public function sponsorRequests(): HasMany
     {
         return $this->hasMany(SponsorRequest::class)->latest();

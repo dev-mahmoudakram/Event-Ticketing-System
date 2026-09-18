@@ -4,6 +4,7 @@
 @section('content')
     <x-admin.page-header :title="__('Sponsors').' — '.$event->name_en">
         <x-admin.button href="{{ route('admin.events.sponsors.create', $event) }}">{{ __('New Sponsor') }}</x-admin.button>
+        <x-admin.button href="{{ route('admin.events.sponsor-tiers.index', $event) }}" variant="secondary">{{ __('Manage Tiers') }}</x-admin.button>
         <x-admin.button href="{{ route('landing.show', $event).'#partners' }}" variant="secondary" target="_blank" rel="noopener">{{ __('View on page') }}</x-admin.button>
     </x-admin.page-header>
 
@@ -18,7 +19,7 @@
                 @foreach($sponsors as $sponsor)
                     <tr>
                         <td>{{ $sponsor->name_en }}</td>
-                        <td>{{ $sponsor->tier }}</td>
+                        <td>{{ $sponsor->tier?->name_en ?? __('No tier') }}</td>
                         <td class="text-end">
                             <a href="{{ route('admin.events.sponsors.edit', [$event, $sponsor]) }}" class="text-hub-purple hover:underline">{{ __('Edit') }}</a>
                             <form method="POST" action="{{ route('admin.events.sponsors.destroy', [$event, $sponsor]) }}" class="inline" onsubmit="return confirm('{{ __('Are you sure? This cannot be undone.') }}')">

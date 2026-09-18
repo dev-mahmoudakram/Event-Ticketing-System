@@ -13,21 +13,19 @@
 
         @if($event->sponsors->isNotEmpty())
         @php
-            $tierLabels = [
-                'platinum' => __('Platinum Sponsors'),
-                'gold' => __('Gold Sponsors'),
-                'silver' => __('Silver Sponsors'),
-                'bronze' => __('Bronze Sponsors'),
-                'community' => __('Community Partners'),
-            ];
+            $sponsorsByTier = $event->sponsors->groupBy('sponsor_tier_id');
+            $untieredSponsors = $sponsorsByTier->get(null, collect());
         @endphp
 
         <div data-sponsor-grid>
-            @foreach($event->sponsors->groupBy('tier') as $tier => $sponsors)
+            @foreach($event->sponsorTiers as $sponsorTier)
+                @continue($sponsorsByTier->get($sponsorTier->id, collect())->isEmpty())
                 <div class="mb-10">
-                    <div class="text-xs font-bold uppercase tracking-wide text-gray-500 mb-4">{{ $tierLabels[$tier] ?? ucfirst($tier) }}</div>
+                    <div class="text-xs font-bold uppercase tracking-wide text-gray-500 mb-4">
+                        {{ app()->getLocale() === 'ar' ? $sponsorTier->name_ar : $sponsorTier->name_en }}
+                    </div>
                     <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-                        @foreach($sponsors as $sponsor)
+                        @foreach($sponsorsByTier->get($sponsorTier->id) as $sponsor)
                             @php
                                 $sponsorName = app()->getLocale() === 'ar' ? $sponsor->name_ar : $sponsor->name_en;
                                 $logo = $sponsor->logoUrl();
@@ -53,6 +51,36 @@
                     </div>
                 </div>
             @endforeach
+
+            @if($untieredSponsors->isNotEmpty())
+                <div class="mb-10">
+                    <div class="text-xs font-bold uppercase tracking-wide text-gray-500 mb-4">{{ __('Partners') }}</div>
+                    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+                        @foreach($untieredSponsors as $sponsor)
+                            @php
+                                $sponsorName = app()->getLocale() === 'ar' ? $sponsor->name_ar : $sponsor->name_en;
+                                $logo = $sponsor->logoUrl();
+                            @endphp
+
+                            <x-dynamic-component
+                                :component="$sponsor->website_url ? 'sponsor-link' : 'sponsor-tile'"
+                                :url="$sponsor->website_url"
+                            >
+                                @if($logo)
+                                    <img
+                                        src="{{ $logo }}"
+                                        alt="{{ $sponsorName }}"
+                                        class="max-h-12 w-auto object-contain transition duration-300 group-hover:scale-105"
+                                        loading="lazy"
+                                    >
+                                @else
+                                    <span class="font-display text-sm font-bold text-gray-300 text-center px-2">{{ $sponsorName }}</span>
+                                @endif
+                            </x-dynamic-component>
+                        @endforeach
+                    </div>
+                </div>
+            @endif
         </div>
         @endif
     </section>

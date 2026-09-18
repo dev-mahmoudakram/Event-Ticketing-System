@@ -6,6 +6,7 @@ namespace Tests\Feature\Admin;
 
 use App\Models\Event;
 use App\Models\Sponsor;
+use App\Models\SponsorTier;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -18,13 +19,14 @@ class SponsorCrudTest extends TestCase
     {
         $admin = User::factory()->create();
         $event = Event::factory()->create();
+        $tier = SponsorTier::factory()->for($event)->create();
 
         $response = $this->actingAs($admin)->post(route('admin.events.sponsors.store', $event), [
-            'name_ar' => 'الراعي', 'name_en' => 'Sponsor Co.', 'tier' => 'gold', 'sort_order' => 0,
+            'name_ar' => 'الراعي', 'name_en' => 'Sponsor Co.', 'sponsor_tier_id' => $tier->id, 'sort_order' => 0,
         ]);
 
         $response->assertRedirect(route('admin.events.sponsors.index', $event));
-        $this->assertDatabaseHas('sponsors', ['event_id' => $event->id, 'name_en' => 'Sponsor Co.', 'tier' => 'gold']);
+        $this->assertDatabaseHas('sponsors', ['event_id' => $event->id, 'name_en' => 'Sponsor Co.', 'sponsor_tier_id' => $tier->id]);
     }
 
     public function test_creating_a_sponsor_requires_a_valid_tier(): void
@@ -33,10 +35,10 @@ class SponsorCrudTest extends TestCase
         $event = Event::factory()->create();
 
         $response = $this->actingAs($admin)->post(route('admin.events.sponsors.store', $event), [
-            'name_ar' => 'الراعي', 'name_en' => 'Sponsor Co.', 'tier' => 'not-a-tier',
+            'name_ar' => 'الراعي', 'name_en' => 'Sponsor Co.', 'sponsor_tier_id' => 99999,
         ]);
 
-        $response->assertSessionHasErrors('tier');
+        $response->assertSessionHasErrors('sponsor_tier_id');
     }
 
     public function test_admin_can_update_a_sponsor(): void
@@ -44,13 +46,14 @@ class SponsorCrudTest extends TestCase
         $admin = User::factory()->create();
         $event = Event::factory()->create();
         $sponsor = Sponsor::factory()->for($event)->create();
+        $tier = SponsorTier::factory()->for($event)->create();
 
         $response = $this->actingAs($admin)->put(route('admin.events.sponsors.update', [$event, $sponsor]), [
-            'name_ar' => 'محدث', 'name_en' => 'Updated', 'tier' => 'platinum', 'sort_order' => 0,
+            'name_ar' => 'محدث', 'name_en' => 'Updated', 'sponsor_tier_id' => $tier->id, 'sort_order' => 0,
         ]);
 
         $response->assertRedirect(route('admin.events.sponsors.index', $event));
-        $this->assertDatabaseHas('sponsors', ['id' => $sponsor->id, 'tier' => 'platinum']);
+        $this->assertDatabaseHas('sponsors', ['id' => $sponsor->id, 'sponsor_tier_id' => $tier->id]);
     }
 
     public function test_admin_can_delete_a_sponsor(): void

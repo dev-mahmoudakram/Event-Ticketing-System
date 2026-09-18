@@ -14,6 +14,7 @@ use App\Models\GalleryPhoto;
 use App\Models\LandingPageContent;
 use App\Models\Speaker;
 use App\Models\Sponsor;
+use App\Models\SponsorTier;
 use App\Models\Testimonial;
 use App\Models\TicketType;
 use App\Models\TicketTypeFeature;
@@ -111,6 +112,12 @@ class CcsEventSeeder extends Seeder
             'sort_order' => 4,
         ]);
 
+        $sponsorTiers = [
+            'platinum' => SponsorTier::create(['event_id' => $event->id, 'name_ar' => 'بلاتينيوم', 'name_en' => 'Platinum', 'sort_order' => 0]),
+            'gold' => SponsorTier::create(['event_id' => $event->id, 'name_ar' => 'ذهبي', 'name_en' => 'Gold', 'sort_order' => 1]),
+            'community' => SponsorTier::create(['event_id' => $event->id, 'name_ar' => 'شركاء المجتمع', 'name_en' => 'Community Partners', 'sort_order' => 2]),
+        ];
+
         $sponsors = [
             ['name_ar' => 'نايل تك', 'name_en' => 'Nile Tech', 'tier' => 'platinum'],
             ['name_ar' => 'استوديوهات القاهرة', 'name_en' => 'Cairo Studios', 'tier' => 'platinum'],
@@ -124,8 +131,10 @@ class CcsEventSeeder extends Seeder
         ];
         foreach ($sponsors as $i => $sponsor) {
             Sponsor::create([
-                ...$sponsor,
                 'event_id' => $event->id,
+                'name_ar' => $sponsor['name_ar'],
+                'name_en' => $sponsor['name_en'],
+                'sponsor_tier_id' => $sponsorTiers[$sponsor['tier']]->id,
                 'logo_path' => 'https://placehold.co/240x100?text='.urlencode($sponsor['name_en']),
                 'sort_order' => $i,
             ]);

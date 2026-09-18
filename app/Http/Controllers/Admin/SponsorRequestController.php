@@ -26,7 +26,12 @@ class SponsorRequestController extends Controller
             ->when($status !== 'all', fn ($query) => $query->where('status', $status))
             ->get();
 
-        return view('admin.sponsor-requests.index', ['event' => $event, 'sponsorRequests' => $sponsorRequests, 'status' => $status]);
+        return view('admin.sponsor-requests.index', [
+            'event' => $event,
+            'sponsorRequests' => $sponsorRequests,
+            'status' => $status,
+            'sponsorTiers' => $event->sponsorTiers,
+        ]);
     }
 
     public function updateStatus(Event $event, SponsorRequest $sponsorRequest, string $status, Request $request): RedirectResponse
@@ -34,10 +39,14 @@ class SponsorRequestController extends Controller
         $this->assertBelongsToEvent($event, $sponsorRequest);
 
         $validated = Validator::make(
-            ['status' => $status, 'tier' => $request->input('tier')],
+            ['status' => $status, 'sponsor_tier_id' => $request->input('sponsor_tier_id')],
             [
                 'status' => ['required', 'in:approved,rejected'],
-                'tier' => [Rule::requiredIf($status === 'approved'), 'nullable', Rule::in(['platinum', 'gold', 'silver', 'bronze'])],
+                'sponsor_tier_id' => [
+                    Rule::requiredIf($status === 'approved'),
+                    'nullable',
+                    Rule::exists('sponsor_tiers', 'id')->where('event_id', $event->id),
+                ],
             ],
         )->validate();
 
@@ -47,7 +56,7 @@ class SponsorRequestController extends Controller
                     'name_ar' => $sponsorRequest->name_ar,
                     'name_en' => $sponsorRequest->name_en,
                     'logo_path' => $sponsorRequest->logo_path,
-                    'tier' => $validated['tier'],
+                    'sponsor_tier_id' => $validated['sponsor_tier_id'],
                     'website_url' => $sponsorRequest->website_url,
                     'sort_order' => $event->sponsors()->max('sort_order') + 1,
                 ]);

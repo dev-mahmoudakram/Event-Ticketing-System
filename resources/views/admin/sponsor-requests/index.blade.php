@@ -76,10 +76,10 @@
                                         <p class="text-sm text-hub-dark/60 mb-4">{{ __('Choose the tier this sponsor will be listed under.') }}</p>
                                         <form method="POST" action="{{ route('admin.events.sponsor-requests.update-status', [$event, $sponsorRequest, 'approved']) }}">
                                             @csrf @method('PATCH')
-                                            <x-admin.field type="select" name="tier" label="{{ __('Tier') }}" required>
+                                            <x-admin.field type="select" name="sponsor_tier_id" label="{{ __('Tier') }}" required>
                                                 <option value="" disabled selected>{{ __('Select a tier') }}</option>
-                                                @foreach(['platinum', 'gold', 'silver', 'bronze'] as $tier)
-                                                    <option value="{{ $tier }}">{{ ucfirst($tier) }}</option>
+                                                @foreach($sponsorTiers as $sponsorTier)
+                                                    <option value="{{ $sponsorTier->id }}">{{ $sponsorTier->name_en }}</option>
                                                 @endforeach
                                             </x-admin.field>
                                             <div class="flex gap-2 justify-end mt-2">

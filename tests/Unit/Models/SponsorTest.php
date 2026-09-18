@@ -6,6 +6,7 @@ namespace Tests\Unit\Models;
 
 use App\Models\Event;
 use App\Models\Sponsor;
+use App\Models\SponsorTier;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -24,9 +25,19 @@ class SponsorTest extends TestCase
     public function test_event_has_many_sponsors(): void
     {
         $event = Event::factory()->create();
-        Sponsor::factory()->count(2)->for($event)->create(['tier' => 'gold']);
+        $tier = SponsorTier::factory()->for($event)->create(['name_en' => 'Gold']);
+        Sponsor::factory()->count(2)->for($event)->create(['sponsor_tier_id' => $tier->id]);
 
         $this->assertCount(2, $event->sponsors);
-        $this->assertSame('gold', $event->sponsors->first()->tier);
+        $this->assertTrue($event->sponsors->first()->tier->is($tier));
+    }
+
+    public function test_sponsor_belongs_to_a_tier(): void
+    {
+        $event = Event::factory()->create();
+        $tier = SponsorTier::factory()->for($event)->create();
+        $sponsor = Sponsor::factory()->for($event)->create(['sponsor_tier_id' => $tier->id]);
+
+        $this->assertTrue($sponsor->tier->is($tier));
     }
 }

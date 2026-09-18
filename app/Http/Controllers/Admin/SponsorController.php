@@ -19,12 +19,12 @@ class SponsorController extends Controller
 
     public function index(Event $event): View
     {
-        return view('admin.sponsors.index', ['event' => $event, 'sponsors' => $event->sponsors]);
+        return view('admin.sponsors.index', ['event' => $event, 'sponsors' => $event->sponsors()->with('tier')->get()]);
     }
 
     public function create(Event $event): View
     {
-        return view('admin.sponsors.form', ['event' => $event, 'sponsor' => new Sponsor]);
+        return view('admin.sponsors.form', ['event' => $event, 'sponsor' => new Sponsor, 'sponsorTiers' => $event->sponsorTiers]);
     }
 
     public function store(SponsorRequest $request, Event $event): RedirectResponse
@@ -41,7 +41,7 @@ class SponsorController extends Controller
     {
         $this->assertBelongsToEvent($event, $sponsor);
 
-        return view('admin.sponsors.form', ['event' => $event, 'sponsor' => $sponsor]);
+        return view('admin.sponsors.form', ['event' => $event, 'sponsor' => $sponsor, 'sponsorTiers' => $event->sponsorTiers]);
     }
 
     public function update(SponsorRequest $request, Event $event, Sponsor $sponsor): RedirectResponse

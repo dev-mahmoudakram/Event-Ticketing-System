@@ -10,9 +10,10 @@
 
         <x-admin.bilingual-field name="name" label="{{ __('Name') }}" :value-ar="old('name_ar', $sponsor->name_ar)" :value-en="old('name_en', $sponsor->name_en)" />
 
-        <x-admin.field type="select" name="tier" label="{{ __('Tier') }}">
-            @foreach(['platinum', 'gold', 'silver', 'bronze'] as $tier)
-                <option value="{{ $tier }}" @selected(old('tier', $sponsor->tier) === $tier)>{{ ucfirst($tier) }}</option>
+        <x-admin.field type="select" name="sponsor_tier_id" label="{{ __('Tier') }}">
+            <option value="" @selected(old('sponsor_tier_id', $sponsor->sponsor_tier_id) === null)>{{ __('No tier') }}</option>
+            @foreach($sponsorTiers as $sponsorTier)
+                <option value="{{ $sponsorTier->id }}" @selected((int) old('sponsor_tier_id', $sponsor->sponsor_tier_id) === $sponsorTier->id)>{{ $sponsorTier->name_en }}</option>
             @endforeach
         </x-admin.field>
 

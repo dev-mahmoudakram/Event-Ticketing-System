@@ -7,6 +7,7 @@ namespace Tests\Feature\Admin;
 use App\Enums\SponsorRequestStatus;
 use App\Models\Event;
 use App\Models\SponsorRequest;
+use App\Models\SponsorTier;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -54,6 +55,7 @@ class SponsorRequestQueueTest extends TestCase
     {
         $admin = User::factory()->create();
         $event = Event::factory()->create();
+        $tier = SponsorTier::factory()->for($event)->create(['name_en' => 'Gold']);
         $sponsorRequest = SponsorRequest::factory()->for($event)->create([
             'status' => SponsorRequestStatus::Pending,
             'name_en' => 'Acme Interiors',
@@ -64,7 +66,7 @@ class SponsorRequestQueueTest extends TestCase
 
         $response = $this->actingAs($admin)->patch(
             route('admin.events.sponsor-requests.update-status', [$event, $sponsorRequest, 'approved']),
-            ['tier' => 'gold'],
+            ['sponsor_tier_id' => $tier->id],
         );
 
         $response->assertRedirect(route('admin.events.sponsor-requests.index', $event));
@@ -74,7 +76,7 @@ class SponsorRequestQueueTest extends TestCase
             'name_en' => 'Acme Interiors',
             'name_ar' => 'أكمي',
             'logo_path' => 'sponsor-requests/logo.png',
-            'tier' => 'gold',
+            'sponsor_tier_id' => $tier->id,
             'website_url' => 'https://acme.example.com',
         ]);
     }
@@ -89,7 +91,7 @@ class SponsorRequestQueueTest extends TestCase
             route('admin.events.sponsor-requests.update-status', [$event, $sponsorRequest, 'approved']),
         );
 
-        $response->assertSessionHasErrors('tier');
+        $response->assertSessionHasErrors('sponsor_tier_id');
         $this->assertSame(SponsorRequestStatus::Pending, $sponsorRequest->fresh()->status);
         $this->assertDatabaseCount('sponsors', 0);
     }

@@ -23,6 +23,7 @@ use App\Http\Controllers\Admin\SpeakerController;
 use App\Http\Controllers\Admin\SpeakerRequestController as AdminSpeakerRequestController;
 use App\Http\Controllers\Admin\SponsorController;
 use App\Http\Controllers\Admin\SponsorRequestController as AdminSponsorRequestController;
+use App\Http\Controllers\Admin\SponsorTierController;
 use App\Http\Controllers\Admin\TestimonialController;
 use App\Http\Controllers\Admin\TicketCheckInController;
 use App\Http\Controllers\Admin\TicketRequestFieldController;
@@ -123,6 +124,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
             ->name('events.speaker-requests.update-status');
         Route::get('events/{event}/workshops/{workshop}/bookings', [AdminWorkshopController::class, 'bookings'])->name('events.workshops.bookings');
         Route::resource('events.workshops', AdminWorkshopController::class)->except('show');
+        Route::resource('events.sponsor-tiers', SponsorTierController::class)->except('show');
         Route::resource('events.sponsors', SponsorController::class)->except('show');
         Route::get('events/{event}/sponsor-requests', [AdminSponsorRequestController::class, 'index'])->name('events.sponsor-requests.index');
         Route::patch('events/{event}/sponsor-requests/{sponsorRequest}/{status}', [AdminSponsorRequestController::class, 'updateStatus'])
