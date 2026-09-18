@@ -5,7 +5,8 @@
     <div class="hub-panel px-8 md:px-12 py-10 flex flex-wrap items-center justify-between gap-8">
         <div class="max-w-xl">
             <h2 class="font-display text-xl md:text-2xl font-extrabold text-hub-purple mb-2" data-reveal>@site('cta.heading')</h2>
-            <p class="text-hub-dark/60 leading-relaxed" data-reveal data-reveal-delay="1">@site('cta.body')</p>
+            {{-- @siteRichText: sanitized on save — safe to render unescaped. --}}
+            <div class="hub-richtext text-hub-dark/60 leading-relaxed" data-reveal data-reveal-delay="1">@siteRichText('cta.body')</div>
         </div>
 
         <div class="flex flex-wrap gap-3" data-reveal data-reveal-delay="2">

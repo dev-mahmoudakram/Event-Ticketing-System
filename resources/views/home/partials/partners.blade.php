@@ -74,8 +74,9 @@
             </ul>
         @endif
 
-        <p class="text-white/70 leading-relaxed max-w-3xl mx-auto text-center" data-reveal data-reveal-delay="1">
-            @site('partners.body')
-        </p>
+        {{-- @siteRichText: sanitized on save — safe to render unescaped. --}}
+        <div class="hub-richtext text-white/70 leading-relaxed max-w-3xl mx-auto text-center" data-reveal data-reveal-delay="1">
+            @siteRichText('partners.body')
+        </div>
     </div>
 </section>

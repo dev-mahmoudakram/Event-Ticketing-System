@@ -15,7 +15,9 @@
             </div>
 
             <div data-reveal data-reveal-delay="1" class="flex flex-col gap-8">
-                <p class="text-lg leading-relaxed text-hub-dark/70">@site('about.body')</p>
+                {{-- @siteRichText: sanitized on save (SiteContentController, type 'richtext'
+                     in SiteContentRegistry) — safe to render unescaped. --}}
+                <div class="hub-richtext text-lg leading-relaxed text-hub-dark/70">@siteRichText('about.body')</div>
 
                 @if($aboutImage)
                     <div class="hub-media-well rounded-3xl aspect-[16/10]">

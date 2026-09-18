@@ -15,7 +15,9 @@
                         {{ $heading }}
                     </h2>
                     @if($whyEgypt['body'])
-                        <p class="text-lg text-hub-dark/70 leading-relaxed mb-8">{{ $whyEgypt['body'] }}</p>
+                        {{-- Sanitized on save (SiteContentController, type 'richtext' in
+                             SiteContentRegistry) — safe to render unescaped. --}}
+                        <div class="hub-richtext text-lg text-hub-dark/70 leading-relaxed mb-8">{!! $whyEgypt['body'] !!}</div>
                     @endif
                     @if($whyEgypt['image'])
                         <div class="hub-media-well rounded-3xl aspect-[4/3]">

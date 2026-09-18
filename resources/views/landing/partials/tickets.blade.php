@@ -26,34 +26,62 @@
             @endforeach
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
-            @foreach($event->ticketTypes->where('is_active', true) as $ticketType)
+        @php
+            $activeTicketTypes = $event->ticketTypes->where('is_active', true);
+        @endphp
+
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 items-start">
+            @foreach($activeTicketTypes as $ticketType)
                 @php
                     $slotCount = $ticketType->workshop_slot_count;
                     $slotLabel = is_null($slotCount)
                         ? __('Unlimited workshops')
                         : ($slotCount === 0 ? __('No workshops included') : trans_choice(':count workshop included|:count workshops included', $slotCount, ['count' => $slotCount]));
+                    $description = app()->getLocale() === 'ar' ? $ticketType->description_ar : $ticketType->description_en;
+                    // The admin's manual pick, not an automatic "highest price wins" guess —
+                    // a ticket table should not editorialize about which tier is worth more.
+                    $isPopular = $ticketType->is_popular;
                 @endphp
-                <div data-reveal data-reveal-delay="{{ min($loop->iteration, 5) }}">
-                    <div class="h-full bg-white/[0.03] border border-white/10 rounded-2xl py-9 px-[30px] flex flex-col gap-[22px] transition-transform duration-300 hover:-translate-y-1">
-                        <div>
-                            <div class="text-[13px] font-bold uppercase tracking-[0.1em] text-gray-500 mb-[14px]">{{ app()->getLocale() === 'ar' ? $ticketType->name_ar : $ticketType->name_en }}</div>
-                            <div class="text-[38px] font-extrabold">{{ $ticketType->price }} {{ $ticketType->currency }}</div>
+                <div data-reveal data-reveal-delay="{{ min($loop->iteration, 5) }}" class="{{ $isPopular ? 'md:-mt-4' : '' }}">
+                    <div class="h-full rounded-2xl py-9 px-[30px] flex flex-col relative transition-transform duration-300 hover:-translate-y-1 {{ $isPopular ? 'bg-gradient-to-b from-ccs-coral/[0.12] to-white/[0.04] border-2 border-ccs-coral shadow-[0_0_40px_-12px_rgba(255,126,113,0.5)] md:scale-105' : 'bg-white/[0.03] border border-white/10' }}">
+                        @if($isPopular)
+                            <div class="absolute top-0 inset-x-0 -translate-y-1/2 flex justify-center">
+                                <span class="text-[11px] font-extrabold uppercase tracking-[0.12em] bg-ccs-coral text-ccs-red px-4 py-1.5 rounded-full whitespace-nowrap">{{ $ticketType->popularLabel() }}</span>
+                            </div>
+                        @endif
+
+                        <div class="text-[13px] font-bold uppercase tracking-[0.1em] text-gray-500 mb-[14px]">{{ app()->getLocale() === 'ar' ? $ticketType->name_ar : $ticketType->name_en }}</div>
+
+                        <div class="flex items-baseline gap-1.5 mb-3 flex-wrap">
+                            @if($ticketType->isOnSale())
+                                <span class="text-lg font-bold text-gray-500 line-through">{{ $ticketType->original_price }}</span>
+                            @endif
+                            <span class="text-[38px] font-extrabold leading-none">{{ $ticketType->price }}</span>
+                            <span class="text-sm font-bold text-gray-500 uppercase tracking-wide">{{ $ticketType->currency }}</span>
                         </div>
-                        <div class="text-sm font-bold text-ccs-gold">{{ $slotLabel }}</div>
+
+                        @if($description)
+                            {{-- Sanitized on save (SanitizedRichText cast on TicketType) —
+                                 safe to render unescaped. --}}
+                            <div class="ccs-richtext text-sm text-gray-400 leading-relaxed mb-6">{!! $description !!}</div>
+                        @endif
+
+                        <button type="button" @click="$store.ticketRequest.show('{{ $ticketType->id }}')" class="text-center p-[14px] rounded-lg text-sm font-bold transition-transform duration-200 hover:scale-[1.03] mb-7 {{ $isPopular ? 'bg-ccs-coral text-ccs-red' : 'ccs-btn-red' }}">
+                            {{ __('Request This Ticket') }}
+                        </button>
+
+                        <div class="text-xs font-bold uppercase tracking-[0.08em] text-ccs-gold mb-4">{{ $slotLabel }}</div>
+
                         @if($ticketType->features->isNotEmpty())
-                            <div class="flex flex-col gap-3 flex-1">
+                            <div class="flex flex-col gap-3.5">
                                 @foreach($ticketType->features as $feature)
-                                    <div class="flex gap-2.5 items-start text-sm text-gray-400">
-                                        <span class="text-ccs-teal-light shrink-0">&mdash;</span>
+                                    <div class="flex gap-2.5 items-start text-sm text-gray-300">
+                                        <x-bi-check-circle-fill class="shrink-0 mt-0.5 text-[15px] text-ccs-teal-light" />
                                         <span>{{ app()->getLocale() === 'ar' ? $feature->text_ar : $feature->text_en }}</span>
                                     </div>
                                 @endforeach
                             </div>
                         @endif
-                        <button type="button" @click="$store.ticketRequest.show('{{ $ticketType->id }}')" class="text-center p-[14px] rounded-lg ccs-btn-red text-sm font-bold transition-transform duration-200 hover:scale-[1.03]">
-                            {{ __('Request This Ticket') }}
-                        </button>
                     </div>
                 </div>
             @endforeach

@@ -41,7 +41,9 @@ class AudienceTabCrudTest extends TestCase
             ])
             ->assertRedirect();
 
-        $this->assertDatabaseHas('audience_tabs', ['label_en' => 'If you teach', 'lede_en' => 'For educators.']);
+        // lede_en is a rich-text field (SanitizedRichText cast on AudienceTab); the sanitizer
+        // wraps bare text in a <p> the way any HTML formatter would.
+        $this->assertDatabaseHas('audience_tabs', ['label_en' => 'If you teach', 'lede_en' => '<p>For educators.</p>']);
     }
 
     public function test_a_tab_needs_a_label(): void

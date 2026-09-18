@@ -23,15 +23,32 @@ class TicketTypeRequest extends FormRequest
             'features_ar' => ['nullable', 'string'],
             'features_en' => ['nullable', 'string'],
             'price' => ['required', 'integer', 'min:0'],
+            'original_price' => ['nullable', 'integer', 'gt:price'],
             'currency' => ['required', 'string', 'size:3'],
             'workshop_slot_count' => ['nullable', 'integer', 'min:0'],
             'sort_order' => ['nullable', 'integer', 'min:0'],
             'is_active' => ['nullable', 'boolean'],
+            'is_popular' => ['nullable', 'boolean'],
+            'popular_label_ar' => ['nullable', 'string', 'max:255'],
+            'popular_label_en' => ['nullable', 'string', 'max:255'],
+        ];
+    }
+
+    /**
+     * @return array<string, string>
+     */
+    public function messages(): array
+    {
+        return [
+            'original_price.gt' => __('The original price must be higher than the current price, or the sale would not be a discount.'),
         ];
     }
 
     protected function prepareForValidation(): void
     {
-        $this->merge(['is_active' => $this->boolean('is_active')]);
+        $this->merge([
+            'is_active' => $this->boolean('is_active'),
+            'is_popular' => $this->boolean('is_popular'),
+        ]);
     }
 }

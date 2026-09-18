@@ -104,7 +104,9 @@
                                 <div class="flex-1">
                                     <h2 class="font-display font-bold mb-1">{{ $workshop->name() }}</h2>
                                     @if($workshop->description())
-                                        <p class="text-sm text-gray-400 leading-relaxed mb-3">{{ $workshop->description() }}</p>
+                                        {{-- Sanitized on save (SanitizedRichText cast on
+                                             Workshop) — safe to render unescaped. --}}
+                                        <div class="ccs-richtext text-sm text-gray-400 leading-relaxed mb-3">{!! $workshop->description() !!}</div>
                                     @endif
                                     <p class="text-xs text-gray-500">
                                         @if($soldOut)

@@ -10,7 +10,7 @@
 
         <x-admin.field name="slug" label="{{ __('Slug') }}" :value="old('slug', $workshop->slug)" />
         <x-admin.bilingual-field name="name" label="{{ __('Name') }}" :value-ar="old('name_ar', $workshop->name_ar)" :value-en="old('name_en', $workshop->name_en)" />
-        <x-admin.bilingual-field type="textarea" name="description" label="{{ __('Description') }}" :value-ar="old('description_ar', $workshop->description_ar)" :value-en="old('description_en', $workshop->description_en)" />
+        <x-admin.bilingual-field type="richtext" name="description" label="{{ __('Description') }}" :value-ar="old('description_ar', $workshop->description_ar)" :value-en="old('description_en', $workshop->description_en)" />
 
         <x-admin.field type="select" name="speaker_id" label="{{ __('Speaker') }}">
             <option value="">{{ __('None') }}</option>

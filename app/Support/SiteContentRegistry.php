@@ -32,7 +32,7 @@ class SiteContentRegistry
                 'anchor' => 'hero',
                 'fields' => [
                     'headline' => ['label' => __('Headline'), 'type' => 'textarea', 'default' => 'Where the people who design and build Egypt actually meet.'],
-                    'body' => ['label' => __('Supporting text'), 'type' => 'textarea', 'default' => 'Creators Hub runs the events that bring interior designers, architects, contractors and the brands supplying them into the same room.'],
+                    'body' => ['label' => __('Supporting text'), 'type' => 'richtext', 'default' => 'Creators Hub runs the events that bring interior designers, architects, contractors and the brands supplying them into the same room.'],
                     'primary_cta' => ['label' => __('Primary button'), 'type' => 'text', 'default' => 'Explore Events'],
                     'secondary_cta' => ['label' => __('Secondary button'), 'type' => 'text', 'default' => 'What we do'],
                     'image' => ['label' => __('Background image'), 'type' => 'image'],
@@ -62,7 +62,7 @@ class SiteContentRegistry
                     'heading' => ['label' => __('Heading'), 'type' => 'textarea', 'default' => 'A hub for the people shaping spaces.'],
                     'statement' => ['label' => __('Statement'), 'type' => 'textarea', 'default' => 'Designers. Builders. Brands. Creators.'],
                     'statement_second_line' => ['label' => __('Statement, second line'), 'type' => 'text', 'default' => 'One connected ecosystem.'],
-                    'body' => ['label' => __('Body'), 'type' => 'textarea', 'default' => 'Creators Hub connects the people and organizations behind interior design and construction — the architects, contractors, and developers who shape the built environment, and the suppliers, brands, and creative communities who work alongside them.'],
+                    'body' => ['label' => __('Body'), 'type' => 'richtext', 'default' => 'Creators Hub connects the people and organizations behind interior design and construction — the architects, contractors, and developers who shape the built environment, and the suppliers, brands, and creative communities who work alongside them.'],
                     'image' => ['label' => __('Section image'), 'type' => 'image'],
                 ],
             ],
@@ -73,7 +73,7 @@ class SiteContentRegistry
                 'anchor' => 'audiences',
                 'fields' => [
                     'heading' => ['label' => __('Heading'), 'type' => 'textarea', 'default' => 'Two sides of the same room.'],
-                    'body' => ['label' => __('Body'), 'type' => 'textarea', 'default' => 'An event only works when both halves of the industry turn up. Pick your side to see what Creators Hub is for.'],
+                    'body' => ['label' => __('Body'), 'type' => 'richtext', 'default' => 'An event only works when both halves of the industry turn up. Pick your side to see what Creators Hub is for.'],
                 ],
             ],
 
@@ -85,7 +85,7 @@ class SiteContentRegistry
                     'heading' => ['label' => __('Heading'), 'type' => 'textarea', 'default' => 'Events that bring the industry together.'],
                     'view_all' => ['label' => __('View all link'), 'type' => 'text', 'default' => 'View All Events'],
                     'empty_heading' => ['label' => __('Heading when there are no events'), 'type' => 'textarea', 'default' => 'Our first gathering is in the works.'],
-                    'empty_body' => ['label' => __('Text when there are no events'), 'type' => 'textarea', 'default' => 'Get in touch to hear about it first — dates, format, and who is speaking, before anyone else.'],
+                    'empty_body' => ['label' => __('Text when there are no events'), 'type' => 'richtext', 'default' => 'Get in touch to hear about it first — dates, format, and who is speaking, before anyone else.'],
                 ],
             ],
 
@@ -96,7 +96,7 @@ class SiteContentRegistry
                 'fields' => [
                     'eyebrow' => ['label' => __('Small label'), 'type' => 'text', 'default' => 'Community'],
                     'heading' => ['label' => __('Heading'), 'type' => 'textarea', 'default' => 'More than events. It is a community.'],
-                    'body' => ['label' => __('Body'), 'type' => 'textarea', 'default' => 'Creators Hub is about relationships that outlast a single event — the ongoing exchange between the people designing spaces and the people building them.'],
+                    'body' => ['label' => __('Body'), 'type' => 'richtext', 'default' => 'Creators Hub is about relationships that outlast a single event — the ongoing exchange between the people designing spaces and the people building them.'],
                     'statement' => ['label' => __('Closing line'), 'type' => 'textarea', 'default' => 'A place where ideas meet people, and people create what comes next.'],
                     'cta' => ['label' => __('Button'), 'type' => 'text', 'default' => 'Join the Community'],
                 ],
@@ -108,7 +108,7 @@ class SiteContentRegistry
                 'anchor' => 'why-egypt',
                 'fields' => [
                     'heading' => ['label' => __('Heading'), 'type' => 'textarea'],
-                    'body' => ['label' => __('Body'), 'type' => 'textarea'],
+                    'body' => ['label' => __('Body'), 'type' => 'richtext'],
                     'point_one' => ['label' => __('First point'), 'type' => 'text'],
                     'point_two' => ['label' => __('Second point'), 'type' => 'text'],
                     'point_three' => ['label' => __('Third point'), 'type' => 'text'],
@@ -125,7 +125,7 @@ class SiteContentRegistry
                 'anchor' => 'partners',
                 'fields' => [
                     'heading' => ['label' => __('Heading'), 'type' => 'textarea', 'default' => 'Built through collaboration.'],
-                    'body' => ['label' => __('Body'), 'type' => 'textarea', 'default' => 'Creators Hub is founded on partnerships with the brands and organizations that supply, build, and shape the industry.'],
+                    'body' => ['label' => __('Body'), 'type' => 'richtext', 'default' => 'Creators Hub is founded on partnerships with the brands and organizations that supply, build, and shape the industry.'],
                     'cta' => ['label' => __('Button'), 'type' => 'text', 'default' => 'Become a Partner'],
                 ],
             ],
@@ -146,7 +146,7 @@ class SiteContentRegistry
                 'anchor' => 'contact',
                 'fields' => [
                     'heading' => ['label' => __('Heading'), 'type' => 'textarea', 'default' => 'Be part of what is next.'],
-                    'body' => ['label' => __('Body'), 'type' => 'textarea', 'default' => 'Join the community shaping the future of interior design and construction.'],
+                    'body' => ['label' => __('Body'), 'type' => 'richtext', 'default' => 'Join the community shaping the future of interior design and construction.'],
                     'primary_cta' => ['label' => __('Primary button'), 'type' => 'text', 'default' => 'Explore Events'],
                     'secondary_cta' => ['label' => __('Secondary button'), 'type' => 'text', 'default' => 'Get in Touch'],
                 ],
@@ -159,7 +159,7 @@ class SiteContentRegistry
                 'fields' => [
                     'eyebrow' => ['label' => __('Small label'), 'type' => 'text', 'default' => 'Contact'],
                     'heading' => ['label' => __('Heading'), 'type' => 'textarea', 'default' => 'Get in touch.'],
-                    'body' => ['label' => __('Body'), 'type' => 'textarea', 'default' => 'Whether you want to attend, partner, or bring an event idea to us — tell us a bit about it.'],
+                    'body' => ['label' => __('Body'), 'type' => 'richtext', 'default' => 'Whether you want to attend, partner, or bring an event idea to us — tell us a bit about it.'],
                     'submit' => ['label' => __('Submit button'), 'type' => 'text', 'default' => 'Send Message'],
                 ],
             ],
@@ -169,7 +169,7 @@ class SiteContentRegistry
                 'description' => __('The bottom of the page.'),
                 'anchor' => null,
                 'fields' => [
-                    'blurb' => ['label' => __('Description under the logo'), 'type' => 'textarea', 'default' => 'Connecting the interior design and construction industry through events, community, and collaboration.'],
+                    'blurb' => ['label' => __('Description under the logo'), 'type' => 'richtext', 'default' => 'Connecting the interior design and construction industry through events, community, and collaboration.'],
                 ],
             ],
 

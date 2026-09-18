@@ -30,6 +30,17 @@
                 @if($placeholder) placeholder="{{ $placeholder }}" @endif
                 @if($required) required @endif
                 class="{{ $inputClasses }}">{{ $value }}</textarea>
+        @elseif($type === 'richtext')
+            {{-- The textarea is the real form field throughout: CKEditor (resources/js/richtext-editor.js)
+                 only replaces how it looks, and writes every change straight back into it, so
+                 this works exactly like any other textarea if JavaScript never loads. Content
+                 is sanitized server-side on save regardless (App\Support\RichText) — this
+                 attribute only controls which editor UI appears, never what is trusted. --}}
+            <textarea name="{{ $name }}" id="{{ $name }}" data-richtext
+                @if($dir) dir="{{ $dir }}" @endif
+                @if($placeholder) placeholder="{{ $placeholder }}" @endif
+                @if($required) required @endif
+                class="{{ $inputClasses }}">{{ $value }}</textarea>
         @elseif($type === 'select')
             <select name="{{ $name }}" id="{{ $name }}" @if($required) required @endif class="{{ $inputClasses }}">
                 {{ $slot }}

@@ -28,6 +28,26 @@ class FaqCrudTest extends TestCase
         $this->assertDatabaseHas('faqs', ['event_id' => $event->id, 'question_en' => 'How do I pay?']);
     }
 
+    /**
+     * The answer is rendered on the public FAQ page with {!! !!} (SanitizedRichText cast on
+     * Faq), because it may legitimately contain its own formatting. This proves the real HTTP
+     * write path — not just the isolated App\Support\RichText unit — actually strips a script
+     * tag before it ever reaches the database.
+     */
+    public function test_the_faq_answer_is_sanitized_on_save(): void
+    {
+        $admin = User::factory()->create();
+        $event = Event::factory()->create();
+
+        $this->actingAs($admin)->post(route('admin.events.faqs.store', $event), [
+            'question_ar' => 'س', 'question_en' => 'Q',
+            'answer_ar' => 'ج', 'answer_en' => '<p>Safe</p><script>alert(1)</script>',
+            'sort_order' => 0,
+        ]);
+
+        $this->assertDatabaseHas('faqs', ['event_id' => $event->id, 'answer_en' => '<p>Safe</p>']);
+    }
+
     public function test_creating_a_faq_requires_bilingual_answer(): void
     {
         $admin = User::factory()->create();

@@ -11,7 +11,8 @@
         @if(!$featuredEvent)
             <div class="rounded-3xl border border-hub-purple/15 px-8 py-16 md:py-24 text-center">
                 <p class="font-display text-2xl md:text-3xl font-bold text-hub-purple max-w-2xl mx-auto mb-4">@site('events.empty_heading')</p>
-                <p class="text-hub-dark/60 max-w-lg mx-auto mb-8">@site('events.empty_body')</p>
+                {{-- @siteRichText: sanitized on save — safe to render unescaped. --}}
+                <div class="hub-richtext text-hub-dark/60 max-w-lg mx-auto mb-8">@siteRichText('events.empty_body')</div>
                 <a href="#contact" class="hub-pill hub-pill-solid">{{ __('Get in Touch') }}</a>
             </div>
         @else

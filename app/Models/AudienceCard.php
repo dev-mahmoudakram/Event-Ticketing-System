@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Casts\SanitizedRichText;
 use App\Models\Concerns\ResolvesStoredMedia;
 use Database\Factories\AudienceCardFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -18,6 +19,17 @@ class AudienceCard extends Model
     protected $fillable = [
         'audience_tab_id', 'title_ar', 'title_en', 'body_ar', 'body_en', 'image_path', 'sort_order',
     ];
+
+    /**
+     * @return array<string, string>
+     */
+    protected function casts(): array
+    {
+        return [
+            'body_ar' => SanitizedRichText::class,
+            'body_en' => SanitizedRichText::class,
+        ];
+    }
 
     /**
      * @return BelongsTo<AudienceTab, $this>

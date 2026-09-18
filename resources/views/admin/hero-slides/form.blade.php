@@ -21,7 +21,7 @@
         <p class="text-sm text-hub-dark/60 mb-4 max-w-2xl">{{ __('Leave the headline and text blank to reuse the hero copy from Creators Hub Content.') }}</p>
 
         <x-admin.bilingual-field name="headline" :label="__('Headline')" :value-ar="old('headline_ar', $slide->headline_ar)" :value-en="old('headline_en', $slide->headline_en)" />
-        <x-admin.bilingual-field type="textarea" name="body" :label="__('Supporting text')" :value-ar="old('body_ar', $slide->body_ar)" :value-en="old('body_en', $slide->body_en)" />
+        <x-admin.bilingual-field type="richtext" name="body" :label="__('Supporting text')" :value-ar="old('body_ar', $slide->body_ar)" :value-en="old('body_en', $slide->body_en)" />
         <x-admin.field type="number" name="sort_order" :label="__('Sort Order')" :value="old('sort_order', $slide->sort_order ?? 0)" />
 
         <x-admin.button type="submit">{{ __('Save') }}</x-admin.button>

@@ -5,7 +5,8 @@
             <div data-reveal>
                 <p class="text-xs font-bold uppercase tracking-[0.18em] text-hub-purple/60 mb-5">@site('contact.eyebrow')</p>
                 <h2 class="font-display text-[clamp(1.9rem,4vw,3rem)] font-extrabold leading-[1.1] tracking-tight text-hub-purple mb-6">@site('contact.heading')</h2>
-                <p class="text-lg text-hub-dark/70 leading-relaxed max-w-md">@site('contact.body')</p>
+                {{-- @siteRichText: sanitized on save — safe to render unescaped. --}}
+                <div class="hub-richtext text-lg text-hub-dark/70 leading-relaxed max-w-md">@siteRichText('contact.body')</div>
             </div>
 
             <form method="POST" action="{{ route('contact.store.general') }}" class="flex flex-col gap-4" data-reveal data-reveal-delay="1">

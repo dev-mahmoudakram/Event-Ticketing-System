@@ -28,7 +28,7 @@
         <x-admin.bilingual-field name="hero_headline" :value-ar="old('hero_headline_ar', $values['hero_headline_ar'])" :value-en="old('hero_headline_en', $values['hero_headline_en'])" />
 
         <h2 class="font-display text-lg font-bold mt-6 mb-2">{{ __('About Body') }}</h2>
-        <x-admin.bilingual-field type="textarea" name="about_body" :value-ar="old('about_body_ar', $values['about_body_ar'])" :value-en="old('about_body_en', $values['about_body_en'])" />
+        <x-admin.bilingual-field type="richtext" name="about_body" :value-ar="old('about_body_ar', $values['about_body_ar'])" :value-en="old('about_body_en', $values['about_body_en'])" />
 
         <x-admin.media-upload
             name="about_image"
@@ -44,10 +44,10 @@
         @endif
 
         <h2 class="font-display text-lg font-bold mt-6 mb-2">{{ __('Location Intro') }}</h2>
-        <x-admin.bilingual-field type="textarea" name="location_intro" :value-ar="old('location_intro_ar', $values['location_intro_ar'])" :value-en="old('location_intro_en', $values['location_intro_en'])" />
+        <x-admin.bilingual-field type="richtext" name="location_intro" :value-ar="old('location_intro_ar', $values['location_intro_ar'])" :value-en="old('location_intro_en', $values['location_intro_en'])" />
 
         <h2 class="font-display text-lg font-bold mt-6 mb-2">{{ __('Awards Teaser Blurb') }}</h2>
-        <x-admin.bilingual-field type="textarea" name="awards_teaser_blurb" :value-ar="old('awards_teaser_blurb_ar', $values['awards_teaser_blurb_ar'])" :value-en="old('awards_teaser_blurb_en', $values['awards_teaser_blurb_en'])" />
+        <x-admin.bilingual-field type="richtext" name="awards_teaser_blurb" :value-ar="old('awards_teaser_blurb_ar', $values['awards_teaser_blurb_ar'])" :value-en="old('awards_teaser_blurb_en', $values['awards_teaser_blurb_en'])" />
 
         <h2 class="font-display text-lg font-bold mt-6 mb-2">{{ __('Stats') }}</h2>
         <x-admin.bilingual-field name="stats_attendees_count" label="{{ __('Attendees') }}" :value-ar="old('stats_attendees_count_ar', $values['stats_attendees_count_ar'])" :value-en="old('stats_attendees_count_en', $values['stats_attendees_count_en'])" />

@@ -89,6 +89,83 @@ class TicketTypeCrudTest extends TestCase
         $this->assertDatabaseMissing('ticket_type_features', ['ticket_type_id' => $ticketType->id, 'text_en' => 'Old feature']);
     }
 
+    public function test_admin_can_mark_a_ticket_type_as_popular_and_on_sale(): void
+    {
+        $admin = User::factory()->create();
+        $event = Event::factory()->create();
+
+        $response = $this->actingAs($admin)->post(route('admin.events.ticket-types.store', $event), [
+            'name_ar' => 'بلاتيني', 'name_en' => 'Platinum',
+            'price' => 300, 'original_price' => 450, 'currency' => 'EGP',
+            'sort_order' => 0, 'is_active' => 1, 'is_popular' => 1,
+        ]);
+
+        $response->assertRedirect(route('admin.events.ticket-types.index', $event));
+        $ticketType = TicketType::where('name_en', 'Platinum')->firstOrFail();
+        $this->assertTrue($ticketType->is_popular);
+        $this->assertSame(450, $ticketType->original_price);
+        $this->assertTrue($ticketType->isOnSale());
+    }
+
+    public function test_admin_can_set_a_custom_popular_badge_label(): void
+    {
+        $admin = User::factory()->create();
+        $event = Event::factory()->create();
+
+        $response = $this->actingAs($admin)->post(route('admin.events.ticket-types.store', $event), [
+            'name_ar' => 'بلاتيني', 'name_en' => 'Platinum',
+            'price' => 300, 'currency' => 'EGP',
+            'sort_order' => 0, 'is_active' => 1, 'is_popular' => 1,
+            'popular_label_ar' => 'الأفضل قيمة',
+            'popular_label_en' => 'Best Value',
+        ]);
+
+        $response->assertRedirect(route('admin.events.ticket-types.index', $event));
+        $ticketType = TicketType::where('name_en', 'Platinum')->firstOrFail();
+        $this->assertSame('Best Value', $ticketType->popular_label_en);
+        $this->assertSame('الأفضل قيمة', $ticketType->popular_label_ar);
+    }
+
+    public function test_leaving_the_popular_label_blank_keeps_the_default_wording(): void
+    {
+        $admin = User::factory()->create();
+        $event = Event::factory()->create();
+
+        $this->actingAs($admin)->post(route('admin.events.ticket-types.store', $event), [
+            'name_ar' => 'عام', 'name_en' => 'General',
+            'price' => 300, 'currency' => 'EGP',
+            'sort_order' => 0, 'is_active' => 1, 'is_popular' => 1,
+        ]);
+
+        $ticketType = TicketType::where('name_en', 'General')->firstOrFail();
+        $this->assertNull($ticketType->popular_label_en);
+
+        app()->setLocale('en');
+        $this->assertSame('Most Popular', $ticketType->popularLabel());
+    }
+
+    public function test_original_price_must_be_higher_than_the_current_price(): void
+    {
+        $admin = User::factory()->create();
+        $event = Event::factory()->create();
+
+        $response = $this->actingAs($admin)->post(route('admin.events.ticket-types.store', $event), [
+            'name_ar' => 'عام', 'name_en' => 'General',
+            'price' => 300, 'original_price' => 200, 'currency' => 'EGP',
+            'sort_order' => 0, 'is_active' => 1,
+        ]);
+
+        $response->assertSessionHasErrors('original_price');
+        $this->assertDatabaseMissing('ticket_types', ['name_en' => 'General']);
+    }
+
+    public function test_a_ticket_type_without_an_original_price_is_not_on_sale(): void
+    {
+        $ticketType = TicketType::factory()->create(['price' => 300, 'original_price' => null]);
+
+        $this->assertFalse($ticketType->isOnSale());
+    }
+
     public function test_creating_a_ticket_type_requires_a_price(): void
     {
         $admin = User::factory()->create();

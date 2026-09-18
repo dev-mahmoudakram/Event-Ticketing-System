@@ -50,7 +50,7 @@
             />
 
             <x-admin.bilingual-field
-                type="textarea"
+                type="richtext"
                 name="body"
                 :label="__('Text')"
                 :value-ar="old('body_ar', $card->body_ar)"

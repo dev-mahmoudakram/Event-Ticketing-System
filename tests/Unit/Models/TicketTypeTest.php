@@ -29,4 +29,25 @@ class TicketTypeTest extends TestCase
         $this->assertSame(0, $general->workshop_slot_count);
         $this->assertNull($platinum->workshop_slot_count);
     }
+
+    public function test_popular_label_falls_back_to_the_default_wording(): void
+    {
+        $ticketType = TicketType::factory()->create(['popular_label_en' => null]);
+
+        $this->assertSame('Most Popular', $ticketType->popularLabel());
+    }
+
+    public function test_popular_label_uses_the_admins_own_wording_when_set(): void
+    {
+        $ticketType = TicketType::factory()->create(['popular_label_en' => 'Best Value']);
+
+        $this->assertSame('Best Value', $ticketType->popularLabel());
+    }
+
+    public function test_popular_label_falls_back_when_set_to_blank_text(): void
+    {
+        $ticketType = TicketType::factory()->create(['popular_label_en' => '   ']);
+
+        $this->assertSame('Most Popular', $ticketType->popularLabel());
+    }
 }

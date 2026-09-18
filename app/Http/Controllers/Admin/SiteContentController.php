@@ -8,6 +8,7 @@ use App\Http\Controllers\Concerns\HandlesMediaUploads;
 use App\Http\Controllers\Controller;
 use App\Models\SiteContent;
 use App\Rules\SafeSvg;
+use App\Support\RichText;
 use App\Support\SiteContentRegistry;
 use App\Support\SiteText;
 use App\Support\UploadLimit;
@@ -49,7 +50,7 @@ class SiteContentController extends Controller
     {
         $definition = $this->definitionFor($section);
 
-        $request->validate([
+        $rules = [
             'fields' => ['array'],
             'fields.*.ar' => ['nullable', 'string', 'max:2000'],
             'fields.*.en' => ['nullable', 'string', 'max:2000'],
@@ -58,7 +59,19 @@ class SiteContentController extends Controller
             // SVG is allowed here so an illustration can be swapped for another drawing, not
             // only a photograph. Only signed-in admins reach this form.
             'images.*' => ['nullable', 'image:allow_svg', new SafeSvg, 'max:'.UploadLimit::effectiveKilobytes((int) config('media.max_image_kb'))],
-        ]);
+        ];
+
+        // A rich-text field's HTML markup (paragraph tags, formatting) carries real overhead
+        // that a plain heading of similar length never had, so it gets a longer ceiling than
+        // the 2000 characters every other field is capped at.
+        foreach ($definition['fields'] as $fieldKey => $field) {
+            if (($field['type'] ?? 'text') === 'richtext') {
+                $rules["fields.{$fieldKey}.ar"] = ['nullable', 'string', 'max:20000'];
+                $rules["fields.{$fieldKey}.en"] = ['nullable', 'string', 'max:20000'];
+            }
+        }
+
+        $request->validate($rules);
 
         foreach ($definition['fields'] as $fieldKey => $field) {
             if (($field['type'] ?? 'text') === 'image') {
@@ -81,10 +94,17 @@ class SiteContentController extends Controller
             }
 
             $values = $request->input("fields.{$fieldKey}", []);
+            $valueAr = $values['ar'] ?? null;
+            $valueEn = $values['en'] ?? null;
+
+            if (($field['type'] ?? 'text') === 'richtext') {
+                $valueAr = RichText::clean($valueAr);
+                $valueEn = RichText::clean($valueEn);
+            }
 
             SiteContent::updateOrCreate(
                 ['section' => $section, 'field_key' => $fieldKey],
-                ['value_ar' => $values['ar'] ?? null, 'value_en' => $values['en'] ?? null],
+                ['value_ar' => $valueAr, 'value_en' => $valueEn],
             );
         }
 

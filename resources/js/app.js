@@ -3,6 +3,7 @@ import initCcsMotion from './ccs-motion';
 import initAutoplayVideo from './autoplay-video';
 import ticketScanner from './ticket-scanner';
 import initCharts from './charts';
+import initRichTextEditors from './richtext-editor';
 import initSortableLists from './sortable';
 import unsavedGuard from './unsaved-guard';
 import intlTelInput from 'intl-tel-input/intlTelInputWithUtils';
@@ -183,4 +184,5 @@ if ('IntersectionObserver' in window) {
 initCcsMotion();
 initAutoplayVideo();
 initCharts();
+initRichTextEditors();
 initSortableLists();

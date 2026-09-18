@@ -1,0 +1,78 @@
+// resources/scss/_richtext.scss
+//
+// Rich-text CMS content: what an admin's CKEditor paragraphs/headings/lists look like once
+// rendered on the public pages, and the CKEditor chrome itself inside the admin.
+//
+// The wrapping element switched from <p> to a plain block (article/div) wherever this class
+// is used, because sanitized rich text can itself contain block-level tags (<p>, <h2>-<h4>,
+// <ul>, <blockquote>) — nesting those inside a <p> would be invalid HTML. This file gives
+// those inner elements their own spacing instead of relying on a parent's typography classes.
+
+.ccs-richtext,
+.hub-richtext {
+  > * + * {
+    margin-block-start: 1em;
+  }
+
+  p {
+    line-height: inherit;
+  }
+
+  h2, h3, h4 {
+    font-weight: 700;
+    line-height: 1.3;
+    color: inherit;
+  }
+
+  h2 { font-size: 1.5em; }
+  h3 { font-size: 1.25em; }
+  h4 { font-size: 1.1em; }
+
+  ul, ol {
+    padding-inline-start: 1.4em;
+  }
+
+  ul { list-style: disc; }
+  ol { list-style: decimal; }
+
+  li + li {
+    margin-block-start: 0.35em;
+  }
+
+  blockquote {
+    padding-inline-start: 1em;
+    border-inline-start: 3px solid currentColor;
+    opacity: 0.85;
+    font-style: italic;
+  }
+
+  a {
+    text-decoration: underline;
+    text-underline-offset: 0.15em;
+  }
+}
+
+// The editor itself, scoped to the admin's light purple theme rather than CKEditor's default
+// blue, so it does not look like a foreign widget dropped into the page.
+.ck.ck-editor {
+  --ck-color-focus-border: var(--color-hub-purple);
+  --ck-color-focus-outer-shadow: rgba(60, 52, 137, 0.18);
+  --ck-color-button-on-background: rgba(60, 52, 137, 0.1);
+  --ck-color-button-on-color: var(--color-hub-purple);
+  --ck-color-toolbar-background: #ffffff;
+  --ck-border-radius: 0.7rem;
+}
+
+.ck.ck-editor__editable {
+  min-height: 10rem;
+}
+
+.ck.ck-toolbar {
+  border-start-start-radius: 0.7rem !important;
+  border-start-end-radius: 0.7rem !important;
+}
+
+.ck.ck-content {
+  border-end-start-radius: 0.7rem !important;
+  border-end-end-radius: 0.7rem !important;
+}

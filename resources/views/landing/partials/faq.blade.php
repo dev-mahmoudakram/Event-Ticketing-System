@@ -16,7 +16,9 @@
                         :class="open ? 'opacity-100' : 'opacity-0'"
                         :style="open ? 'max-height: ' + $refs.panel.scrollHeight + 'px' : 'max-height: 0px'"
                     >
-                        <p class="pb-6 text-gray-400 leading-relaxed max-w-xl">{{ app()->getLocale() === 'ar' ? $faq->answer_ar : $faq->answer_en }}</p>
+                        {{-- Sanitized on save (SanitizedRichText cast on Faq) — safe to render
+                             unescaped. --}}
+                        <div class="ccs-richtext pb-6 text-gray-400 leading-relaxed max-w-xl">{!! app()->getLocale() === 'ar' ? $faq->answer_ar : $faq->answer_en !!}</div>
                     </div>
                 </div>
             @endforeach

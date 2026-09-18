@@ -14,7 +14,8 @@
             <h2 class="font-display text-[clamp(1.9rem,4.4vw,3.4rem)] font-extrabold leading-[1.1] tracking-tight mb-6" data-reveal>
                 @site('community.heading')
             </h2>
-            <p class="text-lg text-white/75 leading-relaxed mb-4" data-reveal data-reveal-delay="1">@site('community.body')</p>
+            {{-- @siteRichText: sanitized on save — safe to render unescaped. --}}
+            <div class="hub-richtext text-lg text-white/75 leading-relaxed mb-4" data-reveal data-reveal-delay="1">@siteRichText('community.body')</div>
             <p class="font-display text-lg md:text-xl font-bold text-hub-lavender mb-10" data-reveal data-reveal-delay="1">@site('community.statement')</p>
             <a href="#contact" class="hub-pill hub-pill-light" data-reveal data-reveal-delay="2">@site('community.cta')</a>
         </div>

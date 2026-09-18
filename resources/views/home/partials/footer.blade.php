@@ -22,7 +22,8 @@
                         <span class="font-display font-extrabold text-xl tracking-tight">Creators Hub</span>
                     @endif
                 </div>
-                <p class="text-sm text-white/60 leading-relaxed max-w-xs">@site('footer.blurb')</p>
+                {{-- @siteRichText: sanitized on save — safe to render unescaped. --}}
+                <div class="hub-richtext text-sm text-white/60 leading-relaxed max-w-xs">@siteRichText('footer.blurb')</div>
             </div>
 
             <div class="flex flex-col gap-3">

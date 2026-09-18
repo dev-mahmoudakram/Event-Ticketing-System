@@ -27,7 +27,9 @@
                         <h3 class="font-display font-bold text-xl mb-2">{{ app()->getLocale() === 'ar' ? $speaker->name_ar : $speaker->name_en }}</h3>
                         <p class="text-ccs-coral font-bold text-sm uppercase tracking-wide mb-5">{{ app()->getLocale() === 'ar' ? $speaker->title_ar : $speaker->title_en }}</p>
                         <div class="w-10 h-px bg-white/20 mb-5"></div>
-                        <p class="text-sm text-gray-400 leading-relaxed">{{ app()->getLocale() === 'ar' ? $speaker->bio_ar : $speaker->bio_en }}</p>
+                        {{-- Sanitized on save (SanitizedRichText cast on Speaker) — safe to
+                             render unescaped. --}}
+                        <div class="ccs-richtext text-sm text-gray-400 leading-relaxed">{!! app()->getLocale() === 'ar' ? $speaker->bio_ar : $speaker->bio_en !!}</div>
                     </div>
                 </div>
             @endforeach

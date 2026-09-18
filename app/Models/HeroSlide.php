@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Casts\SanitizedRichText;
 use App\Models\Concerns\ResolvesStoredMedia;
 use App\Support\SiteText;
 use Illuminate\Database\Eloquent\Model;
@@ -15,6 +16,17 @@ class HeroSlide extends Model
     protected $fillable = [
         'image_path', 'headline_ar', 'headline_en', 'body_ar', 'body_en', 'sort_order',
     ];
+
+    /**
+     * @return array<string, string>
+     */
+    protected function casts(): array
+    {
+        return [
+            'body_ar' => SanitizedRichText::class,
+            'body_en' => SanitizedRichText::class,
+        ];
+    }
 
     public function imageUrl(): ?string
     {

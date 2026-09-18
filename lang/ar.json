@@ -721,5 +721,15 @@
     "Tell us about yourself and what you'd like to speak about — our team will review your request and follow up.": "أخبرنا عن نفسك وعمّا تودّ التحدث عنه — سيقوم فريقنا بمراجعة طلبك والتواصل معك.",
     "No speaker requests yet.": "لا توجد طلبات متحدثين بعد.",
     "Speaker request approved and added to speakers.": "تمت الموافقة على طلب المتحدث وأُضيف إلى قائمة المتحدثين.",
-    "Speaker request rejected successfully.": "تم رفض طلب المتحدث بنجاح."
+    "Speaker request rejected successfully.": "تم رفض طلب المتحدث بنجاح.",
+    "Add point": "إضافة نقطة",
+    "Mark as Popular (highlights this ticket on the public page)": "وضع علامة الأكثر رواجًا (يُبرز هذه التذكرة في الصفحة العامة)",
+    "Original Price (before sale, optional)": "السعر الأصلي (قبل الخصم، اختياري)",
+    "Point text (Arabic)": "نص النقطة (عربي)",
+    "Point text (English)": "نص النقطة (إنجليزي)",
+    "Points (one per line)": "النقاط (نقطة واحدة في كل سطر)",
+    "Remove this point": "حذف هذه النقطة",
+    "Most Popular": "الأكثر رواجًا",
+    "The original price must be higher than the current price, or the sale would not be a discount.": "يجب أن يكون السعر الأصلي أعلى من السعر الحالي، وإلا فلن يكون العرض خصمًا فعليًا.",
+    "Popular Badge Text": "نص شارة الأكثر رواجًا"
 }

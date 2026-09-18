@@ -71,4 +71,54 @@ class LandingPageContentCrudTest extends TestCase
 
         $response->assertSee('Existing Headline');
     }
+
+    /**
+     * The rich-text fields (About Body, Location Intro, Awards Blurb) are rendered on the
+     * public page with {!! !!} rather than {{ }}, since they may legitimately contain their
+     * own HTML tags. That is only safe because this controller sanitizes them before they are
+     * ever stored — this proves the real HTTP write path does that, not just the isolated
+     * RichText helper in tests/Unit/RichTextTest.php.
+     */
+    public function test_rich_text_fields_are_sanitized_on_save(): void
+    {
+        $admin = User::factory()->create();
+        $event = Event::factory()->create();
+
+        $payload = $this->payload();
+        $payload['about_body_en'] = '<p>Safe</p><script>alert(1)</script>';
+        $payload['location_intro_en'] = '<p onclick="alert(1)">Safe</p>';
+        $payload['awards_teaser_blurb_en'] = '<a href="javascript:alert(1)">click</a>';
+
+        $this->actingAs($admin)->put(route('admin.events.content.update', $event), $payload);
+
+        $this->assertDatabaseHas('landing_page_content', [
+            'event_id' => $event->id, 'field_key' => 'body', 'value_en' => '<p>Safe</p>',
+        ]);
+        $this->assertDatabaseHas('landing_page_content', [
+            'event_id' => $event->id, 'field_key' => 'intro', 'value_en' => '<p>Safe</p>',
+        ]);
+        $this->assertDatabaseHas('landing_page_content', [
+            'event_id' => $event->id, 'field_key' => 'blurb', 'value_en' => '<p><a>click</a></p>',
+        ]);
+    }
+
+    /**
+     * A plain field (the hero headline) is not run through the HTML purifier at all — its
+     * value should reach the database byte-for-byte, proving the richtext flag in
+     * LandingPageContentController::FIELDS actually gates which fields are sanitized.
+     */
+    public function test_non_richtext_fields_are_stored_exactly_as_submitted(): void
+    {
+        $admin = User::factory()->create();
+        $event = Event::factory()->create();
+
+        $payload = $this->payload();
+        $payload['hero_headline_en'] = 'Plain & unmodified <not-a-real-tag>';
+
+        $this->actingAs($admin)->put(route('admin.events.content.update', $event), $payload);
+
+        $this->assertDatabaseHas('landing_page_content', [
+            'event_id' => $event->id, 'field_key' => 'headline', 'value_en' => 'Plain & unmodified <not-a-real-tag>',
+        ]);
+    }
 }

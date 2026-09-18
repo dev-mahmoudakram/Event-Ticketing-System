@@ -60,4 +60,92 @@ class LandingPageFullPageTest extends TestCase
         $response->assertSee('id="contact"', false);
         $response->assertSee('id="newsletter"', false);
     }
+
+    public function test_ticket_card_shows_its_description(): void
+    {
+        $event = Event::factory()->create(['status' => EventStatus::Published]);
+        TicketType::factory()->for($event)->create([
+            'name_en' => 'Standard',
+            'description_en' => 'Everything you need for the main stage.',
+            'price' => 500,
+        ]);
+        TicketType::factory()->for($event)->create([
+            'name_en' => 'VIP',
+            'description_en' => 'Front row access and the after-party.',
+            'price' => 2000,
+        ]);
+
+        $response = $this->get(route('landing.show', $event).'?lang=en');
+
+        $response->assertOk();
+        $response->assertSee('Everything you need for the main stage.');
+        $response->assertSee('Front row access and the after-party.');
+    }
+
+    public function test_only_the_ticket_type_marked_popular_gets_the_standout_treatment(): void
+    {
+        $event = Event::factory()->create(['status' => EventStatus::Published]);
+        // The cheaper tier is the one marked popular, proving the highlight follows the
+        // admin's choice rather than defaulting back to whichever tier costs the most.
+        TicketType::factory()->for($event)->create(['name_en' => 'Standard', 'price' => 2000, 'is_popular' => false]);
+        TicketType::factory()->for($event)->create(['name_en' => 'VIP', 'price' => 500, 'is_popular' => true]);
+
+        $response = $this->get(route('landing.show', $event).'?lang=en');
+
+        $response->assertOk();
+        $response->assertSeeInOrder(['border-ccs-coral', 'VIP'], false);
+        $this->assertSame(1, substr_count($response->getContent(), 'border-ccs-coral'));
+        $response->assertSee('Most Popular');
+    }
+
+    public function test_the_popular_badge_shows_the_admins_custom_wording(): void
+    {
+        $event = Event::factory()->create(['status' => EventStatus::Published]);
+        TicketType::factory()->for($event)->create([
+            'is_popular' => true,
+            'popular_label_en' => 'Best Value',
+        ]);
+
+        $response = $this->get(route('landing.show', $event).'?lang=en');
+
+        $response->assertOk();
+        $response->assertSee('Best Value');
+        $response->assertDontSee('Most Popular');
+    }
+
+    public function test_no_ticket_type_is_highlighted_when_none_is_marked_popular(): void
+    {
+        $event = Event::factory()->create(['status' => EventStatus::Published]);
+        TicketType::factory()->for($event)->create(['is_popular' => false]);
+
+        $response = $this->get(route('landing.show', $event).'?lang=en');
+
+        $response->assertOk();
+        $response->assertDontSee('Most Popular');
+        $this->assertSame(0, substr_count($response->getContent(), 'border-ccs-coral'));
+    }
+
+    public function test_ticket_card_shows_the_struck_through_original_price_on_sale(): void
+    {
+        $event = Event::factory()->create(['status' => EventStatus::Published]);
+        TicketType::factory()->for($event)->create([
+            'name_en' => 'General', 'price' => 300, 'original_price' => 450, 'currency' => 'EGP',
+        ]);
+
+        $response = $this->get(route('landing.show', $event).'?lang=en');
+
+        $response->assertOk();
+        $response->assertSeeInOrder(['line-through', '450', '300'], false);
+    }
+
+    public function test_ticket_card_does_not_show_a_struck_through_price_when_not_on_sale(): void
+    {
+        $event = Event::factory()->create(['status' => EventStatus::Published]);
+        TicketType::factory()->for($event)->create(['price' => 300, 'original_price' => null]);
+
+        $response = $this->get(route('landing.show', $event).'?lang=en');
+
+        $response->assertOk();
+        $response->assertDontSee('line-through', false);
+    }
 }

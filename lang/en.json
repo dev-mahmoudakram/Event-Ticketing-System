@@ -723,5 +723,15 @@
     "Tell us about yourself and what you'd like to speak about — our team will review your request and follow up.": "Tell us about yourself and what you'd like to speak about — our team will review your request and follow up.",
     "No speaker requests yet.": "No speaker requests yet.",
     "Speaker request approved and added to speakers.": "Speaker request approved and added to speakers.",
-    "Speaker request rejected successfully.": "Speaker request rejected successfully."
+    "Speaker request rejected successfully.": "Speaker request rejected successfully.",
+    "Add point": "Add point",
+    "Mark as Popular (highlights this ticket on the public page)": "Mark as Popular (highlights this ticket on the public page)",
+    "Original Price (before sale, optional)": "Original Price (before sale, optional)",
+    "Point text (Arabic)": "Point text (Arabic)",
+    "Point text (English)": "Point text (English)",
+    "Points (one per line)": "Points (one per line)",
+    "Remove this point": "Remove this point",
+    "Most Popular": "Most Popular",
+    "The original price must be higher than the current price, or the sale would not be a discount.": "The original price must be higher than the current price, or the sale would not be a discount.",
+    "Popular Badge Text": "Popular Badge Text"
 }

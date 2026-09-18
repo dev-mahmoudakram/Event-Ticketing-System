@@ -24,7 +24,9 @@
             </div>
         @endif
 
-        <p class="text-lg text-gray-300 leading-relaxed mb-8" data-reveal>{{ app()->getLocale() === 'ar' ? $workshop->description_ar : $workshop->description_en }}</p>
+        {{-- Sanitized on save (SanitizedRichText cast on Workshop) — safe to render
+             unescaped. --}}
+        <div class="ccs-richtext text-lg text-gray-300 leading-relaxed mb-8" data-reveal>{!! app()->getLocale() === 'ar' ? $workshop->description_ar : $workshop->description_en !!}</div>
 
         <div class="flex flex-wrap gap-8 text-sm" data-reveal>
             <div>

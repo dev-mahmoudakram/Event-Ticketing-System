@@ -75,12 +75,15 @@
                         @if($index > 0) x-cloak @endif
                     >
                         <h1 class="font-display text-[clamp(2.25rem,5.4vw,4.5rem)] font-extrabold leading-[1.08] tracking-tight mb-6">{{ $heroSlide->headline() }}</h1>
-                        <p class="text-lg md:text-xl text-white/85 leading-relaxed max-w-2xl mx-auto">{{ $heroSlide->body() }}</p>
+                        {{-- Sanitized on save (SanitizedRichText cast on HeroSlide) — safe to
+                             render unescaped. --}}
+                        <div class="hub-richtext text-lg md:text-xl text-white/85 leading-relaxed max-w-2xl mx-auto">{!! $heroSlide->body() !!}</div>
                     </div>
                 @endforeach
             @else
                 <h1 class="font-display text-[clamp(2.25rem,5.4vw,4.5rem)] font-extrabold leading-[1.08] tracking-tight mb-6">@site('hero.headline')</h1>
-                <p class="text-lg md:text-xl text-white/85 leading-relaxed max-w-2xl mx-auto">@site('hero.body')</p>
+                {{-- @siteRichText: sanitized on save — safe to render unescaped. --}}
+                <div class="hub-richtext text-lg md:text-xl text-white/85 leading-relaxed max-w-2xl mx-auto">@siteRichText('hero.body')</div>
             @endif
 
             <div class="flex flex-wrap justify-center gap-4 mt-10">

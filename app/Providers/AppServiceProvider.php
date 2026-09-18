@@ -29,6 +29,14 @@ class AppServiceProvider extends ServiceProvider
             return "<?php echo e(\App\Support\SiteText::forExpression({$expression})); ?>";
         });
 
+        // @siteRichText is the deliberately-unescaped counterpart, for the handful of fields
+        // declared 'type' => 'richtext' in SiteContentRegistry. It is safe specifically
+        // because SiteContentController runs every such field through App\Support\RichText
+        // before it is ever stored — this directive must never be pointed at a plain field.
+        Blade::directive('siteRichText', function (string $expression) {
+            return "<?php echo \App\Support\SiteText::forExpression({$expression}); ?>";
+        });
+
         // The admin menu lists every event, on every admin page.
         View::composer('admin.partials.sidebar', function ($view) {
             $view->with('sidebarEvents', Event::orderByDesc('start_date')->get(['id', 'slug', 'name_ar', 'name_en']));

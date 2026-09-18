@@ -13,7 +13,8 @@
             <h2 class="font-display text-[clamp(1.9rem,4vw,3rem)] font-extrabold leading-[1.1] tracking-tight text-hub-purple mb-5" data-reveal>
                 @site('audiences.heading')
             </h2>
-            <p class="text-lg text-hub-dark/70 leading-relaxed" data-reveal data-reveal-delay="1">@site('audiences.body')</p>
+            {{-- @siteRichText: sanitized on save — safe to render unescaped. --}}
+            <div class="hub-richtext text-lg text-hub-dark/70 leading-relaxed" data-reveal data-reveal-delay="1">@siteRichText('audiences.body')</div>
         </div>
 
         {{-- The page's one interactive moment, built as a real tablist: arrow keys move

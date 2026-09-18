@@ -48,7 +48,9 @@
                                 :class="open === {{ $faq->id }} ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'"
                             >
                                 <div class="overflow-hidden">
-                                    <p class="px-7 pb-6 text-hub-dark/70 leading-relaxed max-w-3xl border-t border-hub-purple/10 pt-5">{{ $faq->answer() }}</p>
+                                    {{-- Sanitized on save (SanitizedRichText cast on SiteFaq)
+                                         — safe to render unescaped. --}}
+                                    <div class="hub-richtext px-7 pb-6 text-hub-dark/70 leading-relaxed max-w-3xl border-t border-hub-purple/10 pt-5">{!! $faq->answer() !!}</div>
                                 </div>
                             </div>
                         </div>

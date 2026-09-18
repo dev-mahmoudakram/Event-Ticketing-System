@@ -9,6 +9,7 @@ use App\Http\Controllers\Concerns\HandlesMediaUploads;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\LandingPageContentRequest;
 use App\Models\Event;
+use App\Support\RichText;
 use App\Support\UploadLimit;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
@@ -17,12 +18,18 @@ class LandingPageContentController extends Controller
 {
     use HandlesMediaUploads;
 
-    /** @var array<string, array{section: LandingPageSection, field_key: string}> */
+    /**
+     * value_ar/value_en on landing_page_content hold everything from a one-line headline to a
+     * file path, so sanitization cannot live on the column — it is declared per field here
+     * instead, exactly once, and applied in update() before anything is stored.
+     *
+     * @var array<string, array{section: LandingPageSection, field_key: string, richtext?: bool}>
+     */
     private const FIELDS = [
         'hero_headline' => ['section' => LandingPageSection::Hero, 'field_key' => 'headline'],
-        'about_body' => ['section' => LandingPageSection::About, 'field_key' => 'body'],
-        'location_intro' => ['section' => LandingPageSection::Location, 'field_key' => 'intro'],
-        'awards_teaser_blurb' => ['section' => LandingPageSection::AwardsTeaser, 'field_key' => 'blurb'],
+        'about_body' => ['section' => LandingPageSection::About, 'field_key' => 'body', 'richtext' => true],
+        'location_intro' => ['section' => LandingPageSection::Location, 'field_key' => 'intro', 'richtext' => true],
+        'awards_teaser_blurb' => ['section' => LandingPageSection::AwardsTeaser, 'field_key' => 'blurb', 'richtext' => true],
         'stats_attendees_count' => ['section' => LandingPageSection::Stats, 'field_key' => 'attendees_count'],
         'stats_countries_count' => ['section' => LandingPageSection::Stats, 'field_key' => 'countries_count'],
     ];
@@ -56,9 +63,17 @@ class LandingPageContentController extends Controller
         $data = $request->validated();
 
         foreach (self::FIELDS as $prefix => $target) {
+            $valueAr = $data[$prefix.'_ar'] ?? null;
+            $valueEn = $data[$prefix.'_en'] ?? null;
+
+            if ($target['richtext'] ?? false) {
+                $valueAr = RichText::clean($valueAr);
+                $valueEn = RichText::clean($valueEn);
+            }
+
             $event->landingPageContent()->updateOrCreate(
                 ['section' => $target['section'], 'field_key' => $target['field_key']],
-                ['value_ar' => $data[$prefix.'_ar'] ?? null, 'value_en' => $data[$prefix.'_en'] ?? null],
+                ['value_ar' => $valueAr, 'value_en' => $valueEn],
             );
         }
 

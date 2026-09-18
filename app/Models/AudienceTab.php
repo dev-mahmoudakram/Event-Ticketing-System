@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Casts\SanitizedRichText;
 use Database\Factories\AudienceTabFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -17,6 +18,17 @@ class AudienceTab extends Model
     protected $fillable = [
         'label_ar', 'label_en', 'lede_ar', 'lede_en', 'cta_ar', 'cta_en', 'sort_order',
     ];
+
+    /**
+     * @return array<string, string>
+     */
+    protected function casts(): array
+    {
+        return [
+            'lede_ar' => SanitizedRichText::class,
+            'lede_en' => SanitizedRichText::class,
+        ];
+    }
 
     /**
      * @return HasMany<AudienceCard, $this>

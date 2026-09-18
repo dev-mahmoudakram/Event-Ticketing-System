@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Casts\SanitizedRichText;
 use Database\Factories\WorkshopFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -18,6 +19,17 @@ class Workshop extends Model
         'event_id', 'speaker_id', 'slug', 'name_ar', 'name_en',
         'description_ar', 'description_en', 'capacity', 'sort_order',
     ];
+
+    /**
+     * @return array<string, string>
+     */
+    protected function casts(): array
+    {
+        return [
+            'description_ar' => SanitizedRichText::class,
+            'description_en' => SanitizedRichText::class,
+        ];
+    }
 
     public function getRouteKeyName(): string
     {

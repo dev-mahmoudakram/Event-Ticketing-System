@@ -43,7 +43,7 @@
                 />
 
                 <x-admin.bilingual-field
-                    type="textarea"
+                    type="richtext"
                     name="lede"
                     :label="__('Intro line')"
                     :value-ar="old('lede_ar', $tab->lede_ar)"
