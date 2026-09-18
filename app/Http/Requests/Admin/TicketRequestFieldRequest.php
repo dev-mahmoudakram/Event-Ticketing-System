@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Requests\Admin;
 
 use App\Enums\TicketRequestFieldType;
+use App\Support\SocialPlatforms;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -19,6 +20,12 @@ class TicketRequestFieldRequest extends FormRequest
     {
         return [
             'type' => ['required', Rule::in(array_column(TicketRequestFieldType::cases(), 'value'))],
+            'platform' => [
+                Rule::requiredIf($this->input('type') === TicketRequestFieldType::SocialLink->value),
+                'nullable',
+                Rule::in(SocialPlatforms::keys()),
+            ],
+            'show_follower_count' => ['nullable', 'boolean'],
             'label_ar' => ['required', 'string', 'max:255'],
             'label_en' => ['required', 'string', 'max:255'],
             'is_required' => ['nullable', 'boolean'],
@@ -28,6 +35,9 @@ class TicketRequestFieldRequest extends FormRequest
 
     protected function prepareForValidation(): void
     {
-        $this->merge(['is_required' => $this->boolean('is_required')]);
+        $this->merge([
+            'is_required' => $this->boolean('is_required'),
+            'show_follower_count' => $this->boolean('show_follower_count'),
+        ]);
     }
 }

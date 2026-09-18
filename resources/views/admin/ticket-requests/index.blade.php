@@ -55,6 +55,9 @@
                                     @else
                                         {{ $answer->value }}
                                     @endif
+                                    @if($answer->follower_count !== null)
+                                        ({{ __(':count followers', ['count' => number_format($answer->follower_count)]) }})
+                                    @endif
                                 </div>
                             @endforeach
                         </td>

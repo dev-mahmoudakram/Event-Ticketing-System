@@ -125,6 +125,15 @@
                             @elseif($field->type === \App\Enums\TicketRequestFieldType::Cv)
                                 <x-file-dropzone :name="$inputKey" accept=".pdf,.doc,.docx" />
                                 <p id="error-{{ $inputKey }}" class="text-red-400 text-sm mt-1 {{ $errors->has($inputKey) ? '' : 'hidden' }}">{{ $errors->first($inputKey) }}</p>
+                            @elseif($field->type === \App\Enums\TicketRequestFieldType::SocialLink)
+                                <input type="url" name="{{ $inputKey }}" value="{{ old($inputKey) }}" placeholder="{{ \App\Support\SocialPlatforms::all()[$field->platform]['placeholder'] ?? 'https://' }}" class="w-full border border-gray-600 bg-gray-900 text-white rounded px-3 py-2">
+                                <p id="error-{{ $inputKey }}" class="text-red-400 text-sm mt-1 {{ $errors->has($inputKey) ? '' : 'hidden' }}">{{ $errors->first($inputKey) }}</p>
+
+                                @if($field->show_follower_count)
+                                    <label class="block text-sm text-gray-300 mt-3 mb-1">{{ __('Follower count') }}</label>
+                                    <input type="number" min="0" name="{{ $inputKey }}_followers" value="{{ old($inputKey.'_followers') }}" class="w-full border border-gray-600 bg-gray-900 text-white rounded px-3 py-2">
+                                    <p id="error-{{ $inputKey }}_followers" class="text-red-400 text-sm mt-1 {{ $errors->has($inputKey.'_followers') ? '' : 'hidden' }}">{{ $errors->first($inputKey.'_followers') }}</p>
+                                @endif
                             @endif
                         </div>
                     @endforeach

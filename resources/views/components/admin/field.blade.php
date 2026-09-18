@@ -42,7 +42,7 @@
                 @if($required) required @endif
                 class="{{ $inputClasses }}">{{ $value }}</textarea>
         @elseif($type === 'select')
-            <select name="{{ $name }}" id="{{ $name }}" @if($required) required @endif class="{{ $inputClasses }}">
+            <select name="{{ $name }}" id="{{ $name }}" @if($required) required @endif {{ $attributes->merge(['class' => $inputClasses]) }}>
                 {{ $slot }}
             </select>
         @else

@@ -93,7 +93,13 @@ class TicketRequestController extends Controller
         }
 
         if ($request->filled($inputKey)) {
-            $ticket->answers()->create(['ticket_request_field_id' => $field->id, 'value' => $request->input($inputKey)]);
+            $ticket->answers()->create([
+                'ticket_request_field_id' => $field->id,
+                'value' => $request->input($inputKey),
+                'follower_count' => $field->type === TicketRequestFieldType::SocialLink
+                    ? $request->input($inputKey.'_followers')
+                    : null,
+            ]);
         }
     }
 

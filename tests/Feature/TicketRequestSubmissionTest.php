@@ -227,6 +227,43 @@ class TicketRequestSubmissionTest extends TestCase
         ]);
     }
 
+    public function test_social_link_answer_and_follower_count_are_stored(): void
+    {
+        $event = Event::factory()->create(['status' => EventStatus::Published]);
+        $ticketType = TicketType::factory()->for($event)->create();
+        $field = TicketRequestField::factory()->for($event)->create([
+            'type' => 'social_link', 'platform' => 'tiktok', 'show_follower_count' => true,
+        ]);
+
+        $this->post(route('ticket-requests.store', $event), [
+            'ticket_type_id' => $ticketType->id, 'name' => 'Test', 'email' => 'test@example.com', 'phone' => '+201001234567',
+            'field_'.$field->id => 'https://tiktok.com/@myhandle',
+            'field_'.$field->id.'_followers' => 15000,
+        ]);
+
+        $ticket = Ticket::where('email', 'test@example.com')->firstOrFail();
+        $this->assertDatabaseHas('ticket_request_answers', [
+            'ticket_id' => $ticket->id,
+            'ticket_request_field_id' => $field->id,
+            'value' => 'https://tiktok.com/@myhandle',
+            'follower_count' => 15000,
+        ]);
+    }
+
+    public function test_social_link_requires_a_valid_url(): void
+    {
+        $event = Event::factory()->create(['status' => EventStatus::Published]);
+        $ticketType = TicketType::factory()->for($event)->create();
+        $field = TicketRequestField::factory()->for($event)->create(['type' => 'social_link', 'platform' => 'instagram']);
+
+        $response = $this->post(route('ticket-requests.store', $event), [
+            'ticket_type_id' => $ticketType->id, 'name' => 'Test', 'email' => 'test@example.com', 'phone' => '+201001234567',
+            'field_'.$field->id => 'not-a-url',
+        ]);
+
+        $response->assertSessionHasErrors('field_'.$field->id);
+    }
+
     public function test_cv_upload_is_stored_privately(): void
     {
         Storage::fake('local');

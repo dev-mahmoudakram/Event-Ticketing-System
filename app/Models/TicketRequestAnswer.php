@@ -13,7 +13,7 @@ class TicketRequestAnswer extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['ticket_id', 'ticket_request_field_id', 'value', 'file_path'];
+    protected $fillable = ['ticket_id', 'ticket_request_field_id', 'value', 'follower_count', 'file_path'];
 
     public function ticket(): BelongsTo
     {

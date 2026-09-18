@@ -52,7 +52,14 @@ class TicketRequestStoreRequest extends FormRequest
                 TicketRequestFieldType::Cv => [
                     $inputKey => [$requiredRule, 'file', 'mimes:pdf,doc,docx', 'max:5120'],
                 ],
+                TicketRequestFieldType::SocialLink => [
+                    $inputKey => [$requiredRule, 'url', 'max:2048'],
+                ],
             };
+
+            if ($field->type === TicketRequestFieldType::SocialLink && $field->show_follower_count) {
+                $rules[$inputKey.'_followers'] = ['nullable', 'integer', 'min:0'];
+            }
         }
 
         return $rules;
