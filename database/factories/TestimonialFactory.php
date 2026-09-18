@@ -16,6 +16,7 @@ class TestimonialFactory extends Factory
     {
         return [
             'event_id' => Event::factory(),
+            'photo_path' => null,
             'quote_ar' => $this->faker->paragraph(),
             'quote_en' => $this->faker->paragraph(),
             'name_ar' => $this->faker->name(),

@@ -8,6 +8,8 @@ use App\Models\Event;
 use App\Models\Testimonial;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 
 class TestimonialCrudTest extends TestCase
@@ -39,6 +41,44 @@ class TestimonialCrudTest extends TestCase
         ]);
 
         $response->assertSessionHasErrors(['quote_ar', 'quote_en']);
+    }
+
+    public function test_admin_can_upload_a_photo_for_a_testimonial(): void
+    {
+        Storage::fake('public');
+        $admin = User::factory()->create();
+        $event = Event::factory()->create();
+
+        $response = $this->actingAs($admin)->post(route('admin.events.testimonials.store', $event), [
+            'quote_ar' => 'حدث رائع', 'quote_en' => 'A great event',
+            'name_ar' => 'سارة', 'name_en' => 'Sarah',
+            'title_ar' => 'مؤسسة', 'title_en' => 'Founder', 'sort_order' => 0,
+            'photo' => UploadedFile::fake()->image('sarah.jpg'),
+        ]);
+
+        $response->assertRedirect(route('admin.events.testimonials.index', $event));
+        $testimonial = Testimonial::where('event_id', $event->id)->firstOrFail();
+        $this->assertNotNull($testimonial->photo_path);
+        Storage::disk('public')->assertExists($testimonial->photo_path);
+    }
+
+    public function test_replacing_a_photo_deletes_the_old_one(): void
+    {
+        Storage::fake('public');
+        $admin = User::factory()->create();
+        $event = Event::factory()->create();
+        $testimonial = Testimonial::factory()->for($event)->create(['photo_path' => 'testimonials/old.jpg']);
+        Storage::disk('public')->put('testimonials/old.jpg', 'fake');
+
+        $this->actingAs($admin)->put(route('admin.events.testimonials.update', [$event, $testimonial]), [
+            'quote_ar' => $testimonial->quote_ar, 'quote_en' => $testimonial->quote_en,
+            'name_ar' => $testimonial->name_ar, 'name_en' => $testimonial->name_en,
+            'title_ar' => $testimonial->title_ar, 'title_en' => $testimonial->title_en,
+            'photo' => UploadedFile::fake()->image('new.jpg'),
+        ]);
+
+        Storage::disk('public')->assertMissing('testimonials/old.jpg');
+        $this->assertNotSame('testimonials/old.jpg', $testimonial->fresh()->photo_path);
     }
 
     public function test_admin_can_delete_a_testimonial(): void

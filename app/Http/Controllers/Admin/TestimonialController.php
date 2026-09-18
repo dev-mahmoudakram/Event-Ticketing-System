@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Admin;
 
+use App\Http\Controllers\Concerns\HandlesMediaUploads;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\TestimonialRequest;
 use App\Models\Event;
@@ -14,6 +15,8 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class TestimonialController extends Controller
 {
+    use HandlesMediaUploads;
+
     public function index(Event $event): View
     {
         return view('admin.testimonials.index', ['event' => $event, 'testimonials' => $event->testimonials]);
@@ -26,7 +29,10 @@ class TestimonialController extends Controller
 
     public function store(TestimonialRequest $request, Event $event): RedirectResponse
     {
-        $event->testimonials()->create($request->validated());
+        $data = $request->safe()->except(['photo']);
+        $data = $this->withUploadedMedia($data, $request, 'photo', 'photo_path', 'testimonials');
+
+        $event->testimonials()->create($data);
 
         return redirect()->route('admin.events.testimonials.index', $event);
     }
@@ -41,7 +47,10 @@ class TestimonialController extends Controller
     public function update(TestimonialRequest $request, Event $event, Testimonial $testimonial): RedirectResponse
     {
         $this->assertBelongsToEvent($event, $testimonial);
-        $testimonial->update($request->validated());
+        $data = $request->safe()->except(['photo']);
+        $data = $this->withUploadedMedia($data, $request, 'photo', 'photo_path', 'testimonials', $testimonial->photo_path);
+
+        $testimonial->update($data);
 
         return redirect()->route('admin.events.testimonials.index', $event);
     }
@@ -49,6 +58,7 @@ class TestimonialController extends Controller
     public function destroy(Event $event, Testimonial $testimonial): RedirectResponse
     {
         $this->assertBelongsToEvent($event, $testimonial);
+        $this->deleteStoredMedia($testimonial->photo_path);
         $testimonial->delete();
 
         return redirect()->route('admin.events.testimonials.index', $event);

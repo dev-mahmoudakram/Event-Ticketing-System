@@ -22,6 +22,7 @@ class TestimonialRequest extends FormRequest
             'name_en' => ['required', 'string', 'max:255'],
             'title_ar' => ['required', 'string', 'max:255'],
             'title_en' => ['required', 'string', 'max:255'],
+            'photo' => ['nullable', 'image', 'max:4096'],
             'sort_order' => ['nullable', 'integer', 'min:0'],
         ];
     }
