@@ -19,8 +19,13 @@
         @if($featuredSpeakers->isNotEmpty())
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
             @foreach($featuredSpeakers as $speaker)
-                <div class="group relative aspect-3/4 rounded-2xl border border-white/10 overflow-hidden select-none" data-reveal data-reveal-delay="{{ min($loop->iteration, 5) }}">
-                    @php $speakerName = app()->getLocale() === 'ar' ? $speaker->name_ar : $speaker->name_en; @endphp
+                @php $speakerName = app()->getLocale() === 'ar' ? $speaker->name_ar : $speaker->name_en; @endphp
+                <div
+                    class="group relative aspect-3/4 rounded-2xl border border-white/10 overflow-hidden select-none"
+                    data-reveal data-reveal-delay="{{ min($loop->iteration, 5) }}"
+                    x-data="{ open: false }"
+                    @click="open = !open"
+                >
                     @if($speaker->photoUrl())
                         <img src="{{ $speaker->photoUrl() }}" alt="{{ $speakerName }}" class="w-full h-full object-cover transition-transform duration-500 ease-out group-hover:scale-110" loading="lazy">
                     @else
@@ -29,7 +34,12 @@
                             <span class="font-display text-4xl font-extrabold text-ccs-coral/70">{{ \Illuminate\Support\Str::of($speakerName)->explode(' ')->take(2)->map(fn ($part) => \Illuminate\Support\Str::substr($part, 0, 1))->implode('') }}</span>
                         </div>
                     @endif
-                    <div class="absolute inset-0 bg-ccs-black/95 p-8 flex flex-col justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500 ease-out">
+                    {{-- Hover reveals this on pointer devices; a tap toggles it on touch, since
+                         :hover never fires (or never releases) on a touchscreen. --}}
+                    <div
+                        class="absolute inset-0 bg-ccs-black/95 p-8 flex flex-col justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500 ease-out"
+                        :class="open && 'opacity-100'"
+                    >
                         <h3 class="font-display font-bold text-xl mb-2">{{ app()->getLocale() === 'ar' ? $speaker->name_ar : $speaker->name_en }}</h3>
                         <p class="text-ccs-coral font-bold text-sm uppercase tracking-wide mb-5">{{ app()->getLocale() === 'ar' ? $speaker->title_ar : $speaker->title_en }}</p>
                         <div class="w-10 h-px bg-white/20 mb-5"></div>

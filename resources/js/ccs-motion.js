@@ -162,8 +162,11 @@ function initReel() {
                 x: offset * cardWidth * 0.64,
                 z: -distance * 170,
                 rotateY: offset * -20,
-                scale: Math.max(0.7, 1 - distance * 0.13),
-                opacity: isVisible ? 1 - distance * 0.26 : 0,
+                // Every card in the visible window reads at full size and brightness — only
+                // its position in the fan (and the click-through disabling above) marks it as
+                // off to the side, not a faded/shrunken look.
+                scale: 1,
+                opacity: isVisible ? 1 : 0,
                 zIndex: 100 - distance,
                 duration: animate ? 0.7 : 0,
                 ease: 'power3.out',
