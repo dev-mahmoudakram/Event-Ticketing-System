@@ -127,6 +127,8 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::resource('events.workshops', AdminWorkshopController::class)->except('show');
         Route::resource('events.sponsor-tiers', SponsorTierController::class)->except('show');
         Route::resource('events.influencer-categories', InfluencerCategoryController::class)->except('show');
+        Route::patch('events/{event}/influencer-categories-settings', [InfluencerCategoryController::class, 'updateSettings'])
+            ->name('events.influencer-categories.update-settings');
         Route::resource('events.sponsors', SponsorController::class)->except('show');
         Route::get('events/{event}/sponsor-requests', [AdminSponsorRequestController::class, 'index'])->name('events.sponsor-requests.index');
         Route::patch('events/{event}/sponsor-requests/{sponsorRequest}/{status}', [AdminSponsorRequestController::class, 'updateStatus'])

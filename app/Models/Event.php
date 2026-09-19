@@ -31,7 +31,7 @@ class Event extends Model
         'voting_opens_at', 'voting_closes_at', 'show_award_results',
         'start_date', 'end_date', 'check_in_starts_at',
         'venue_name_ar', 'venue_name_en', 'venue_address_ar', 'venue_address_en',
-        'map_embed_url', 'status', 'visible_sections',
+        'map_embed_url', 'status', 'visible_sections', 'require_influencer_category',
     ];
 
     protected $casts = [
@@ -44,6 +44,7 @@ class Event extends Model
         'voting_opens_at' => 'datetime',
         'voting_closes_at' => 'datetime',
         'show_award_results' => 'boolean',
+        'require_influencer_category' => 'boolean',
     ];
 
     /**

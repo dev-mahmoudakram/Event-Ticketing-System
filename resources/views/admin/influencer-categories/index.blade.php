@@ -6,6 +6,12 @@
         <x-admin.button href="{{ route('admin.events.influencer-categories.create', $event) }}">{{ __('New Category') }}</x-admin.button>
     </x-admin.page-header>
 
+    <form method="POST" action="{{ route('admin.events.influencer-categories.update-settings', $event) }}" class="mb-6">
+        @csrf @method('PATCH')
+        <x-admin.field type="checkbox" name="require_influencer_category" label="{{ __('Require influencer category on ticket requests') }}" :checked="$event->require_influencer_category" />
+        <x-admin.button type="submit">{{ __('Save') }}</x-admin.button>
+    </form>
+
     @if($influencerCategories->isEmpty())
         <x-admin.empty-state :message="__('No influencer categories yet.')" />
     @else

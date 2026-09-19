@@ -35,10 +35,13 @@ class TicketRequestStoreRequest extends FormRequest
             // at full price, and the form says the code was not applied.
             'coupon_code' => ['nullable', 'string', 'max:40'],
             'influencer_category_id' => [
-                'nullable',
-                'integer',
-                Rule::exists('influencer_categories', 'id')->where('event_id', $event->id),
+                $event->require_influencer_category ? 'required' : 'nullable',
+                Rule::in(array_merge(
+                    ['other'],
+                    $event->influencerCategories->pluck('id')->map(fn ($id) => (string) $id)->all(),
+                )),
             ],
+            'influencer_category_other' => ['nullable', 'required_if:influencer_category_id,other', 'string', 'max:255'],
         ];
 
         foreach ($event->ticketRequestFields as $field) {

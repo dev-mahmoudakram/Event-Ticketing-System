@@ -98,4 +98,27 @@ class InfluencerCategoryCrudTest extends TestCase
 
         $response->assertNotFound();
     }
+
+    public function test_admin_can_require_influencer_category_on_ticket_requests(): void
+    {
+        $admin = User::factory()->create();
+        $event = Event::factory()->create(['require_influencer_category' => false]);
+
+        $response = $this->actingAs($admin)->patch(route('admin.events.influencer-categories.update-settings', $event), [
+            'require_influencer_category' => 1,
+        ]);
+
+        $response->assertRedirect(route('admin.events.influencer-categories.index', $event));
+        $this->assertTrue($event->fresh()->require_influencer_category);
+    }
+
+    public function test_admin_can_make_influencer_category_optional_again(): void
+    {
+        $admin = User::factory()->create();
+        $event = Event::factory()->create(['require_influencer_category' => true]);
+
+        $this->actingAs($admin)->patch(route('admin.events.influencer-categories.update-settings', $event), []);
+
+        $this->assertFalse($event->fresh()->require_influencer_category);
+    }
 }

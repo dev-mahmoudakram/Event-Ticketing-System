@@ -36,9 +36,12 @@ class TicketRequestController extends Controller
             $coupon = $this->coupons->find($event, $validated['coupon_code'] ?? null);
             $pricing = $this->coupons->priceFor($ticketType, $coupon);
 
+            $isOtherCategory = ($validated['influencer_category_id'] ?? null) === 'other';
+
             $ticket = $event->tickets()->create([
                 'ticket_type_id' => $validated['ticket_type_id'],
-                'influencer_category_id' => $validated['influencer_category_id'] ?? null,
+                'influencer_category_id' => $isOtherCategory ? null : ($validated['influencer_category_id'] ?? null),
+                'influencer_category_other' => $isOtherCategory ? $validated['influencer_category_other'] : null,
                 'discount_coupon_id' => $pricing['coupon_id'],
                 'price' => $pricing['price'],
                 'discount_amount' => $pricing['discount'],

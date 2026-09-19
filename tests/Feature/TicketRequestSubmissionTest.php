@@ -310,6 +310,49 @@ class TicketRequestSubmissionTest extends TestCase
         $response->assertSessionHasErrors('influencer_category_id');
     }
 
+    public function test_influencer_category_is_required_when_the_event_requires_it(): void
+    {
+        $event = Event::factory()->create(['status' => EventStatus::Published, 'require_influencer_category' => true]);
+        $ticketType = TicketType::factory()->for($event)->create();
+        InfluencerCategory::factory()->for($event)->create();
+
+        $response = $this->post(route('ticket-requests.store', $event), [
+            'ticket_type_id' => $ticketType->id, 'name' => 'Test', 'email' => 'test@example.com', 'phone' => '+201001234567',
+        ]);
+
+        $response->assertSessionHasErrors('influencer_category_id');
+    }
+
+    public function test_other_influencer_category_stores_the_typed_text(): void
+    {
+        $event = Event::factory()->create(['status' => EventStatus::Published]);
+        $ticketType = TicketType::factory()->for($event)->create();
+        InfluencerCategory::factory()->for($event)->create();
+
+        $this->post(route('ticket-requests.store', $event), [
+            'ticket_type_id' => $ticketType->id, 'name' => 'Test', 'email' => 'test@example.com', 'phone' => '+201001234567',
+            'influencer_category_id' => 'other', 'influencer_category_other' => 'Podcast Host',
+        ]);
+
+        $this->assertDatabaseHas('tickets', [
+            'email' => 'test@example.com', 'influencer_category_id' => null, 'influencer_category_other' => 'Podcast Host',
+        ]);
+    }
+
+    public function test_other_influencer_category_requires_the_typed_text(): void
+    {
+        $event = Event::factory()->create(['status' => EventStatus::Published]);
+        $ticketType = TicketType::factory()->for($event)->create();
+        InfluencerCategory::factory()->for($event)->create();
+
+        $response = $this->post(route('ticket-requests.store', $event), [
+            'ticket_type_id' => $ticketType->id, 'name' => 'Test', 'email' => 'test@example.com', 'phone' => '+201001234567',
+            'influencer_category_id' => 'other',
+        ]);
+
+        $response->assertSessionHasErrors('influencer_category_other');
+    }
+
     public function test_social_link_answer_and_follower_count_are_stored(): void
     {
         $event = Event::factory()->create(['status' => EventStatus::Published]);

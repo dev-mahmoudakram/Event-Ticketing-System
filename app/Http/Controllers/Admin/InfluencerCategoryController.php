@@ -9,6 +9,7 @@ use App\Http\Requests\Admin\InfluencerCategoryRequest;
 use App\Models\Event;
 use App\Models\InfluencerCategory;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\View\View;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -50,6 +51,15 @@ class InfluencerCategoryController extends Controller
     {
         $this->assertBelongsToEvent($event, $influencerCategory);
         $influencerCategory->delete();
+
+        return redirect()->route('admin.events.influencer-categories.index', $event);
+    }
+
+    public function updateSettings(Request $request, Event $event): RedirectResponse
+    {
+        $event->update([
+            'require_influencer_category' => $request->boolean('require_influencer_category'),
+        ]);
 
         return redirect()->route('admin.events.influencer-categories.index', $event);
     }

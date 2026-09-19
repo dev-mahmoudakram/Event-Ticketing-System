@@ -72,13 +72,13 @@
 
                     <div>
                         <label for="name" class="block text-sm text-gray-300 mb-1">{{ __('Name') }}</label>
-                        <input id="name" type="text" name="name" value="{{ old('name') }}" class="w-full border border-gray-600 bg-gray-900 text-white rounded px-3 py-2">
+                        <input id="name" type="text" name="name" value="{{ old('name') }}" placeholder="{{ __('e.g. Ahmed Hassan') }}" class="w-full border border-gray-600 bg-gray-900 text-white rounded px-3 py-2">
                         <p id="error-name" class="text-red-400 text-sm mt-1 {{ $errors->has('name') ? '' : 'hidden' }}">{{ $errors->first('name') }}</p>
                     </div>
 
                     <div>
                         <label for="email" class="block text-sm text-gray-300 mb-1">{{ __('Email') }}</label>
-                        <input id="email" type="email" name="email" value="{{ old('email') }}" class="w-full border border-gray-600 bg-gray-900 text-white rounded px-3 py-2">
+                        <input id="email" type="email" name="email" value="{{ old('email') }}" placeholder="{{ __('name@example.com') }}" class="w-full border border-gray-600 bg-gray-900 text-white rounded px-3 py-2">
                         <p id="error-email" class="text-red-400 text-sm mt-1 {{ $errors->has('email') ? '' : 'hidden' }}">{{ $errors->first('email') }}</p>
                     </div>
 
@@ -90,7 +90,12 @@
 
                     @if($event->influencerCategories->isNotEmpty())
                         <div x-data="{ influencerCategoryId: '{{ old('influencer_category_id') }}' }">
-                            <label for="influencer_category_id" class="block text-sm text-gray-300 mb-1">{{ __('Influencer Category') }} <span class="text-gray-500">({{ __('optional') }})</span></label>
+                            <label for="influencer_category_id" class="block text-sm text-gray-300 mb-1">
+                                {{ __('Influencer Category') }}
+                                @unless($event->require_influencer_category)
+                                    <span class="text-gray-500">({{ __('optional') }})</span>
+                                @endunless
+                            </label>
                             <x-nice-select
                                 id="influencer_category_id"
                                 name="influencer_category_id"
@@ -98,9 +103,14 @@
                                 :options="$event->influencerCategories->map(fn ($category) => [
                                     'value' => (string) $category->id,
                                     'label' => app()->getLocale() === 'ar' ? $category->name_ar : $category->name_en,
-                                ])->values()->all()"
+                                ])->push(['value' => 'other', 'label' => __('Other')])->values()->all()"
                             />
                             <p id="error-influencer_category_id" class="text-red-400 text-sm mt-1 {{ $errors->has('influencer_category_id') ? '' : 'hidden' }}">{{ $errors->first('influencer_category_id') }}</p>
+
+                            <div x-show="influencerCategoryId === 'other'" x-cloak class="mt-3">
+                                <input type="text" name="influencer_category_other" value="{{ old('influencer_category_other') }}" placeholder="{{ __('Tell us your category') }}" class="w-full border border-gray-600 bg-gray-900 text-white rounded px-3 py-2">
+                                <p id="error-influencer_category_other" class="text-red-400 text-sm mt-1 {{ $errors->has('influencer_category_other') ? '' : 'hidden' }}">{{ $errors->first('influencer_category_other') }}</p>
+                            </div>
                         </div>
                     @endif
 
@@ -108,7 +118,7 @@
                     @if($event->discountCoupons()->where('is_active', true)->exists())
                         <div>
                             <label for="coupon_code" class="block text-sm text-gray-300 mb-1">{{ __('Discount code') }} <span class="text-gray-500">({{ __('optional') }})</span></label>
-                            <input id="coupon_code" type="text" name="coupon_code" value="{{ old('coupon_code') }}" autocapitalize="characters" class="w-full border border-gray-600 bg-gray-900 text-white rounded px-3 py-2 uppercase">
+                            <input id="coupon_code" type="text" name="coupon_code" value="{{ old('coupon_code') }}" autocapitalize="characters" placeholder="{{ __('Enter your code') }}" class="w-full border border-gray-600 bg-gray-900 text-white rounded px-3 py-2 uppercase">
                             <p id="error-coupon_code" class="text-red-400 text-sm mt-1 {{ $errors->has('coupon_code') ? '' : 'hidden' }}">{{ $errors->first('coupon_code') }}</p>
                         </div>
                     @endif
@@ -138,7 +148,7 @@
                                         <label class="flex items-center gap-2"><input type="radio" name="{{ $inputKey }}_mode" value="url" x-model="mode"> {{ __('URL') }}</label>
                                         <label class="flex items-center gap-2"><input type="radio" name="{{ $inputKey }}_mode" value="pdf" x-model="mode"> {{ __('PDF') }}</label>
                                     </div>
-                                    <input x-show="mode === 'url'" type="url" name="{{ $inputKey }}_url" value="{{ old($inputKey.'_url') }}" class="w-full border border-gray-600 bg-gray-900 text-white rounded px-3 py-2">
+                                    <input x-show="mode === 'url'" type="url" name="{{ $inputKey }}_url" value="{{ old($inputKey.'_url') }}" placeholder="https://" class="w-full border border-gray-600 bg-gray-900 text-white rounded px-3 py-2">
                                     <div x-show="mode === 'pdf'" x-cloak>
                                         <x-file-dropzone :name="$inputKey.'_file'" accept=".pdf" />
                                     </div>
