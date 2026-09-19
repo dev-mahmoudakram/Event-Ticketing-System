@@ -108,12 +108,12 @@ class TicketRequestController extends Controller
         }
 
         if ($request->filled($inputKey)) {
+            $supportsFollowerCount = in_array($field->type, [TicketRequestFieldType::Instagram, TicketRequestFieldType::SocialLink], true);
+
             $ticket->answers()->create([
                 'ticket_request_field_id' => $field->id,
                 'value' => $request->input($inputKey),
-                'follower_count' => $field->type === TicketRequestFieldType::SocialLink
-                    ? $request->input($inputKey.'_followers')
-                    : null,
+                'follower_count' => $supportsFollowerCount ? $request->input($inputKey.'_followers') : null,
             ]);
         }
     }

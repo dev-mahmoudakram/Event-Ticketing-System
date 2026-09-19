@@ -122,8 +122,18 @@
                             </label>
 
                             @if($field->type === \App\Enums\TicketRequestFieldType::Instagram)
-                                <input type="text" name="{{ $inputKey }}" value="{{ old($inputKey) }}" placeholder="@username" class="w-full border border-gray-600 bg-gray-900 text-white rounded px-3 py-2">
-                                <p id="error-{{ $inputKey }}" class="text-red-400 text-sm mt-1 {{ $errors->has($inputKey) ? '' : 'hidden' }}">{{ $errors->first($inputKey) }}</p>
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                    <div>
+                                        <input type="url" name="{{ $inputKey }}" value="{{ old($inputKey) }}" placeholder="https://instagram.com/" class="w-full border border-gray-600 bg-gray-900 text-white rounded px-3 py-2">
+                                        <p id="error-{{ $inputKey }}" class="text-red-400 text-sm mt-1 {{ $errors->has($inputKey) ? '' : 'hidden' }}">{{ $errors->first($inputKey) }}</p>
+                                    </div>
+                                    @if($field->show_follower_count)
+                                        <div>
+                                            <input type="number" min="0" name="{{ $inputKey }}_followers" value="{{ old($inputKey.'_followers') }}" placeholder="{{ __('Follower count') }}" class="w-full border border-gray-600 bg-gray-900 text-white rounded px-3 py-2">
+                                            <p id="error-{{ $inputKey }}_followers" class="text-red-400 text-sm mt-1 {{ $errors->has($inputKey.'_followers') ? '' : 'hidden' }}">{{ $errors->first($inputKey.'_followers') }}</p>
+                                        </div>
+                                    @endif
+                                </div>
                             @elseif($field->type === \App\Enums\TicketRequestFieldType::Portfolio)
                                 <div x-data="{ mode: '{{ old($inputKey.'_mode', 'url') }}' }" class="flex flex-col gap-3">
                                     <div class="flex gap-4 text-sm">
@@ -142,14 +152,18 @@
                                 <x-file-dropzone :name="$inputKey" accept=".pdf,.doc,.docx" />
                                 <p id="error-{{ $inputKey }}" class="text-red-400 text-sm mt-1 {{ $errors->has($inputKey) ? '' : 'hidden' }}">{{ $errors->first($inputKey) }}</p>
                             @elseif($field->type === \App\Enums\TicketRequestFieldType::SocialLink)
-                                <input type="url" name="{{ $inputKey }}" value="{{ old($inputKey) }}" placeholder="{{ \App\Support\SocialPlatforms::all()[$field->platform]['placeholder'] ?? 'https://' }}" class="w-full border border-gray-600 bg-gray-900 text-white rounded px-3 py-2">
-                                <p id="error-{{ $inputKey }}" class="text-red-400 text-sm mt-1 {{ $errors->has($inputKey) ? '' : 'hidden' }}">{{ $errors->first($inputKey) }}</p>
-
-                                @if($field->show_follower_count)
-                                    <label class="block text-sm text-gray-300 mt-3 mb-1">{{ __('Follower count') }}</label>
-                                    <input type="number" min="0" name="{{ $inputKey }}_followers" value="{{ old($inputKey.'_followers') }}" class="w-full border border-gray-600 bg-gray-900 text-white rounded px-3 py-2">
-                                    <p id="error-{{ $inputKey }}_followers" class="text-red-400 text-sm mt-1 {{ $errors->has($inputKey.'_followers') ? '' : 'hidden' }}">{{ $errors->first($inputKey.'_followers') }}</p>
-                                @endif
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                    <div>
+                                        <input type="url" name="{{ $inputKey }}" value="{{ old($inputKey) }}" placeholder="{{ \App\Support\SocialPlatforms::all()[$field->platform]['placeholder'] ?? 'https://' }}" class="w-full border border-gray-600 bg-gray-900 text-white rounded px-3 py-2">
+                                        <p id="error-{{ $inputKey }}" class="text-red-400 text-sm mt-1 {{ $errors->has($inputKey) ? '' : 'hidden' }}">{{ $errors->first($inputKey) }}</p>
+                                    </div>
+                                    @if($field->show_follower_count)
+                                        <div>
+                                            <input type="number" min="0" name="{{ $inputKey }}_followers" value="{{ old($inputKey.'_followers') }}" placeholder="{{ __('Follower count') }}" class="w-full border border-gray-600 bg-gray-900 text-white rounded px-3 py-2">
+                                            <p id="error-{{ $inputKey }}_followers" class="text-red-400 text-sm mt-1 {{ $errors->has($inputKey.'_followers') ? '' : 'hidden' }}">{{ $errors->first($inputKey.'_followers') }}</p>
+                                        </div>
+                                    @endif
+                                </div>
                             @endif
                         </div>
                     @endforeach

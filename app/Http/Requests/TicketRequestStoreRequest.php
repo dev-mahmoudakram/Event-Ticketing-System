@@ -47,7 +47,7 @@ class TicketRequestStoreRequest extends FormRequest
 
             $rules += match ($field->type) {
                 TicketRequestFieldType::Instagram => [
-                    $inputKey => [$requiredRule, 'regex:/^@?[A-Za-z0-9_.]{1,30}$/'],
+                    $inputKey => [$requiredRule, 'url', 'max:2048'],
                 ],
                 TicketRequestFieldType::Portfolio => [
                     $inputKey.'_mode' => [$requiredRule, 'in:url,pdf'],
@@ -62,7 +62,9 @@ class TicketRequestStoreRequest extends FormRequest
                 ],
             };
 
-            if ($field->type === TicketRequestFieldType::SocialLink && $field->show_follower_count) {
+            $typeSupportsFollowerCount = in_array($field->type, [TicketRequestFieldType::Instagram, TicketRequestFieldType::SocialLink], true);
+
+            if ($typeSupportsFollowerCount && $field->show_follower_count) {
                 $rules[$inputKey.'_followers'] = ['nullable', 'integer', 'min:0'];
             }
         }

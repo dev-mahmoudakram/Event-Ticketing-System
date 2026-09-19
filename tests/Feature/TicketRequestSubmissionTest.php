@@ -237,12 +237,31 @@ class TicketRequestSubmissionTest extends TestCase
 
         $this->post(route('ticket-requests.store', $event), [
             'ticket_type_id' => $ticketType->id, 'name' => 'Test', 'email' => 'test@example.com', 'phone' => '+201001234567',
-            'field_'.$field->id => '@myhandle',
+            'field_'.$field->id => 'https://instagram.com/myhandle',
         ]);
 
         $ticket = Ticket::where('email', 'test@example.com')->firstOrFail();
         $this->assertDatabaseHas('ticket_request_answers', [
-            'ticket_id' => $ticket->id, 'ticket_request_field_id' => $field->id, 'value' => '@myhandle',
+            'ticket_id' => $ticket->id, 'ticket_request_field_id' => $field->id, 'value' => 'https://instagram.com/myhandle',
+        ]);
+    }
+
+    public function test_instagram_follower_count_is_stored_when_enabled(): void
+    {
+        $event = Event::factory()->create(['status' => EventStatus::Published]);
+        $ticketType = TicketType::factory()->for($event)->create();
+        $field = TicketRequestField::factory()->for($event)->create(['type' => 'instagram', 'show_follower_count' => true]);
+
+        $this->post(route('ticket-requests.store', $event), [
+            'ticket_type_id' => $ticketType->id, 'name' => 'Test', 'email' => 'test@example.com', 'phone' => '+201001234567',
+            'field_'.$field->id => 'https://instagram.com/myhandle',
+            'field_'.$field->id.'_followers' => '1500',
+        ]);
+
+        $ticket = Ticket::where('email', 'test@example.com')->firstOrFail();
+        $this->assertDatabaseHas('ticket_request_answers', [
+            'ticket_id' => $ticket->id, 'ticket_request_field_id' => $field->id,
+            'value' => 'https://instagram.com/myhandle', 'follower_count' => 1500,
         ]);
     }
 

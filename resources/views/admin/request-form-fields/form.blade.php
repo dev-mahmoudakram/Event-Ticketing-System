@@ -25,7 +25,9 @@
                     <option value="{{ $key }}" @selected(old('platform', $requestField->platform) === $key)>{{ $platform['label'] }}</option>
                 @endforeach
             </x-admin.field>
+        </div>
 
+        <div x-show="type === 'social_link' || type === 'instagram'" x-cloak>
             <x-admin.field type="checkbox" name="show_follower_count" label="{{ __('Ask for follower count') }}" :checked="old('show_follower_count', $requestField->show_follower_count ?? false)" />
         </div>
 
