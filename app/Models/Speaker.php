@@ -17,7 +17,7 @@ class Speaker extends Model
 
     protected $fillable = [
         'event_id', 'name_ar', 'name_en', 'title_ar', 'title_en',
-        'bio_ar', 'bio_en', 'photo_path', 'sort_order',
+        'bio_ar', 'bio_en', 'photo_path', 'sort_order', 'is_featured',
     ];
 
     /**
@@ -28,6 +28,7 @@ class Speaker extends Model
         return [
             'bio_ar' => SanitizedRichText::class,
             'bio_en' => SanitizedRichText::class,
+            'is_featured' => 'boolean',
         ];
     }
 

@@ -12,12 +12,13 @@
     @else
         <x-admin.table>
             <thead>
-                <tr><th>{{ __('Name') }}</th><th></th></tr>
+                <tr><th>{{ __('Name') }}</th><th>{{ __('Featured') }}</th><th></th></tr>
             </thead>
             <tbody>
                 @foreach($speakers as $speaker)
                     <tr>
                         <td>{{ $speaker->name_en }}</td>
+                        <td>{{ $speaker->is_featured ? __('Yes') : __('No') }}</td>
                         <td class="text-end">
                             <a href="{{ route('admin.events.speakers.edit', [$event, $speaker]) }}" class="text-hub-purple hover:underline">{{ __('Edit') }}</a>
                             <form method="POST" action="{{ route('admin.events.speakers.destroy', [$event, $speaker]) }}" class="inline" onsubmit="return confirm('{{ __('Are you sure? This cannot be undone.') }}')">

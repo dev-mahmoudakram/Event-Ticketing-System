@@ -38,6 +38,7 @@ use App\Http\Controllers\EventsController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LandingPageController;
 use App\Http\Controllers\NewsletterSubscriberController;
+use App\Http\Controllers\SpeakerController as PublicSpeakerController;
 use App\Http\Controllers\SpeakerRequestController;
 use App\Http\Controllers\SponsorRequestController;
 use App\Http\Controllers\TicketController;
@@ -56,6 +57,7 @@ Route::prefix('events/{event}')->middleware(EnsureEventIsPublished::class)->grou
     Route::get('/', [LandingPageController::class, 'show'])->name('landing.show');
     Route::get('/agenda', [AgendaController::class, 'show'])->name('agenda.show');
     Route::get('/awards', [AwardsController::class, 'show'])->name('awards.show');
+    Route::get('/speakers', [PublicSpeakerController::class, 'index'])->name('speakers.index');
     Route::get('/workshops', [WorkshopController::class, 'index'])->name('workshops.index');
 
     // Booking, opened with a ticket reference and the key issued with the ticket — no login.

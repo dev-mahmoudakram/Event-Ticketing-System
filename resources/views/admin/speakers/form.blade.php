@@ -19,6 +19,7 @@
         />
 
         <x-admin.field type="number" name="sort_order" label="{{ __('Sort Order') }}" :value="old('sort_order', $speaker->sort_order ?? 0)" />
+        <x-admin.field type="checkbox" name="is_featured" label="{{ __('Featured on the landing page (up to 4)') }}" :checked="old('is_featured', $speaker->is_featured ?? false)" />
 
         <x-admin.button type="submit">{{ __('Save') }}</x-admin.button>
     </form>

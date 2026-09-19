@@ -1,4 +1,5 @@
 {{-- resources/views/landing/partials/speakers.blade.php --}}
+@php $featuredSpeakers = $event->speakers->where('is_featured', true); @endphp
 @if($event->isSectionVisible('speakers'))
     <section id="speakers" class="ccs-section scroll-mt-24">
         <div class="flex flex-wrap items-end justify-between gap-6 mb-12">
@@ -6,13 +7,18 @@
                 <div class="ccs-eyebrow text-ccs-coral" data-reveal>{{ __('Featured Speakers') }}</div>
                 <h2 class="font-display text-3xl md:text-5xl font-extrabold" data-reveal>{{ __('Voices shaping the industry.') }}</h2>
             </div>
-            <a href="{{ route('speaker-requests.create', $event) }}" class="shrink-0 px-6 py-3 rounded-lg ccs-btn-red text-sm font-bold transition-transform duration-200 hover:scale-[1.03]" data-reveal>
-                {{ __('Become a Speaker') }}
-            </a>
+            <div class="flex flex-wrap gap-3" data-reveal>
+                <a href="{{ route('speakers.index', $event) }}" class="shrink-0 px-6 py-3 rounded-lg border border-white/20 text-sm font-bold transition-colors hover:bg-white hover:text-ccs-black">
+                    {{ __('View All Speakers') }}
+                </a>
+                <a href="{{ route('speaker-requests.create', $event) }}" class="shrink-0 px-6 py-3 rounded-lg ccs-btn-red text-sm font-bold transition-transform duration-200 hover:scale-[1.03]">
+                    {{ __('Become a Speaker') }}
+                </a>
+            </div>
         </div>
-        @if($event->speakers->isNotEmpty())
+        @if($featuredSpeakers->isNotEmpty())
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
-            @foreach($event->speakers as $speaker)
+            @foreach($featuredSpeakers as $speaker)
                 <div class="group relative aspect-3/4 rounded-2xl border border-white/10 overflow-hidden select-none" data-reveal data-reveal-delay="{{ min($loop->iteration, 5) }}">
                     @php $speakerName = app()->getLocale() === 'ar' ? $speaker->name_ar : $speaker->name_en; @endphp
                     @if($speaker->photoUrl())

@@ -58,14 +58,34 @@ class LandingPageTest extends TestCase
         $response->assertDontSee('id="about"', false);
     }
 
-    public function test_speakers_section_lists_speaker_names(): void
+    public function test_speakers_section_lists_featured_speaker_names(): void
     {
         $event = Event::factory()->create();
-        Speaker::factory()->for($event)->create(['name_en' => 'Jane Creator']);
+        Speaker::factory()->for($event)->create(['name_en' => 'Jane Creator', 'is_featured' => true]);
 
         $response = $this->get(route('landing.show', $event).'?lang=en');
 
         $response->assertSee('Jane Creator');
+    }
+
+    public function test_speakers_section_omits_non_featured_speakers(): void
+    {
+        $event = Event::factory()->create();
+        Speaker::factory()->for($event)->create(['name_en' => 'Not Featured', 'is_featured' => false]);
+
+        $response = $this->get(route('landing.show', $event).'?lang=en');
+
+        $response->assertDontSee('Not Featured');
+    }
+
+    public function test_speakers_section_links_to_the_full_speakers_page(): void
+    {
+        $event = Event::factory()->create();
+        Speaker::factory()->for($event)->create(['is_featured' => true]);
+
+        $response = $this->get(route('landing.show', $event).'?lang=en');
+
+        $response->assertSee(route('speakers.index', $event), false);
     }
 
     public function test_speakers_section_still_offers_a_speaker_cta_when_no_speakers_yet(): void
