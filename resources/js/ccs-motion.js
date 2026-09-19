@@ -228,24 +228,9 @@ function initReel() {
     }
 }
 
-function initSponsorStagger() {
-    const grid = document.querySelector('[data-sponsor-grid]');
-    if (!grid || prefersReducedMotion) return;
-
-    gsap.from(grid.querySelectorAll('[data-sponsor-logo]'), {
-        y: 40,
-        opacity: 0,
-        duration: 0.7,
-        stagger: 0.05,
-        ease: 'power3.out',
-        scrollTrigger: { trigger: grid, start: 'top 85%' },
-    });
-}
-
 export default function initCcsMotion() {
     initScrollProgress();
     initHero();
     initHubHero();
     initReel();
-    initSponsorStagger();
 }

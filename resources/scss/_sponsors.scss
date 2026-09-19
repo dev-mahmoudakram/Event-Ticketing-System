@@ -1,0 +1,67 @@
+/* ── Sponsor marquee ───────────────────────────────────────────────────────
+   One infinitely-scrolling row per tier. The track's content is duplicated
+   in the Blade markup so the loop is seamless; this file only defines the
+   resting animation, direction, and reduced-motion / RTL handling. */
+
+.ccs-sponsor-row {
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+
+  /* In an RTL document a block box's own position is resolved against its containing
+     block's direction, not its own: setting direction: ltr on the track itself only
+     reorders the track's children, it does NOT stop the (wider than the row) track from
+     being anchored to the row's right edge and spilling off the LEFT side instead of the
+     right. Forcing the row — the actual containing block — to LTR is what makes the
+     track sit flush against the row's left edge, which is what the translateX keyframes
+     below assume. */
+  direction: ltr;
+}
+
+.ccs-sponsor-track {
+  display: flex;
+  width: max-content;
+  animation: ccs-sponsor-scroll var(--ccs-marquee-duration, 40s) linear infinite;
+}
+
+.ccs-sponsor-row:hover .ccs-sponsor-track {
+  animation-play-state: paused;
+}
+
+/* The track is always exactly two matching halves (see the Blade view), so both
+   directions travel between the same two points, 0 and -50%: sliding one way
+   uncovers the duplicate half exactly as the first half slides out, with no gap
+   ever exposed. --reverse uses its own dedicated keyframes rather than
+   animation-direction: reverse, which is unnecessary complexity for the same
+   result and one less thing to reason about under RTL. */
+@keyframes ccs-sponsor-scroll {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes ccs-sponsor-scroll-reverse {
+  from {
+    transform: translateX(-50%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+.ccs-sponsor-track--reverse {
+  animation-name: ccs-sponsor-scroll-reverse;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ccs-sponsor-track {
+    animation: none;
+  }
+
+  .ccs-sponsor-row {
+    overflow-x: auto;
+  }
+}

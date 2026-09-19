@@ -95,7 +95,7 @@ class LandingPageTest extends TestCase
 
         $response->assertSee('id="partners"', false);
         $response->assertSee('Become a Sponsor');
-        $response->assertDontSee('data-sponsor-grid', false);
+        $response->assertDontSee('ccs-sponsor-row', false);
     }
 
     public function test_partners_section_omitted_when_hidden(): void
