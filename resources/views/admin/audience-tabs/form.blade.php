@@ -128,7 +128,7 @@
                     <div class="adm-preview-card">
                         <div class="adm-preview-card-body">
                             <p class="adm-preview-card-title">{{ $card->title_en }}</p>
-                            <p class="adm-preview-card-text">{{ Str::limit((string) $card->body_en, 70) }}</p>
+                            <p class="adm-preview-card-text">{{ Str::limit(strip_tags((string) $card->body_en), 70) }}</p>
                             <span class="adm-preview-pill" x-show="cta" x-text="cta"></span>
                         </div>
                         <div class="adm-preview-card-media">

@@ -116,6 +116,19 @@ class TestimonialCrudTest extends TestCase
         $this->assertDatabaseMissing('testimonials', ['id' => $testimonial->id]);
     }
 
+    public function test_the_index_page_quote_preview_strips_html_tags(): void
+    {
+        $admin = User::factory()->create();
+        $event = Event::factory()->create();
+        Testimonial::factory()->for($event)->create(['quote_en' => '<blockquote><p>Hands-on and unforgettable.</p></blockquote>']);
+
+        $response = $this->actingAs($admin)->get(route('admin.events.testimonials.index', $event));
+
+        $response->assertSee('Hands-on and unforgettable.');
+        $response->assertDontSee('&lt;blockquote&gt;', false);
+        $response->assertDontSee('<blockquote>', false);
+    }
+
     public function test_admin_can_view_the_index_page_with_records(): void
     {
         $admin = User::factory()->create();
