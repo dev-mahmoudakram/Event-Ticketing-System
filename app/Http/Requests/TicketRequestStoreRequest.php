@@ -62,9 +62,7 @@ class TicketRequestStoreRequest extends FormRequest
                 ],
             };
 
-            $typeSupportsFollowerCount = in_array($field->type, [TicketRequestFieldType::Instagram, TicketRequestFieldType::SocialLink], true);
-
-            if ($typeSupportsFollowerCount && $field->show_follower_count) {
+            if (in_array($field->type, [TicketRequestFieldType::Instagram, TicketRequestFieldType::SocialLink], true)) {
                 $rules[$inputKey.'_followers'] = ['nullable', 'integer', 'min:0'];
             }
         }

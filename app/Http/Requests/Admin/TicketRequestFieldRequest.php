@@ -25,7 +25,6 @@ class TicketRequestFieldRequest extends FormRequest
                 'nullable',
                 Rule::in(SocialPlatforms::keys()),
             ],
-            'show_follower_count' => ['nullable', 'boolean'],
             'label_ar' => ['required', 'string', 'max:255'],
             'label_en' => ['required', 'string', 'max:255'],
             'is_required' => ['nullable', 'boolean'],
@@ -37,7 +36,6 @@ class TicketRequestFieldRequest extends FormRequest
     {
         $this->merge([
             'is_required' => $this->boolean('is_required'),
-            'show_follower_count' => $this->boolean('show_follower_count'),
         ]);
     }
 }

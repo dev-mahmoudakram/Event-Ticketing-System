@@ -14,14 +14,13 @@ class TicketRequestField extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['event_id', 'type', 'platform', 'show_follower_count', 'label_ar', 'label_en', 'is_required', 'sort_order'];
+    protected $fillable = ['event_id', 'type', 'platform', 'label_ar', 'label_en', 'is_required', 'sort_order'];
 
     protected function casts(): array
     {
         return [
             'type' => TicketRequestFieldType::class,
             'is_required' => 'boolean',
-            'show_follower_count' => 'boolean',
         ];
     }
 

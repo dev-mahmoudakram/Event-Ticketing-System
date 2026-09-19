@@ -250,7 +250,7 @@ class TicketRequestSubmissionTest extends TestCase
     {
         $event = Event::factory()->create(['status' => EventStatus::Published]);
         $ticketType = TicketType::factory()->for($event)->create();
-        $field = TicketRequestField::factory()->for($event)->create(['type' => 'instagram', 'show_follower_count' => true]);
+        $field = TicketRequestField::factory()->for($event)->create(['type' => 'instagram']);
 
         $this->post(route('ticket-requests.store', $event), [
             'ticket_type_id' => $ticketType->id, 'name' => 'Test', 'email' => 'test@example.com', 'phone' => '+201001234567',
@@ -315,7 +315,7 @@ class TicketRequestSubmissionTest extends TestCase
         $event = Event::factory()->create(['status' => EventStatus::Published]);
         $ticketType = TicketType::factory()->for($event)->create();
         $field = TicketRequestField::factory()->for($event)->create([
-            'type' => 'social_link', 'platform' => 'tiktok', 'show_follower_count' => true,
+            'type' => 'social_link', 'platform' => 'tiktok',
         ]);
 
         $this->post(route('ticket-requests.store', $event), [

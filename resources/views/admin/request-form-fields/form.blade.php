@@ -27,10 +27,6 @@
             </x-admin.field>
         </div>
 
-        <div x-show="type === 'social_link' || type === 'instagram'" x-cloak>
-            <x-admin.field type="checkbox" name="show_follower_count" label="{{ __('Ask for follower count') }}" :checked="old('show_follower_count', $requestField->show_follower_count ?? false)" />
-        </div>
-
         <x-admin.bilingual-field name="label" label="{{ __('Label') }}" :value-ar="old('label_ar', $requestField->label_ar)" :value-en="old('label_en', $requestField->label_en)" />
 
         <x-admin.field type="checkbox" name="is_required" label="{{ __('Required') }}" :checked="old('is_required', $requestField->is_required ?? false)" />

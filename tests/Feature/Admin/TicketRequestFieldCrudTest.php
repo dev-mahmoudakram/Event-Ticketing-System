@@ -57,19 +57,19 @@ class TicketRequestFieldCrudTest extends TestCase
         $this->assertDatabaseMissing('ticket_request_fields', ['id' => $field->id]);
     }
 
-    public function test_admin_can_create_a_social_link_field_with_follower_count(): void
+    public function test_admin_can_create_a_social_link_field(): void
     {
         $admin = User::factory()->create();
         $event = Event::factory()->create();
 
         $response = $this->actingAs($admin)->post(route('admin.events.request-form-fields.store', $event), [
-            'type' => 'social_link', 'platform' => 'tiktok', 'show_follower_count' => 1,
+            'type' => 'social_link', 'platform' => 'tiktok',
             'label_ar' => 'تيك توك', 'label_en' => 'TikTok', 'is_required' => 1, 'sort_order' => 0,
         ]);
 
         $response->assertRedirect(route('admin.events.request-form-fields.index', $event));
         $this->assertDatabaseHas('ticket_request_fields', [
-            'event_id' => $event->id, 'type' => 'social_link', 'platform' => 'tiktok', 'show_follower_count' => 1,
+            'event_id' => $event->id, 'type' => 'social_link', 'platform' => 'tiktok',
         ]);
     }
 
