@@ -88,6 +88,22 @@
                         <p id="error-phone" class="text-red-400 text-sm mt-1 {{ $errors->has('phone') ? '' : 'hidden' }}">{{ $errors->first('phone') }}</p>
                     </div>
 
+                    @if($event->influencerCategories->isNotEmpty())
+                        <div x-data="{ influencerCategoryId: '{{ old('influencer_category_id') }}' }">
+                            <label for="influencer_category_id" class="block text-sm text-gray-300 mb-1">{{ __('Influencer Category') }} <span class="text-gray-500">({{ __('optional') }})</span></label>
+                            <x-nice-select
+                                id="influencer_category_id"
+                                name="influencer_category_id"
+                                model="influencerCategoryId"
+                                :options="$event->influencerCategories->map(fn ($category) => [
+                                    'value' => (string) $category->id,
+                                    'label' => app()->getLocale() === 'ar' ? $category->name_ar : $category->name_en,
+                                ])->values()->all()"
+                            />
+                            <p id="error-influencer_category_id" class="text-red-400 text-sm mt-1 {{ $errors->has('influencer_category_id') ? '' : 'hidden' }}">{{ $errors->first('influencer_category_id') }}</p>
+                        </div>
+                    @endif
+
                     {{-- Only offered when this event actually runs codes. --}}
                     @if($event->discountCoupons()->where('is_active', true)->exists())
                         <div>

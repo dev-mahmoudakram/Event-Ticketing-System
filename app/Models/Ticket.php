@@ -17,7 +17,7 @@ class Ticket extends Model
     use HasFactory;
 
     protected $fillable = [
-        'event_id', 'ticket_type_id', 'discount_coupon_id', 'price', 'discount_amount',
+        'event_id', 'ticket_type_id', 'influencer_category_id', 'discount_coupon_id', 'price', 'discount_amount',
         'name', 'email', 'phone', 'ticket_number',
         'status', 'ticket_id', 'workshop_booking_key', 'is_paid', 'payment_method', 'checked_in_at',
     ];
@@ -44,6 +44,11 @@ class Ticket extends Model
     public function discountCoupon(): BelongsTo
     {
         return $this->belongsTo(DiscountCoupon::class);
+    }
+
+    public function influencerCategory(): BelongsTo
+    {
+        return $this->belongsTo(InfluencerCategory::class);
     }
 
     public function workshopBookings(): HasMany

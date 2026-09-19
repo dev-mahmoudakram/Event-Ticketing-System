@@ -29,7 +29,7 @@ class TicketRequestQueueController extends Controller
         $status = $request->query('status', TicketStatus::Pending->value);
 
         $tickets = $event->tickets()
-            ->with(['ticketType', 'answers.field'])
+            ->with(['ticketType', 'influencerCategory', 'answers.field'])
             ->when($status !== 'all', fn ($query) => $query->where('status', $status))
             ->latest()
             ->get();

@@ -34,6 +34,7 @@
                     <th>{{ __('Name') }}</th>
                     <th>{{ __('Email') }}</th>
                     <th>{{ __('Ticket Type') }}</th>
+                    <th>{{ __('Category') }}</th>
                     <th>{{ __('Status') }}</th>
                     <th>{{ __('Answers') }}</th>
                     <th></th>
@@ -45,6 +46,7 @@
                         <td>{{ $ticket->name }}</td>
                         <td>{{ $ticket->email }}</td>
                         <td>{{ $ticket->ticketType->name_en }}</td>
+                        <td>{{ $ticket->influencerCategory?->name_en ?? '—' }}</td>
                         <td>{{ ucfirst(str_replace('_', ' ', $ticket->status->value)) }}</td>
                         <td>
                             @foreach($ticket->answers as $answer)

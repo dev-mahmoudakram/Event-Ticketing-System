@@ -34,6 +34,11 @@ class TicketRequestStoreRequest extends FormRequest
             // An unknown or expired code is not a validation failure: the request goes through
             // at full price, and the form says the code was not applied.
             'coupon_code' => ['nullable', 'string', 'max:40'],
+            'influencer_category_id' => [
+                'nullable',
+                'integer',
+                Rule::exists('influencer_categories', 'id')->where('event_id', $event->id),
+            ],
         ];
 
         foreach ($event->ticketRequestFields as $field) {

@@ -35,6 +35,7 @@ class TicketRequestController extends Controller
 
             $ticket = $event->tickets()->create([
                 'ticket_type_id' => $validated['ticket_type_id'],
+                'influencer_category_id' => $validated['influencer_category_id'] ?? null,
                 'discount_coupon_id' => $pricing['coupon_id'],
                 'price' => $pricing['price'],
                 'discount_amount' => $pricing['discount'],

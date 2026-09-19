@@ -7,6 +7,7 @@ namespace Tests\Feature;
 use App\Enums\EventStatus;
 use App\Enums\TicketStatus;
 use App\Models\Event;
+use App\Models\InfluencerCategory;
 use App\Models\Ticket;
 use App\Models\TicketRequestField;
 use App\Models\TicketType;
@@ -225,6 +226,51 @@ class TicketRequestSubmissionTest extends TestCase
         $this->assertDatabaseHas('ticket_request_answers', [
             'ticket_id' => $ticket->id, 'ticket_request_field_id' => $field->id, 'value' => '@myhandle',
         ]);
+    }
+
+    public function test_influencer_category_is_stored_on_the_ticket(): void
+    {
+        $event = Event::factory()->create(['status' => EventStatus::Published]);
+        $ticketType = TicketType::factory()->for($event)->create();
+        $category = InfluencerCategory::factory()->for($event)->create();
+
+        $this->post(route('ticket-requests.store', $event), [
+            'ticket_type_id' => $ticketType->id, 'name' => 'Test', 'email' => 'test@example.com', 'phone' => '+201001234567',
+            'influencer_category_id' => $category->id,
+        ]);
+
+        $this->assertDatabaseHas('tickets', [
+            'email' => 'test@example.com', 'influencer_category_id' => $category->id,
+        ]);
+    }
+
+    public function test_influencer_category_is_optional(): void
+    {
+        $event = Event::factory()->create(['status' => EventStatus::Published]);
+        $ticketType = TicketType::factory()->for($event)->create();
+        InfluencerCategory::factory()->for($event)->create();
+
+        $response = $this->post(route('ticket-requests.store', $event), [
+            'ticket_type_id' => $ticketType->id, 'name' => 'Test', 'email' => 'test@example.com', 'phone' => '+201001234567',
+        ]);
+
+        $response->assertSessionDoesntHaveErrors('influencer_category_id');
+        $this->assertDatabaseHas('tickets', ['email' => 'test@example.com', 'influencer_category_id' => null]);
+    }
+
+    public function test_an_influencer_category_from_a_different_event_is_rejected(): void
+    {
+        $event = Event::factory()->create(['status' => EventStatus::Published]);
+        $otherEvent = Event::factory()->create();
+        $ticketType = TicketType::factory()->for($event)->create();
+        $foreignCategory = InfluencerCategory::factory()->for($otherEvent)->create();
+
+        $response = $this->post(route('ticket-requests.store', $event), [
+            'ticket_type_id' => $ticketType->id, 'name' => 'Test', 'email' => 'test@example.com', 'phone' => '+201001234567',
+            'influencer_category_id' => $foreignCategory->id,
+        ]);
+
+        $response->assertSessionHasErrors('influencer_category_id');
     }
 
     public function test_social_link_answer_and_follower_count_are_stored(): void

@@ -13,6 +13,7 @@ use App\Http\Controllers\Admin\FaqController;
 use App\Http\Controllers\Admin\GalleryPhotoController;
 use App\Http\Controllers\Admin\HeroSlideController;
 use App\Http\Controllers\Admin\HubPartnerController;
+use App\Http\Controllers\Admin\InfluencerCategoryController;
 use App\Http\Controllers\Admin\LandingPageContentController;
 use App\Http\Controllers\Admin\NewsletterSubscriberController as AdminNewsletterSubscriberController;
 use App\Http\Controllers\Admin\PlatformReportController;
@@ -125,6 +126,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('events/{event}/workshops/{workshop}/bookings', [AdminWorkshopController::class, 'bookings'])->name('events.workshops.bookings');
         Route::resource('events.workshops', AdminWorkshopController::class)->except('show');
         Route::resource('events.sponsor-tiers', SponsorTierController::class)->except('show');
+        Route::resource('events.influencer-categories', InfluencerCategoryController::class)->except('show');
         Route::resource('events.sponsors', SponsorController::class)->except('show');
         Route::get('events/{event}/sponsor-requests', [AdminSponsorRequestController::class, 'index'])->name('events.sponsor-requests.index');
         Route::patch('events/{event}/sponsor-requests/{sponsorRequest}/{status}', [AdminSponsorRequestController::class, 'updateStatus'])
