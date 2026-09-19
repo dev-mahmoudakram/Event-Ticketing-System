@@ -6,6 +6,7 @@ namespace Tests\Feature;
 
 use App\Enums\EventStatus;
 use App\Enums\TicketStatus;
+use App\Mail\TicketRequestReceived;
 use App\Models\Event;
 use App\Models\InfluencerCategory;
 use App\Models\Ticket;
@@ -13,6 +14,7 @@ use App\Models\TicketRequestField;
 use App\Models\TicketType;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 
@@ -40,6 +42,22 @@ class TicketRequestSubmissionTest extends TestCase
         ]);
         $ticket = Ticket::where('email', 'kareem@example.com')->firstOrFail();
         $this->assertSame('CCS2026-'.str_pad((string) $ticket->id, 6, '0', STR_PAD_LEFT), $ticket->ticket_number);
+    }
+
+    public function test_a_confirmation_email_is_sent_on_submission(): void
+    {
+        Mail::fake();
+        $event = Event::factory()->create(['status' => EventStatus::Published, 'slug' => 'ccs-2026']);
+        $ticketType = TicketType::factory()->for($event)->create();
+
+        $this->post(route('ticket-requests.store', $event), [
+            'ticket_type_id' => $ticketType->id,
+            'name' => 'Kareem Al-Sayed',
+            'email' => 'kareem@example.com',
+            'phone' => '+201001234567',
+        ]);
+
+        Mail::assertSent(TicketRequestReceived::class, fn ($mail) => $mail->hasTo('kareem@example.com'));
     }
 
     public function test_the_response_carries_the_reference_number_for_the_confirmation_popup(): void

@@ -6,9 +6,11 @@ namespace Tests\Feature;
 
 use App\Enums\EventStatus;
 use App\Enums\SpeakerRequestStatus;
+use App\Mail\SpeakerRequestSubmitted;
 use App\Models\Event;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 
@@ -80,6 +82,17 @@ class SpeakerRequestTest extends TestCase
         $response = $this->get(route('speaker-requests.create', $event).'?lang=en');
 
         $response->assertSee("Thanks — we'll review your request and be in touch soon.");
+    }
+
+    public function test_a_confirmation_email_is_sent_on_submission(): void
+    {
+        Mail::fake();
+        Storage::fake('public');
+        $event = Event::factory()->create(['status' => EventStatus::Published]);
+
+        $this->post(route('speaker-requests.store', $event), $this->validPayload());
+
+        Mail::assertSent(SpeakerRequestSubmitted::class, fn ($mail) => $mail->hasTo('jane@example.com'));
     }
 
     public function test_bilingual_name_is_required(): void

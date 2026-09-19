@@ -6,9 +6,11 @@ namespace Tests\Feature;
 
 use App\Enums\EventStatus;
 use App\Enums\SponsorRequestStatus;
+use App\Mail\SponsorRequestSubmitted;
 use App\Models\Event;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 
@@ -70,6 +72,17 @@ class SponsorRequestTest extends TestCase
         ]);
         $sponsorRequest = $event->sponsorRequests()->first();
         Storage::disk('public')->assertExists($sponsorRequest->logo_path);
+    }
+
+    public function test_a_confirmation_email_is_sent_on_submission(): void
+    {
+        Mail::fake();
+        Storage::fake('public');
+        $event = Event::factory()->create(['status' => EventStatus::Published]);
+
+        $this->post(route('sponsor-requests.store', $event), $this->validPayload());
+
+        Mail::assertSent(SponsorRequestSubmitted::class, fn ($mail) => $mail->hasTo('jane@example.com'));
     }
 
     public function test_the_success_message_shows_after_submission(): void

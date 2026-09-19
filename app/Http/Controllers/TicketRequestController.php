@@ -7,6 +7,7 @@ namespace App\Http\Controllers;
 use App\Enums\TicketRequestFieldType;
 use App\Enums\TicketStatus;
 use App\Http\Requests\TicketRequestStoreRequest;
+use App\Mail\TicketRequestReceived;
 use App\Models\Event;
 use App\Models\Ticket;
 use App\Models\TicketRequestField;
@@ -16,6 +17,8 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 
 class TicketRequestController extends Controller
 {
@@ -57,6 +60,17 @@ class TicketRequestController extends Controller
 
             return $ticket;
         });
+
+        try {
+            Mail::to($ticket->email)->send(new TicketRequestReceived($ticket));
+        } catch (\Exception $e) {
+            // The request itself already succeeded and is saved: a broken mail server should
+            // not make the attendee re-submit, so this is logged rather than surfaced to them.
+            Log::error('Failed to send ticket request received email.', [
+                'ticket_id' => $ticket->id,
+                'exception' => $e,
+            ]);
+        }
 
         $message = __('Request received! Your reference number is :number.', ['number' => $ticket->ticket_number]);
 
