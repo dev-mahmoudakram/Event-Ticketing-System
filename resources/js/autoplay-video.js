@@ -40,6 +40,24 @@ function attemptPlay(video) {
 }
 
 /**
+ * Get a clip's first frame on screen without playing it — for a carousel card that is
+ * visible but not the focused one. Playing and immediately pausing (rather than just
+ * setting `src`) is what actually forces the browser to decode and paint a frame; a bare
+ * `src` assignment alone still shows nothing until something asks the video to render.
+ */
+function loadFirstFrame(video) {
+    if (video.dataset.src && ! video.src) {
+        video.src = video.dataset.src;
+    }
+
+    if (video.readyState > 0) {
+        return;
+    }
+
+    video.play().then(() => video.pause()).catch(() => {});
+}
+
+/**
  * Background clips that are not part of a carousel: the hero's flanking phones, and the
  * Creators Hub events section's fallback clip. Each plays only once actually visible —
  * skipping the hero phones' `hidden lg:flex` pair below `lg`, and never fetching a clip
@@ -72,7 +90,7 @@ function initVisibilityDrivenClips() {
     videos.forEach((video) => observer.observe(video));
 }
 
-export { attemptPlay };
+export { attemptPlay, loadFirstFrame };
 
 export default function initAutoplayVideo() {
     initVisibilityDrivenClips();

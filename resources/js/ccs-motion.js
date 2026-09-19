@@ -8,7 +8,7 @@
  */
 import gsap from 'gsap';
 import ScrollTrigger from 'gsap/ScrollTrigger';
-import { attemptPlay } from './autoplay-video';
+import { attemptPlay, loadFirstFrame } from './autoplay-video';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -173,9 +173,9 @@ function initReel() {
                 overwrite: 'auto',
             });
 
-            // Only the focused clip plays; the rest hold on their poster frame. The active
-            // clip's source is attached here too — a card that is never brought to focus is
-            // never fetched at all.
+            // The focused clip plays; every other card in the visible fan still loads and
+            // freezes on its own first frame, so the fan shows real footage rather than a
+            // black card — only clips scrolled entirely out of the fan stay unfetched.
             const video = card.querySelector('video');
             if (video) {
                 if (isActive) {
@@ -186,6 +186,10 @@ function initReel() {
                     // plays more than one clip's sound at once.
                     video.muted = true;
                     video.pause();
+
+                    if (isVisible) {
+                        loadFirstFrame(video);
+                    }
                 }
             }
         });
