@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Casts\SanitizedRichText;
 use App\Models\Concerns\ResolvesStoredMedia;
 use Database\Factories\TestimonialFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -17,6 +18,17 @@ class Testimonial extends Model
     protected $fillable = [
         'event_id', 'photo_path', 'quote_ar', 'quote_en', 'name_ar', 'name_en', 'title_ar', 'title_en', 'sort_order',
     ];
+
+    /**
+     * @return array<string, string>
+     */
+    protected function casts(): array
+    {
+        return [
+            'quote_ar' => SanitizedRichText::class,
+            'quote_en' => SanitizedRichText::class,
+        ];
+    }
 
     public function event(): BelongsTo
     {

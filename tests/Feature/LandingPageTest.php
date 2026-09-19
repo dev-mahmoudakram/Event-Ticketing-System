@@ -258,6 +258,35 @@ class LandingPageTest extends TestCase
         $response->assertDontSee('id="gallery"', false);
     }
 
+    public function test_gallery_section_shows_custom_eyebrow_and_heading(): void
+    {
+        $event = Event::factory()->create();
+        GalleryPhoto::factory()->for($event)->create();
+        LandingPageContent::factory()->for($event)->create([
+            'section' => LandingPageSection::Gallery, 'field_key' => 'eyebrow', 'value_en' => 'Snapshots',
+        ]);
+        LandingPageContent::factory()->for($event)->create([
+            'section' => LandingPageSection::Gallery, 'field_key' => 'heading', 'value_en' => 'Moments that mattered.',
+        ]);
+
+        $response = $this->get(route('landing.show', $event).'?lang=en');
+
+        $response->assertSee('Snapshots');
+        $response->assertSee('Moments that mattered.');
+        $response->assertDontSee('>1<', false);
+    }
+
+    public function test_gallery_section_falls_back_to_defaults_when_content_is_empty(): void
+    {
+        $event = Event::factory()->create();
+        GalleryPhoto::factory()->for($event)->create();
+
+        $response = $this->get(route('landing.show', $event).'?lang=en');
+
+        $response->assertSee('Gallery');
+        $response->assertSee('Last year, in frames.');
+    }
+
     public function test_testimonials_section_lists_quotes(): void
     {
         $event = Event::factory()->create();
@@ -276,6 +305,19 @@ class LandingPageTest extends TestCase
         $response = $this->get(route('landing.show', $event));
 
         $response->assertDontSee('id="testimonials"', false);
+    }
+
+    public function test_testimonial_quote_renders_its_sanitized_html_unescaped(): void
+    {
+        $event = Event::factory()->create();
+        Testimonial::factory()->for($event)->create([
+            'quote_en' => '<blockquote><p>Hands-on workshops made this unforgettable.</p></blockquote>',
+        ]);
+
+        $response = $this->get(route('landing.show', $event).'?lang=en');
+
+        $response->assertSee('<blockquote><p>Hands-on workshops made this unforgettable.</p></blockquote>', false);
+        $response->assertDontSee('&lt;blockquote&gt;', false);
     }
 
     public function test_a_one_day_event_shows_a_single_date_not_a_range(): void

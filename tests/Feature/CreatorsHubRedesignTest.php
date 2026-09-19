@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Tests\Feature;
 
 use App\Enums\EventStatus;
+use App\Models\AudienceCard;
 use App\Models\AudienceTab;
 use App\Models\Event;
 use App\Models\SiteContent;
@@ -46,6 +47,32 @@ class CreatorsHubRedesignTest extends TestCase
     public function test_the_stats_band_is_absent_until_it_is_filled_in(): void
     {
         $this->get(route('home'))->assertDontSee('data-stats-band', false);
+    }
+
+    public function test_audience_tab_lede_renders_its_sanitized_html_unescaped(): void
+    {
+        AudienceTab::factory()->create([
+            'lede_en' => '<p><strong>Built</strong> for creators.</p>',
+            'sort_order' => 0,
+        ]);
+
+        $response = $this->get(route('home').'?lang=en');
+
+        $response->assertSee('<p><strong>Built</strong> for creators.</p>', false);
+        $response->assertDontSee('&lt;strong&gt;', false);
+    }
+
+    public function test_audience_card_body_renders_its_sanitized_html_unescaped(): void
+    {
+        $tab = AudienceTab::factory()->create(['sort_order' => 0]);
+        AudienceCard::factory()->for($tab, 'tab')->create([
+            'body_en' => '<p>Everything you need, <em>in one place</em>.</p>',
+        ]);
+
+        $response = $this->get(route('home').'?lang=en');
+
+        $response->assertSee('<p>Everything you need, <em>in one place</em>.</p>', false);
+        $response->assertDontSee('&lt;em&gt;', false);
     }
 
     public function test_a_stat_needs_both_a_figure_and_a_label_to_show(): void

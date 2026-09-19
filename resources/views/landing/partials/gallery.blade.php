@@ -2,8 +2,8 @@
 @php
     $galleryEyebrow = $event->contentFor(\App\Enums\LandingPageSection::Gallery, 'eyebrow');
     $galleryHeading = $event->contentFor(\App\Enums\LandingPageSection::Gallery, 'heading');
-    $eyebrowText = ($galleryEyebrow && (app()->getLocale() === 'ar' ? $galleryEyebrow->value_ar : $galleryEyebrow->value_en)) ?: __('Gallery');
-    $headingText = ($galleryHeading && (app()->getLocale() === 'ar' ? $galleryHeading->value_ar : $galleryHeading->value_en)) ?: __('Last year, in frames.');
+    $eyebrowText = ($galleryEyebrow ? (app()->getLocale() === 'ar' ? $galleryEyebrow->value_ar : $galleryEyebrow->value_en) : null) ?: __('Gallery');
+    $headingText = ($galleryHeading ? (app()->getLocale() === 'ar' ? $galleryHeading->value_ar : $galleryHeading->value_en) : null) ?: __('Last year, in frames.');
 @endphp
 @if($event->galleryPhotos->isNotEmpty() && $event->isSectionVisible('gallery'))
     <section id="gallery" class="ccs-section scroll-mt-24">

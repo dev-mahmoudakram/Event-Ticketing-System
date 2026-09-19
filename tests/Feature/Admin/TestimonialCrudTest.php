@@ -28,7 +28,30 @@ class TestimonialCrudTest extends TestCase
         ]);
 
         $response->assertRedirect(route('admin.events.testimonials.index', $event));
-        $this->assertDatabaseHas('testimonials', ['event_id' => $event->id, 'quote_en' => 'A great event']);
+        // The rich-text cast wraps a plain quote in a paragraph on save — see
+        // App\Casts\SanitizedRichText, applied to Testimonial::quote_ar/quote_en.
+        $this->assertDatabaseHas('testimonials', ['event_id' => $event->id, 'quote_en' => '<p>A great event</p>']);
+    }
+
+    /**
+     * The quote field uses CKEditor (App\Casts\SanitizedRichText on Testimonial::quote_ar/
+     * quote_en), so it must be sanitized on save exactly like every other rich-text field in
+     * the app, and safe to render unescaped on the public landing page.
+     */
+    public function test_testimonial_quote_is_sanitized_on_save(): void
+    {
+        $admin = User::factory()->create();
+        $event = Event::factory()->create();
+
+        $this->actingAs($admin)->post(route('admin.events.testimonials.store', $event), [
+            'quote_ar' => 'حدث رائع', 'quote_en' => '<p>Safe</p><script>alert(1)</script>',
+            'name_ar' => 'سارة', 'name_en' => 'Sarah',
+            'title_ar' => 'مؤسسة', 'title_en' => 'Founder', 'sort_order' => 0,
+        ]);
+
+        $this->assertDatabaseHas('testimonials', [
+            'event_id' => $event->id, 'quote_en' => '<p>Safe</p>',
+        ]);
     }
 
     public function test_creating_a_testimonial_requires_bilingual_quote(): void

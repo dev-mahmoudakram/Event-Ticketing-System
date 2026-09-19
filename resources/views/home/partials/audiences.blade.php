@@ -62,7 +62,10 @@
                 @endif
             >
                 @if(trim($tab->lede()) !== '')
-                    <p class="text-center text-sm font-semibold text-hub-purple-light mb-10">{{ $tab->lede() }}</p>
+                    {{-- Sanitized on save (App\Casts\SanitizedRichText on AudienceTab::lede_ar/lede_en)
+                         against the strict 'cms' Purifier profile — safe to render unescaped here
+                         because nothing reaches this column without having passed through it first. --}}
+                    <div class="ccs-richtext text-center text-sm font-semibold text-hub-purple-light mb-10">{!! $tab->lede() !!}</div>
                 @endif
 
                 {{-- Cards stick under the navbar as the section scrolls, so each one comes to
@@ -77,7 +80,10 @@
                                         <h3 class="font-display text-[clamp(1.6rem,3vw,2.6rem)] font-extrabold leading-tight tracking-tight text-hub-purple mb-5">
                                             {{ $card->title() }}
                                         </h3>
-                                        <p class="text-lg text-hub-dark/70 leading-relaxed mb-8 max-w-md">{{ $card->body() }}</p>
+                                        {{-- Sanitized on save (App\Casts\SanitizedRichText on AudienceCard::body_ar/body_en)
+                                             against the strict 'cms' Purifier profile — safe to render unescaped here
+                                             because nothing reaches this column without having passed through it first. --}}
+                                        <div class="ccs-richtext text-lg text-hub-dark/70 leading-relaxed mb-8 max-w-md">{!! $card->body() !!}</div>
                                         @if(trim($tab->cta()) !== '')
                                             <a href="#contact" class="hub-pill hub-pill-outline text-sm">{{ $tab->cta() }}</a>
                                         @endif
