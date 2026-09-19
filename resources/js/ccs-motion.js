@@ -121,6 +121,9 @@ function initReel() {
     // Two cards each side of the focused one, so the fan reads 2 · 1 · 2.
     const VISIBLE_EACH_SIDE = 2;
     let active = Math.floor(cards.length / 2);
+    // One switch for the whole section, not per clip: whichever card is active picks it up,
+    // and every other clip stays muted regardless of this flag.
+    let soundOn = false;
 
     stage.dataset.enhanced = 'true';
 
@@ -173,8 +176,12 @@ function initReel() {
             const video = card.querySelector('video');
             if (video) {
                 if (isActive) {
+                    video.muted = !soundOn;
                     attemptPlay(video);
                 } else {
+                    // Every clip but the active one stays muted, so switching cards never
+                    // plays more than one clip's sound at once.
+                    video.muted = true;
                     video.pause();
                 }
             }
@@ -197,12 +204,40 @@ function initReel() {
     prev?.addEventListener('click', () => move(-1));
     next?.addEventListener('click', () => move(1));
 
+    /**
+     * Reflects soundOn onto every card's mute button, not just the active one — CSS shows
+     * only the active card's copy, but keeping all of them in sync means whichever card
+     * becomes active next is already showing the right icon/label the instant it appears.
+     */
+    const syncMuteButtons = () => {
+        cards.forEach((card) => {
+            const button = card.querySelector('[data-reel-mute]');
+            if (!button) return;
+            button.setAttribute('aria-pressed', String(soundOn));
+            button.setAttribute('aria-label', soundOn ? button.dataset.labelMute : button.dataset.labelUnmute);
+        });
+    };
+
     cards.forEach((card, index) => {
         card.addEventListener('click', () => {
             if (index === active) return;
             // Step towards the clicked card the short way round, so clicking the card on
             // the left always walks left even when it wraps past the end of the list.
             move(wrappedOffset(index));
+        });
+
+        card.querySelector('[data-reel-mute]')?.addEventListener('click', (event) => {
+            // The button sits inside the clickable card; without this its click would also
+            // fire the card's own "navigate here" handler above.
+            event.stopPropagation();
+
+            soundOn = !soundOn;
+            syncMuteButtons();
+
+            const activeVideo = cards[active].querySelector('video');
+            if (activeVideo) {
+                activeVideo.muted = !soundOn;
+            }
         });
     });
 
