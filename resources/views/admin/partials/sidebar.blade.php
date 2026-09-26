@@ -2,30 +2,45 @@
 @php
     // Every section an event owns. One list, used for each event in the tree below.
     $eventSections = [
-        ['prefix' => 'admin.events.content', 'route' => 'admin.events.content.edit', 'label' => __('Landing Page Content')],
-        ['prefix' => 'admin.events.speakers', 'route' => 'admin.events.speakers.index', 'label' => __('Speakers')],
-        ['prefix' => 'admin.events.speaker-requests', 'route' => 'admin.events.speaker-requests.index', 'label' => __('Speaker Requests')],
-        ['prefix' => 'admin.events.sponsors', 'route' => 'admin.events.sponsors.index', 'label' => __('Partners')],
-        ['prefix' => 'admin.events.sponsor-tiers', 'route' => 'admin.events.sponsor-tiers.index', 'label' => __('Sponsor Tiers')],
-        ['prefix' => 'admin.events.sponsor-requests', 'route' => 'admin.events.sponsor-requests.index', 'label' => __('Sponsor Requests')],
-        ['prefix' => 'admin.events.invitations', 'route' => 'admin.events.invitations.index', 'label' => __('Invitations')],
-        ['prefix' => 'admin.events.invitation-requests', 'route' => 'admin.events.invitation-requests.index', 'label' => __('Invitation Requests')],
-        ['prefix' => 'admin.events.ticket-types', 'route' => 'admin.events.ticket-types.index', 'label' => __('Ticket Types')],
-        ['prefix' => 'admin.events.request-form-fields', 'route' => 'admin.events.request-form-fields.index', 'label' => __('Request Form')],
-        ['prefix' => 'admin.events.influencer-categories', 'route' => 'admin.events.influencer-categories.index', 'label' => __('Influencer Categories')],
-        ['prefix' => 'admin.events.ticket-requests', 'route' => 'admin.events.ticket-requests.index', 'label' => __('Ticket Requests')],
-        ['prefix' => 'admin.events.discount-coupons', 'route' => 'admin.events.discount-coupons.index', 'label' => __('Discount Coupons')],
-        ['prefix' => 'admin.events.reports', 'route' => 'admin.events.reports.show', 'label' => __('Report')],
-        ['prefix' => 'check-in', 'route' => 'check-in.index', 'label' => __('Registration Desk')],
-        ['prefix' => 'admin.events.workshops', 'route' => 'admin.events.workshops.index', 'label' => __('Workshops')],
-        ['prefix' => 'admin.events.agenda-items', 'route' => 'admin.events.agenda-items.index', 'label' => __('Agenda')],
-        ['prefix' => 'admin.events.reels', 'route' => 'admin.events.reels.index', 'label' => __('Reels')],
-        ['prefix' => 'admin.events.gallery-photos', 'route' => 'admin.events.gallery-photos.index', 'label' => __('Gallery')],
-        ['prefix' => 'admin.events.testimonials', 'route' => 'admin.events.testimonials.index', 'label' => __('Testimonials')],
-        ['prefix' => 'admin.events.faqs', 'route' => 'admin.events.faqs.index', 'label' => __('FAQs')],
-        ['prefix' => 'admin.events.contact-messages', 'route' => 'admin.events.contact-messages.index', 'label' => __('Contact Messages')],
-        ['prefix' => 'admin.events.newsletter-subscribers', 'route' => 'admin.events.newsletter-subscribers.index', 'label' => __('Newsletter')],
+        ['prefix' => 'admin.events.content', 'permission' => \App\Enums\Permission::LandingPage, 'route' => 'admin.events.content.edit', 'label' => __('Landing Page Content')],
+        ['prefix' => 'admin.events.speakers', 'permission' => \App\Enums\Permission::Speakers, 'route' => 'admin.events.speakers.index', 'label' => __('Speakers')],
+        ['prefix' => 'admin.events.speaker-requests', 'permission' => \App\Enums\Permission::SpeakerRequests, 'route' => 'admin.events.speaker-requests.index', 'label' => __('Speaker Requests')],
+        ['prefix' => 'admin.events.sponsors', 'permission' => \App\Enums\Permission::Sponsors, 'route' => 'admin.events.sponsors.index', 'label' => __('Partners')],
+        ['prefix' => 'admin.events.sponsor-tiers', 'permission' => \App\Enums\Permission::Sponsors, 'route' => 'admin.events.sponsor-tiers.index', 'label' => __('Sponsor Tiers')],
+        ['prefix' => 'admin.events.sponsor-requests', 'permission' => \App\Enums\Permission::SponsorRequests, 'route' => 'admin.events.sponsor-requests.index', 'label' => __('Sponsor Requests')],
+        ['prefix' => 'admin.events.invitations', 'permission' => \App\Enums\Permission::Invitations, 'route' => 'admin.events.invitations.index', 'label' => __('Invitations')],
+        ['prefix' => 'admin.events.invitation-requests', 'permission' => \App\Enums\Permission::Invitations, 'route' => 'admin.events.invitation-requests.index', 'label' => __('Invitation Requests')],
+        ['prefix' => 'admin.events.ticket-types', 'permission' => \App\Enums\Permission::TicketSetup, 'route' => 'admin.events.ticket-types.index', 'label' => __('Ticket Types')],
+        ['prefix' => 'admin.events.request-form-fields', 'permission' => \App\Enums\Permission::TicketSetup, 'route' => 'admin.events.request-form-fields.index', 'label' => __('Request Form')],
+        ['prefix' => 'admin.events.influencer-categories', 'permission' => \App\Enums\Permission::TicketSetup, 'route' => 'admin.events.influencer-categories.index', 'label' => __('Influencer Categories')],
+        ['prefix' => 'admin.events.ticket-requests', 'permission' => \App\Enums\Permission::TicketRequests, 'route' => 'admin.events.ticket-requests.index', 'label' => __('Ticket Requests')],
+        ['prefix' => 'admin.events.discount-coupons', 'permission' => \App\Enums\Permission::DiscountCoupons, 'route' => 'admin.events.discount-coupons.index', 'label' => __('Discount Coupons')],
+        ['prefix' => 'admin.events.reports', 'permission' => \App\Enums\Permission::EventReports, 'route' => 'admin.events.reports.show', 'label' => __('Report')],
+        ['prefix' => 'check-in', 'permission' => \App\Enums\Permission::RegistrationDesk, 'route' => 'check-in.index', 'label' => __('Registration Desk')],
+        ['prefix' => 'admin.events.workshops', 'permission' => \App\Enums\Permission::AgendaWorkshops, 'route' => 'admin.events.workshops.index', 'label' => __('Workshops')],
+        ['prefix' => 'admin.events.agenda-items', 'permission' => \App\Enums\Permission::AgendaWorkshops, 'route' => 'admin.events.agenda-items.index', 'label' => __('Agenda')],
+        ['prefix' => 'admin.events.reels', 'permission' => \App\Enums\Permission::LandingPage, 'route' => 'admin.events.reels.index', 'label' => __('Reels')],
+        ['prefix' => 'admin.events.gallery-photos', 'permission' => \App\Enums\Permission::LandingPage, 'route' => 'admin.events.gallery-photos.index', 'label' => __('Gallery')],
+        ['prefix' => 'admin.events.testimonials', 'permission' => \App\Enums\Permission::LandingPage, 'route' => 'admin.events.testimonials.index', 'label' => __('Testimonials')],
+        ['prefix' => 'admin.events.faqs', 'permission' => \App\Enums\Permission::LandingPage, 'route' => 'admin.events.faqs.index', 'label' => __('FAQs')],
+        ['prefix' => 'admin.events.contact-messages', 'permission' => \App\Enums\Permission::Inbox, 'route' => 'admin.events.contact-messages.index', 'label' => __('Contact Messages')],
+        ['prefix' => 'admin.events.newsletter-subscribers', 'permission' => \App\Enums\Permission::Inbox, 'route' => 'admin.events.newsletter-subscribers.index', 'label' => __('Newsletter')],
     ];
+
+    // Everything below is filtered by the signed-in person's role (App\Enums\Permission).
+    // Registration Desk staff keep their one-click desk list at the top instead of finding the
+    // desk inside each event.
+    $staffUser = auth()->user();
+    $showDeskShortcut = ! $staffUser?->isAdmin() && $staffUser?->hasPermission(\App\Enums\Permission::RegistrationDesk);
+    $visibleEventSections = array_values(array_filter(
+        $eventSections,
+        fn (array $section) => $staffUser?->hasPermission($section['permission'])
+            && ! ($showDeskShortcut && $section['permission'] === \App\Enums\Permission::RegistrationDesk),
+    ));
+    $canManageEvents = (bool) $staffUser?->hasPermission(\App\Enums\Permission::Events);
+    $showEventTree = $canManageEvents || $visibleEventSections !== [];
+    $canSeePlatformReport = (bool) $staffUser?->hasPermission(\App\Enums\Permission::PlatformReport);
+    $canEditHubSite = (bool) $staffUser?->hasPermission(\App\Enums\Permission::HubSite);
 
     // The event being worked on, so its branch opens on arrival rather than after a click.
     $currentEvent = request()->route('event');
@@ -41,8 +56,7 @@
 </div>
 
 <nav class="flex-1 overflow-y-auto px-3 py-4 flex flex-col gap-1">
-    @unless(auth()->user()?->isAdmin())
-    {{-- Check-in staff only ever see the desks; every admin page would answer 403. --}}
+    @if($showDeskShortcut)
     <a href="{{ route('check-in.events') }}" class="adm-nav-link {{ request()->routeIs('check-in.events') ? 'is-active' : '' }}">
         {{ __('Registration Desk') }}
     </a>
@@ -53,12 +67,16 @@
             </a>
         @endforeach
     </div>
-    @else
+    @endif
+
+    @if($staffUser?->hasPermission(\App\Enums\Permission::Dashboard))
     <a href="{{ route('admin.dashboard') }}" class="adm-nav-link {{ request()->routeIs('admin.dashboard') ? 'is-active' : '' }}">
         {{ __('Dashboard') }}
     </a>
+    @endif
 
     {{-- Events: the list lives in the menu, and each event opens onto its own sections. --}}
+    @if($showEventTree)
     <div class="mt-4" x-data="{ open: {{ $inEvents ? 'true' : 'false' }}, event: {{ $currentEventId ?? 'null' }} }">
         <button
             type="button"
@@ -73,12 +91,14 @@
         <div class="grid transition-[grid-template-rows] duration-200 ease-out motion-reduce:transition-none" :class="open ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'">
         <div class="overflow-hidden">
         <div class="adm-nav-branch mt-1 flex flex-col gap-0.5">
+            @if($canManageEvents)
             <a href="{{ route('admin.events.index') }}" class="adm-nav-link adm-nav-sub {{ request()->routeIs('admin.events.index') ? 'is-active' : '' }}">
                 {{ __('All events') }}
             </a>
             <a href="{{ route('admin.events.create') }}" class="adm-nav-link adm-nav-sub {{ request()->routeIs('admin.events.create') ? 'is-active' : '' }}">
                 {{ __('New Event') }}
             </a>
+            @endif
 
             @forelse($sidebarEvents as $sidebarEvent)
                 @php $eventName = app()->getLocale() === 'ar' ? $sidebarEvent->name_ar : $sidebarEvent->name_en; @endphp
@@ -97,10 +117,12 @@
                     <div class="grid transition-[grid-template-rows] duration-200 ease-out motion-reduce:transition-none" :class="event === {{ $sidebarEvent->id }} ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'">
                     <div class="overflow-hidden">
                     <div class="adm-nav-branch mt-0.5 flex flex-col gap-0.5">
+                        @if($canManageEvents)
                         <a href="{{ route('admin.events.edit', $sidebarEvent) }}" class="adm-nav-link adm-nav-sub {{ request()->routeIs('admin.events.edit') && $currentEventId === $sidebarEvent->id ? 'is-active' : '' }}">
                             {{ __('Event Details') }}
                         </a>
-                        @foreach($eventSections as $section)
+                        @endif
+                        @foreach($visibleEventSections as $section)
                             <a href="{{ route($section['route'], $sidebarEvent) }}" class="adm-nav-link adm-nav-sub {{ request()->routeIs($section['prefix'].'.*') && $currentEventId === $sidebarEvent->id ? 'is-active' : '' }}">
                                 {{ $section['label'] }}
                             </a>
@@ -117,7 +139,10 @@
         </div>
     </div>
 
+    @endif
+
     {{-- The platform's own pages, kept apart from the events it hosts. --}}
+    @if($canSeePlatformReport || $canEditHubSite)
     <div class="mt-4" x-data="{ open: {{ $inHub ? 'true' : 'false' }} }">
         <button
             type="button"
@@ -132,21 +157,27 @@
         <div class="grid transition-[grid-template-rows] duration-200 ease-out motion-reduce:transition-none" :class="open ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'">
         <div class="overflow-hidden">
         <div class="adm-nav-branch mt-1 flex flex-col gap-0.5">
+            @if($canSeePlatformReport)
             <a href="{{ route('admin.reports.show') }}" class="adm-nav-link adm-nav-sub {{ request()->routeIs('admin.reports.*') ? 'is-active' : '' }}">{{ __('Platform Report') }}</a>
+            @endif
+            @if($canEditHubSite)
             <a href="{{ route('admin.site-content.index') }}" class="adm-nav-link adm-nav-sub {{ request()->routeIs('admin.site-content.*') ? 'is-active' : '' }}">{{ __('Landing Page Content') }}</a>
             <a href="{{ route('admin.hero-slides.index') }}" class="adm-nav-link adm-nav-sub {{ request()->routeIs('admin.hero-slides.*') ? 'is-active' : '' }}">{{ __('Hero Slides') }}</a>
             <a href="{{ route('admin.audience-tabs.index') }}" class="adm-nav-link adm-nav-sub {{ request()->routeIs('admin.audience-tabs.*') ? 'is-active' : '' }}">{{ __('Who it is for') }}</a>
             <a href="{{ route('admin.hub-partners.index') }}" class="adm-nav-link adm-nav-sub {{ request()->routeIs('admin.hub-partners.*') ? 'is-active' : '' }}">{{ __('Partners') }}</a>
             <a href="{{ route('admin.site-faqs.index') }}" class="adm-nav-link adm-nav-sub {{ request()->routeIs('admin.site-faqs.*') ? 'is-active' : '' }}">{{ __('FAQs') }}</a>
+            @endif
         </div>
         </div>
         </div>
     </div>
+    @endif
 
+    @if($staffUser?->isAdmin())
     <a href="{{ route('admin.staff.index') }}" class="adm-nav-link mt-4 {{ request()->routeIs('admin.staff.*') ? 'is-active' : '' }}">
         {{ __('Staff') }}
     </a>
-    @endunless
+    @endif
 </nav>
 
 <form method="POST" action="{{ route('admin.logout') }}" class="px-5 py-4 border-t border-hub-purple/10">
