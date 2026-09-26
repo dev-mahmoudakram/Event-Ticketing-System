@@ -61,7 +61,7 @@
                 @if($isFull)
                     <span class="ccs-schedule-book is-full" aria-disabled="true">{{ __('Full') }}</span>
                 @else
-                    <a href="{{ route('workshops.book', [$event, $workshop]) }}" data-book-seat class="ccs-schedule-book">{{ __('Book your seat') }}</a>
+                    <a href="{{ route('workshops.book', $event) }}" data-book-seat class="ccs-schedule-book">{{ __('Book your seat') }}</a>
                 @endif
             </div>
         @endif
@@ -117,7 +117,7 @@
                     @if($seatsLeft !== null)
                         <span class="text-sm text-gray-300">{{ trans_choice(':count seat left|:count seats left', $seatsLeft, ['count' => $seatsLeft]) }}</span>
                     @endif
-                    <a href="{{ route('workshops.book', [$event, $workshop]) }}" class="ccs-schedule-book">{{ __('Book your seat') }}</a>
+                    <a href="{{ route('workshops.book', $event) }}" class="ccs-schedule-book">{{ __('Book your seat') }}</a>
                 @endif
             </div>
         @endif

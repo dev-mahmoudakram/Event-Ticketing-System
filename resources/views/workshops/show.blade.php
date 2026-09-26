@@ -58,7 +58,7 @@
         @endif
 
         @unless($workshop->isFull())
-            <a href="{{ route('workshops.book', [$event, $workshop]) }}" class="ccs-schedule-book mt-10" data-reveal>{{ __('Book your seat') }}</a>
+            <a href="{{ route('workshops.book', $event) }}" class="ccs-schedule-book mt-10" data-reveal>{{ __('Book your seat') }}</a>
         @endunless
     </section>
 

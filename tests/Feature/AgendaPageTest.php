@@ -63,11 +63,11 @@ class AgendaPageTest extends TestCase
         $page = $this->get(route('agenda.show', $event).'?lang=en')->assertOk();
 
         $page->assertSee('id="workshop-'.$workshop->id.'"', false)
-            ->assertSee(route('workshops.book', [$event, $workshop]), false)
+            ->assertSee('href="'.route('workshops.book', $event).'"', false)
+            ->assertDontSee(route('workshops.book', $event).'?', false)
             ->assertSee('Book your seat');
         $this->assertSame(1, substr_count($page->getContent(), 'data-book-seat'));
         $this->assertStringContainsString('20 seats left', $page->getContent());
-        $page->assertDontSee(route('workshops.book', [$event, $full]), false);
     }
 
     public function test_break_sessions_render_as_a_slim_line(): void
