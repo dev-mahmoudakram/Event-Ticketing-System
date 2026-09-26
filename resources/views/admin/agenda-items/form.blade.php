@@ -16,23 +16,9 @@
 
         <x-admin.bilingual-field name="title" label="{{ __('Title') }}" :value-ar="old('title_ar', $item->title_ar)" :value-en="old('title_en', $item->title_en)" />
 
-        <x-admin.field type="select" name="type" label="{{ __('Type') }}">
+        <x-admin.field type="select" name="session_type_id" label="{{ __('Type') }}">
             @foreach($types as $type)
-                <option value="{{ $type->value }}" @selected(old('type', $item->type?->value) === $type->value)>{{ $type->label() }}</option>
-            @endforeach
-        </x-admin.field>
-
-        <x-admin.field type="select" name="speaker_id" label="{{ __('Speaker') }}">
-            <option value="">{{ __('None') }}</option>
-            @foreach($speakers as $speaker)
-                <option value="{{ $speaker->id }}" @selected(old('speaker_id', $item->speaker_id) === $speaker->id)>{{ $speaker->name_en }}</option>
-            @endforeach
-        </x-admin.field>
-
-        <x-admin.field type="select" name="workshop_id" label="{{ __('Workshop') }}">
-            <option value="">{{ __('None') }}</option>
-            @foreach($workshops as $workshop)
-                <option value="{{ $workshop->id }}" @selected(old('workshop_id', $item->workshop_id) === $workshop->id)>{{ $workshop->name_en }}</option>
+                <option value="{{ $type->id }}" @selected((string) old('session_type_id', $item->session_type_id) === (string) $type->id)>{{ $type->name() }}</option>
             @endforeach
         </x-admin.field>
 

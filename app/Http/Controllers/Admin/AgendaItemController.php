@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Admin;
 
-use App\Enums\AgendaItemType;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\AgendaItemRequest;
 use App\Models\AgendaItem;
@@ -24,8 +23,7 @@ class AgendaItemController extends Controller
     {
         return view('admin.agenda-items.form', [
             'event' => $event, 'item' => new AgendaItem,
-            'speakers' => $event->speakers, 'workshops' => $event->workshops,
-            'types' => AgendaItemType::cases(),
+            'speakers' => $event->speakers, 'types' => $event->sessionTypes,
         ]);
     }
 
@@ -42,8 +40,7 @@ class AgendaItemController extends Controller
 
         return view('admin.agenda-items.form', [
             'event' => $event, 'item' => $agendaItem,
-            'speakers' => $event->speakers, 'workshops' => $event->workshops,
-            'types' => AgendaItemType::cases(),
+            'speakers' => $event->speakers, 'types' => $event->sessionTypes,
         ]);
     }
 

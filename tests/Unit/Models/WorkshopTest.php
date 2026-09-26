@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Models;
 
-use App\Enums\AgendaItemType;
-use App\Models\AgendaItem;
 use App\Models\Event;
 use App\Models\Speaker;
 use App\Models\Workshop;
@@ -24,12 +22,15 @@ class WorkshopTest extends TestCase
         $this->assertTrue($workshop->event->is($event));
     }
 
-    public function test_workshop_can_have_a_speaker(): void
+    public function test_workshop_can_have_several_speakers(): void
     {
-        $speaker = Speaker::factory()->create();
-        $workshop = Workshop::factory()->create(['speaker_id' => $speaker->id]);
+        $event = Event::factory()->create();
+        $speakers = Speaker::factory()->for($event)->count(2)->create();
+        $workshop = Workshop::factory()->for($event)->create();
 
-        $this->assertTrue($workshop->speaker->is($speaker));
+        $workshop->syncSpeakersInOrder($speakers->pluck('id')->all());
+
+        $this->assertCount(2, $workshop->fresh()->speakers);
     }
 
     public function test_workshop_uses_slug_as_route_key(): void
@@ -39,19 +40,9 @@ class WorkshopTest extends TestCase
         $this->assertSame('slug', $workshop->getRouteKeyName());
     }
 
-    public function test_workshop_has_many_agenda_items_ordered_by_time(): void
+    public function test_a_workshop_knows_whether_it_is_scheduled(): void
     {
-        $event = Event::factory()->create();
-        $workshop = Workshop::factory()->for($event)->create();
-        AgendaItem::factory()->for($event)->create([
-            'workshop_id' => $workshop->id, 'type' => AgendaItemType::WorkshopSession,
-            'day_date' => '2026-08-16', 'start_time' => '09:00', 'title_en' => 'Second Session',
-        ]);
-        AgendaItem::factory()->for($event)->create([
-            'workshop_id' => $workshop->id, 'type' => AgendaItemType::WorkshopSession,
-            'day_date' => '2026-08-15', 'start_time' => '09:00', 'title_en' => 'First Session',
-        ]);
-
-        $this->assertSame(['First Session', 'Second Session'], $workshop->agendaItems->pluck('title_en')->all());
+        $this->assertTrue(Workshop::factory()->create()->isScheduled());
+        $this->assertFalse(Workshop::factory()->unscheduled()->create()->isScheduled());
     }
 }

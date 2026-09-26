@@ -22,14 +22,13 @@ class WorkshopCrudTest extends TestCase
         $speaker = Speaker::factory()->for($event)->create();
 
         $response = $this->actingAs($admin)->post(route('admin.events.workshops.store', $event), [
-            'speaker_id' => $speaker->id,
             'slug' => 'ai-workshop',
             'name_ar' => 'ورشة', 'name_en' => 'AI Workshop',
             'capacity' => 30, 'sort_order' => 0,
         ]);
 
         $response->assertRedirect(route('admin.events.workshops.index', $event));
-        $this->assertDatabaseHas('workshops', ['event_id' => $event->id, 'slug' => 'ai-workshop', 'speaker_id' => $speaker->id]);
+        $this->assertDatabaseHas('workshops', ['event_id' => $event->id, 'slug' => 'ai-workshop']);
     }
 
     public function test_creating_a_workshop_requires_a_unique_slug(): void
@@ -43,22 +42,6 @@ class WorkshopCrudTest extends TestCase
         ]);
 
         $response->assertSessionHasErrors('slug');
-    }
-
-    public function test_creating_a_workshop_rejects_a_speaker_from_a_different_event(): void
-    {
-        $admin = User::factory()->create();
-        $event = Event::factory()->create();
-        $otherEventSpeaker = Speaker::factory()->create();
-
-        $response = $this->actingAs($admin)->post(route('admin.events.workshops.store', $event), [
-            'speaker_id' => $otherEventSpeaker->id,
-            'slug' => 'ai-workshop',
-            'name_ar' => 'ورشة', 'name_en' => 'AI Workshop',
-            'capacity' => 30, 'sort_order' => 0,
-        ]);
-
-        $response->assertSessionHasErrors('speaker_id');
     }
 
     public function test_admin_can_delete_a_workshop(): void

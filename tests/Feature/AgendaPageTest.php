@@ -33,8 +33,8 @@ class AgendaPageTest extends TestCase
         $event = Event::factory()->create();
         $speaker = Speaker::factory()->for($event)->create(['name_en' => 'Maya Chen']);
         AgendaItem::factory()->for($event)->create([
-            'speaker_id' => $speaker->id, 'title_en' => 'Opening Keynote', 'start_time' => '09:00',
-        ]);
+            'title_en' => 'Opening Keynote', 'start_time' => '09:00',
+        ])->syncSpeakersInOrder([$speaker->id]);
 
         $response = $this->get(route('agenda.show', $event).'?lang=en');
 

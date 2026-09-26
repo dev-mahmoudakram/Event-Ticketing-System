@@ -15,7 +15,7 @@ class WorkshopController extends Controller
     {
         return view('workshops.index', [
             'event' => $event,
-            'workshops' => $event->workshops()->with('speaker')->get(),
+            'workshops' => $event->workshops()->with('speakers')->get(),
         ]);
     }
 
@@ -25,7 +25,7 @@ class WorkshopController extends Controller
             throw new NotFoundHttpException;
         }
 
-        $workshop->load(['speaker', 'agendaItems']);
+        $workshop->load(['speakers', 'location']);
 
         return view('workshops.show', ['event' => $event, 'workshop' => $workshop]);
     }

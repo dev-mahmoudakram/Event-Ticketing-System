@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Tests\Feature;
 
-use App\Enums\AgendaItemType;
-use App\Models\AgendaItem;
 use App\Models\Event;
 use App\Models\Speaker;
 use App\Models\Workshop;
@@ -42,10 +40,10 @@ class WorkshopPagesTest extends TestCase
         $event = Event::factory()->create();
         $speaker = Speaker::factory()->create(['name_en' => 'Jane Creator']);
         $workshop = Workshop::factory()->for($event)->create([
-            'speaker_id' => $speaker->id,
             'name_en' => 'AI Content Workshop',
             'slug' => 'ai-content-workshop',
         ]);
+        $workshop->syncSpeakersInOrder([$speaker->id]);
 
         $response = $this->get(route('workshops.show', [$event, $workshop]).'?lang=en');
 
@@ -62,24 +60,6 @@ class WorkshopPagesTest extends TestCase
         $response = $this->get(route('workshops.show', [$event, $otherEventWorkshop]));
 
         $response->assertStatus(404);
-    }
-
-    public function test_show_displays_scheduled_session_time_when_linked_to_an_agenda_item(): void
-    {
-        $event = Event::factory()->create();
-        $workshop = Workshop::factory()->for($event)->create();
-        AgendaItem::factory()->for($event)->create([
-            'workshop_id' => $workshop->id,
-            'type' => AgendaItemType::WorkshopSession,
-            'day_date' => '2026-08-15',
-            'start_time' => '14:00',
-            'end_time' => '15:30',
-        ]);
-
-        $response = $this->get(route('workshops.show', [$event, $workshop]));
-
-        $response->assertSee('14:00', false);
-        $response->assertSee('15:30', false);
     }
 
     public function test_show_omits_schedule_block_when_no_agenda_item_is_linked(): void

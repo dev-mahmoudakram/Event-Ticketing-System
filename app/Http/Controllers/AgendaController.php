@@ -11,7 +11,7 @@ class AgendaController extends Controller
 {
     public function show(Event $event): View
     {
-        $days = $event->agendaItems()->with(['speaker', 'workshop'])->get()
+        $days = $event->agendaItems()->with(['speakers', 'sessionType', 'location'])->get()
             ->groupBy(fn ($item) => $item->day_date->toDateString())
             ->values();
 

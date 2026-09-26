@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Database\Seeders;
 
-use App\Enums\AgendaItemType;
 use App\Enums\EventStatus;
 use App\Enums\LandingPageSection;
 use App\Models\AgendaItem;
@@ -12,6 +11,7 @@ use App\Models\Event;
 use App\Models\Faq;
 use App\Models\GalleryPhoto;
 use App\Models\LandingPageContent;
+use App\Models\SessionType;
 use App\Models\Speaker;
 use App\Models\Sponsor;
 use App\Models\SponsorTier;
@@ -66,6 +66,12 @@ class CcsEventSeeder extends Seeder
                 ['stats' => false],
             ),
         ]);
+
+        // DatabaseSeeder runs without model events, so Event's "seed default types on create"
+        // hook doesn't fire here.
+        if ($event->sessionTypes()->doesntExist()) {
+            SessionType::seedDefaultsFor($event);
+        }
 
         $speakerKareem = Speaker::create([
             'event_id' => $event->id,
@@ -197,9 +203,15 @@ class CcsEventSeeder extends Seeder
             }
         }
 
+        $stage = $event->locations()->create(['name_ar' => 'المسرح الرئيسي', 'name_en' => 'Main Stage', 'sort_order' => 0]);
+        $roomA = $event->locations()->create(['name_ar' => 'القاعة A', 'name_en' => 'Room A', 'sort_order' => 1]);
+
         $workshop = Workshop::create([
             'event_id' => $event->id,
-            'speaker_id' => $speakerKareem->id,
+            'location_id' => $roomA->id,
+            'day_date' => '2026-08-15',
+            'start_time' => '10:00',
+            'end_time' => '11:30',
             'slug' => 'ai-content-workshop',
             'name_ar' => 'ورشة صناعة المحتوى بالذكاء الاصطناعي',
             'name_en' => 'AI-Powered Content Creation Workshop',
@@ -208,8 +220,14 @@ class CcsEventSeeder extends Seeder
             'capacity' => 40,
             'sort_order' => 1,
         ]);
+        $workshop->syncSpeakersInOrder([$speakerKareem->id]);
+
         Workshop::create([
             'event_id' => $event->id,
+            'location_id' => $roomA->id,
+            'day_date' => '2026-08-16',
+            'start_time' => '12:00',
+            'end_time' => '13:30',
             'slug' => 'short-form-editing-workshop',
             'name_ar' => 'ورشة مونتاج المحتوى القصير',
             'name_en' => 'Short-Form Editing Workshop',
@@ -219,18 +237,20 @@ class CcsEventSeeder extends Seeder
             'sort_order' => 2,
         ]);
 
-        AgendaItem::create([
+        $opening = AgendaItem::create([
             'event_id' => $event->id,
-            'speaker_id' => $speakerKareem->id,
-            'workshop_id' => $workshop->id,
+            'session_type_id' => $event->sessionTypes()->where('name_en', 'Keynote')->value('id'),
+            'location_id' => $stage->id,
             'day_date' => '2026-08-15',
-            'start_time' => '10:00',
-            'end_time' => '11:30',
-            'title_ar' => $workshop->name_ar,
-            'title_en' => $workshop->name_en,
-            'type' => AgendaItemType::WorkshopSession,
-            'sort_order' => 1,
+            'start_time' => '09:00',
+            'end_time' => '09:45',
+            'title_ar' => 'الكلمة الافتتاحية',
+            'title_en' => 'Opening Keynote',
+            'description_ar' => '<p>افتتاح القمة ورؤية هذا العام لصناعة المحتوى.</p>',
+            'description_en' => '<p>Opening the summit and this year\'s outlook for content creation.</p>',
+            'sort_order' => 0,
         ]);
+        $opening->syncSpeakersInOrder([$speakerKareem->id]);
 
         $faqs = [
             [

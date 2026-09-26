@@ -40,11 +40,11 @@
                                 <span class="absolute left-0 top-1.5 w-2.75 h-2.75 rounded-full bg-ccs-gold"></span>
                                 <div class="flex flex-wrap items-center gap-3 mb-2">
                                     <span class="text-sm font-bold text-gray-400 tabular-nums">{{ $item->start_time->format('H:i') }}</span>
-                                    <span class="text-xs font-bold uppercase tracking-wide text-ccs-coral border border-ccs-coral/40 rounded-md px-3 py-1.5 whitespace-nowrap">{{ $item->type->label() }}</span>
+                                    <span class="text-xs font-bold uppercase tracking-wide text-ccs-coral border border-ccs-coral/40 rounded-md px-3 py-1.5 whitespace-nowrap">{{ $item->sessionType->name() }}</span>
                                 </div>
                                 <div class="font-display font-bold text-lg mb-1">{{ app()->getLocale() === 'ar' ? $item->title_ar : $item->title_en }}</div>
-                                @if($item->speaker)
-                                    <div class="text-sm text-gray-500">{{ app()->getLocale() === 'ar' ? $item->speaker->name_ar : $item->speaker->name_en }}</div>
+                                @if($item->speakers->isNotEmpty())
+                                    <div class="text-sm text-gray-500">{{ $item->speakers->map(fn ($speaker) => app()->getLocale() === 'ar' ? $speaker->name_ar : $speaker->name_en)->implode('، ') }}</div>
                                 @endif
                             </div>
                         @endforeach

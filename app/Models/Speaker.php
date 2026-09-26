@@ -10,6 +10,7 @@ use Database\Factories\SpeakerFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Speaker extends Model
 {
@@ -40,6 +41,16 @@ class Speaker extends Model
     public function photoUrl(): ?string
     {
         return $this->storedMediaUrl($this->photo_path);
+    }
+
+    public function agendaItems(): BelongsToMany
+    {
+        return $this->belongsToMany(AgendaItem::class);
+    }
+
+    public function workshops(): BelongsToMany
+    {
+        return $this->belongsToMany(Workshop::class);
     }
 
     protected static function newFactory(): SpeakerFactory
