@@ -3,7 +3,9 @@
 @section('content')
     <x-admin.page-header :title="$role->exists ? __('Edit Role') : __('New Role')" />
 
-    @php $chosen = old('permissions', $role->permissions ?? []); @endphp
+    {{-- After a failed save, show the ticks as submitted — none submitted means none ticked, not
+         the saved ones, or an admin could re-save access they meant to remove. --}}
+    @php $chosen = $errors->any() ? old('permissions', []) : ($role->permissions ?? []); @endphp
 
     <form method="POST" action="{{ $role->exists ? route('admin.roles.update', $role) : route('admin.roles.store') }}" class="max-w-5xl">
         @csrf

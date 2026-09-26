@@ -17,7 +17,7 @@
 
     <x-admin.table>
         <thead>
-            <tr><th>{{ __('Role') }}</th><th>{{ __('Staff') }}</th><th>{{ __('Access') }}</th><th></th></tr>
+            <tr><th>{{ __('Role') }}</th><th>{{ __('Staff') }}</th><th>{{ __('Sections') }}</th><th></th></tr>
         </thead>
         <tbody>
             @foreach($roles as $role)

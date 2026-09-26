@@ -55,7 +55,7 @@ class PermissionAccessTest extends TestCase
 
         $this->actingAs($sales)->get(route('admin.events.speakers.index', $event))->assertForbidden();
         $this->actingAs($sales)->get(route('admin.events.ticket-types.index', $event))->assertForbidden();
-        $this->actingAs($sales)->get(route('admin.dashboard'))->assertForbidden();
+        $this->actingAs($sales)->get(route('admin.dashboard'))->assertRedirect();
         $this->actingAs($sales)->get(route('check-in.events'))->assertForbidden();
     }
 

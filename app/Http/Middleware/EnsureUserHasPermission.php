@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Middleware;
 
+use App\Enums\Permission;
 use App\Support\AdminPermissions;
 use Closure;
 use Illuminate\Http\Request;
@@ -23,6 +24,12 @@ class EnsureUserHasPermission
         $user = $request->user();
         $routeName = (string) $request->route()?->getName();
         $permission = AdminPermissions::for($routeName);
+
+        // /admin is where everyone lands by habit or bookmark; without the Dashboard, send the
+        // person to their own start page rather than a dead-end 403.
+        if ($permission === Permission::Dashboard && $user !== null && ! $user->hasPermission(Permission::Dashboard)) {
+            return redirect()->to(AdminPermissions::homeFor($user));
+        }
 
         $allowed = $user !== null && ($permission !== null ? $user->hasPermission($permission) : $user->isAdmin());
 

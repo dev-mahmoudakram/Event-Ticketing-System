@@ -19,7 +19,9 @@
         </div>
     </div>
 
-    <div class="mt-6">
-        <x-admin.button href="{{ route('admin.events.index') }}">{{ __('View Events') }}</x-admin.button>
-    </div>
+    @if(auth()->user()->hasPermission(\App\Enums\Permission::Events))
+        <div class="mt-6">
+            <x-admin.button href="{{ route('admin.events.index') }}">{{ __('View Events') }}</x-admin.button>
+        </div>
+    @endif
 @endsection

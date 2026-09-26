@@ -22,7 +22,7 @@ class StaffRolesTest extends TestCase
         $event = Event::factory()->create();
         $ticket = Ticket::factory()->for($event)->create(['status' => TicketStatus::Pending]);
 
-        $this->actingAs($staff)->get(route('admin.dashboard'))->assertForbidden();
+        $this->actingAs($staff)->get(route('admin.dashboard'))->assertRedirect(route('check-in.events'));
         $this->actingAs($staff)->get(route('admin.events.index'))->assertForbidden();
         $this->actingAs($staff)->get(route('admin.events.reports.export', $event))->assertForbidden();
         $this->actingAs($staff)->get(route('admin.staff.index'))->assertForbidden();

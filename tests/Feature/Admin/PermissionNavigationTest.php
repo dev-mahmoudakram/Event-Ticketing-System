@@ -67,7 +67,8 @@ class PermissionNavigationTest extends TestCase
 
         $this->logIn('new@example.com')->assertRedirect(route('admin.no-access'));
         $this->get(route('admin.no-access'))->assertOk()->assertSee(__('Your role has no access yet. Ask an admin to give it some.'));
-        $this->get(route('admin.dashboard'))->assertForbidden();
+        $this->get(route('admin.dashboard'))->assertRedirect(route('admin.no-access'));
+        $this->get(route('admin.events.index'))->assertForbidden();
     }
 
     public function test_the_sidebar_shows_only_what_the_role_allows(): void
@@ -85,6 +86,27 @@ class PermissionNavigationTest extends TestCase
             ->assertDontSee(route('admin.site-content.index'), false)
             ->assertDontSee(route('admin.staff.index'), false)
             ->assertDontSee('href="'.route('admin.dashboard').'"', false);
+    }
+
+    public function test_opening_admin_without_the_dashboard_goes_to_your_own_start_page(): void
+    {
+        $event = Event::factory()->create(['status' => EventStatus::Published]);
+        $sales = $this->staffWithRole('Sales', 'sales@example.com');
+
+        $this->actingAs($sales)->get(route('admin.dashboard'))
+            ->assertRedirect(route('admin.events.ticket-requests.index', $event));
+    }
+
+    public function test_the_dashboard_only_links_to_pages_the_role_can_open(): void
+    {
+        $manager = $this->staffWithRole('Project Manager', 'pm@example.com');
+
+        $this->actingAs($manager)->get(route('admin.dashboard'))
+            ->assertOk()
+            ->assertDontSee(route('admin.events.index'), false);
+
+        $this->actingAs(User::factory()->create())->get(route('admin.dashboard'))
+            ->assertSee(route('admin.events.index'), false);
     }
 
     public function test_desk_staff_keep_their_one_click_desk_list(): void

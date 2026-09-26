@@ -78,6 +78,31 @@ class RoleCrudTest extends TestCase
         $this->assertEqualsCanonicalizing(['ticket_requests', 'inbox'], $sales->permissions);
     }
 
+    public function test_unticking_everything_survives_a_failed_save(): void
+    {
+        $sales = Role::where('name', 'Sales')->sole();
+
+        $this->actingAs($this->admin)
+            ->from(route('admin.roles.edit', $sales))
+            ->put(route('admin.roles.update', $sales), ['name' => ''])
+            ->assertSessionHasErrors('name');
+
+        // The form comes back with nothing ticked, as the admin left it — not the saved ticks.
+        $this->actingAs($this->admin)->get(route('admin.roles.edit', $sales))
+            ->assertOk()
+            ->assertDontSee('value="ticket_requests" checked', false);
+
+        $this->assertContains('ticket_requests', $sales->fresh()->permissions);
+    }
+
+    public function test_the_access_column_reads_as_sections_in_arabic(): void
+    {
+        $this->actingAs($this->admin)->get(route('admin.roles.index', ['lang' => 'ar']))
+            ->assertOk()
+            ->assertSee('<th>الأقسام</th>', false)
+            ->assertDontSee('<th>الدخول</th>', false);
+    }
+
     public function test_names_are_required_and_unique(): void
     {
         $this->actingAs($this->admin)->post(route('admin.roles.store'), ['name' => 'Sales'])
