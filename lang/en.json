@@ -805,5 +805,8 @@
     "Social link": "Social link",
     "Confirm": "Confirm",
     "Choose a category": "Choose a category",
-    "followers": "followers"
+    "followers": "followers",
+    "Enter a number like 30000, 30k or 1.2m.": "Enter a number like 30000, 30k or 1.2m.",
+    "e.g. 30k": "e.g. 30k",
+    ":count followers": ":count followers"
 }

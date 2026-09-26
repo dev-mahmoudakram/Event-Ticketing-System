@@ -851,5 +851,7 @@
     "Social link": "رابط حساب التواصل",
     "Confirm": "تأكيد",
     "Choose a category": "اختر الفئة",
-    "followers": "متابع"
+    "followers": "متابع",
+    "Enter a number like 30000, 30k or 1.2m.": "اكتب رقمًا مثل 30000 أو 30k أو 1.2m.",
+    "e.g. 30k": "مثال: 30k"
 }

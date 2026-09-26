@@ -82,4 +82,42 @@ class InvitationRequestSubmissionTest extends TestCase
 
         $this->assertSame(InvitationStatus::Unused, $invitation->fresh()->status);
     }
+
+    public function test_follower_counts_can_be_written_in_shorthand(): void
+    {
+        Mail::fake();
+        $event = Event::factory()->create(['status' => EventStatus::Published]);
+        $ticketType = TicketType::factory()->for($event)->create();
+        $invitation = Invitation::factory()->for($event)->for($ticketType)->create();
+
+        $this->withSession(['invitation_verified.'.$event->id => $invitation->id])
+            ->post(route('invitations.store', [$event, $invitation->token]), [
+                'name' => 'Sara Ali', 'email' => 'sara@example.com', 'phone' => '+201001234567',
+                'instagram_url' => 'https://instagram.com/sara', 'instagram_followers' => '1.5M',
+                'tiktok_url' => 'https://tiktok.com/@sara', 'tiktok_followers' => '30k',
+                'facebook_followers' => '',
+            ])
+            ->assertSessionHasNoErrors();
+
+        $this->assertDatabaseHas('invitation_requests', [
+            'invitation_id' => $invitation->id,
+            'instagram_followers' => 1500000,
+            'tiktok_followers' => 30000,
+            'facebook_followers' => null,
+        ]);
+    }
+
+    public function test_an_unreadable_follower_count_explains_the_accepted_formats(): void
+    {
+        $event = Event::factory()->create(['status' => EventStatus::Published]);
+        $ticketType = TicketType::factory()->for($event)->create();
+        $invitation = Invitation::factory()->for($event)->for($ticketType)->create();
+
+        $this->withSession(['invitation_verified.'.$event->id => $invitation->id])
+            ->post(route('invitations.store', [$event, $invitation->token]).'?lang=en', [
+                'name' => 'Sara Ali', 'email' => 'sara@example.com', 'phone' => '+201001234567',
+                'instagram_followers' => 'lots',
+            ])
+            ->assertSessionHasErrors(['instagram_followers' => 'Enter a number like 30000, 30k or 1.2m.']);
+    }
 }

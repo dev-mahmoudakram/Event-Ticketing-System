@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Requests;
 
 use App\Enums\TicketRequestFieldType;
+use App\Http\Requests\Concerns\NormalizesFollowerCounts;
 use App\Models\Event;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
@@ -12,9 +13,16 @@ use Propaganistas\LaravelPhone\Rules\Phone;
 
 class TicketRequestStoreRequest extends FormRequest
 {
+    use NormalizesFollowerCounts;
+
     public function authorize(): bool
     {
         return true;
+    }
+
+    protected function prepareForValidation(): void
+    {
+        $this->normalizeFollowerCounts($this->followerKeys());
     }
 
     public function rules(): array
@@ -66,7 +74,7 @@ class TicketRequestStoreRequest extends FormRequest
             };
 
             if (in_array($field->type, [TicketRequestFieldType::Instagram, TicketRequestFieldType::SocialLink], true)) {
-                $rules[$inputKey.'_followers'] = ['nullable', 'integer', 'min:0'];
+                $rules[$inputKey.'_followers'] = $this->followerCountRules();
             }
         }
 
@@ -96,5 +104,28 @@ class TicketRequestStoreRequest extends FormRequest
         }
 
         return $attributes;
+    }
+
+    /** @return array<string, string> */
+    public function messages(): array
+    {
+        return $this->followerCountMessages($this->followerKeys());
+    }
+
+    /**
+     * The follower-count inputs this event's form has: one per Instagram or social link field.
+     *
+     * @return list<string>
+     */
+    private function followerKeys(): array
+    {
+        /** @var Event $event */
+        $event = $this->route('event');
+
+        return $event->ticketRequestFields
+            ->filter(fn ($field) => in_array($field->type, [TicketRequestFieldType::Instagram, TicketRequestFieldType::SocialLink], true))
+            ->map(fn ($field) => 'field_'.$field->id.'_followers')
+            ->values()
+            ->all();
     }
 }

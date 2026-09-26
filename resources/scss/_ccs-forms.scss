@@ -81,6 +81,13 @@
   color: #ff9b90;
 }
 
+.ccs-form-hint {
+  margin-top: 0.4rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--color-ccs-teal-light);
+}
+
 /* A social profile: the link takes the room, the follower count sits beside it. */
 .ccs-form-social {
   display: grid;

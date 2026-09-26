@@ -35,9 +35,13 @@
         <div>
             <label for="{{ $followersName }}" class="sr-only">{{ __('Follower count') }}</label>
             <div class="ccs-form-input ccs-form-affix">
-                <input id="{{ $followersName }}" type="number" min="0" inputmode="numeric" name="{{ $followersName }}" value="{{ old($followersName) }}" placeholder="0" dir="ltr">
+                {{-- Text, not number: "30k" and "1.2m" are accepted and read on the server
+                     (App\Support\FollowerCount). --}}
+                <input id="{{ $followersName }}" type="text" name="{{ $followersName }}" value="{{ old($followersName) }}" placeholder="{{ __('e.g. 30k') }}" dir="ltr" autocomplete="off" spellcheck="false"
+                    data-follower-count data-follower-hint="{{ __(':count followers') }}" aria-describedby="{{ $followersName }}-hint">
                 <span class="ccs-form-affix-text">{{ __('followers') }}</span>
             </div>
+            <p id="{{ $followersName }}-hint" class="ccs-form-hint" hidden></p>
             <p id="error-{{ $followersName }}" class="ccs-form-error {{ $errors->has($followersName) ? '' : 'hidden' }}">{{ $errors->first($followersName) }}</p>
         </div>
     </div>

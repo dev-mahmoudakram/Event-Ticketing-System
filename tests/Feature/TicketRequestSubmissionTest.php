@@ -243,7 +243,7 @@ class TicketRequestSubmissionTest extends TestCase
         $response->assertJsonValidationErrors(['field_'.$field->id, 'field_'.$field->id.'_followers']);
         $this->assertStringContainsString('Instagram', $response->json('errors.field_'.$field->id.'.0'));
         $this->assertStringNotContainsString('field 1', $response->json('errors.field_'.$field->id.'.0'));
-        $this->assertStringContainsString('Follower count', $response->json('errors.field_'.$field->id.'_followers.0'));
+        $this->assertSame('Enter a number like 30000, 30k or 1.2m.', $response->json('errors.field_'.$field->id.'_followers.0'));
     }
 
     public function test_validation_errors_are_in_arabic_on_the_arabic_site(): void
@@ -291,6 +291,41 @@ class TicketRequestSubmissionTest extends TestCase
             'ticket_id' => $ticket->id, 'ticket_request_field_id' => $field->id,
             'value' => 'https://instagram.com/myhandle', 'follower_count' => 1500,
         ]);
+    }
+
+    public function test_a_follower_count_can_be_written_as_30k_or_1_2m(): void
+    {
+        $event = Event::factory()->create(['status' => EventStatus::Published]);
+        $ticketType = TicketType::factory()->for($event)->create();
+        $field = TicketRequestField::factory()->for($event)->create(['type' => 'instagram']);
+
+        foreach (['30k' => 30000, '1.2m' => 1200000, '٣٠ك' => 30000, '1,500' => 1500] as $typed => $stored) {
+            $email = 'fan'.$stored.md5($typed).'@example.com';
+
+            $this->post(route('ticket-requests.store', $event), [
+                'ticket_type_id' => $ticketType->id, 'name' => 'Test', 'email' => $email, 'phone' => '+201001234567',
+                'field_'.$field->id => 'https://instagram.com/myhandle',
+                'field_'.$field->id.'_followers' => $typed,
+            ])->assertSessionHasNoErrors();
+
+            $ticket = Ticket::where('email', $email)->firstOrFail();
+            $this->assertDatabaseHas('ticket_request_answers', ['ticket_id' => $ticket->id, 'follower_count' => $stored]);
+        }
+    }
+
+    public function test_a_follower_count_too_large_to_store_is_refused(): void
+    {
+        $event = Event::factory()->create(['status' => EventStatus::Published]);
+        $ticketType = TicketType::factory()->for($event)->create();
+        $field = TicketRequestField::factory()->for($event)->create(['type' => 'instagram']);
+
+        $this->post(route('ticket-requests.store', $event), [
+            'ticket_type_id' => $ticketType->id, 'name' => 'Test', 'email' => 'test@example.com', 'phone' => '+201001234567',
+            'field_'.$field->id => 'https://instagram.com/myhandle',
+            'field_'.$field->id.'_followers' => '5b',
+        ])->assertSessionHasErrors('field_'.$field->id.'_followers');
+
+        $this->assertDatabaseCount('tickets', 0);
     }
 
     public function test_influencer_category_is_stored_on_the_ticket(): void
