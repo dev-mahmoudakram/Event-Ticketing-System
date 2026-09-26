@@ -10,6 +10,7 @@ use App\Models\Event;
 use App\Models\Ticket;
 use App\Models\TicketType;
 use App\Models\User;
+use App\Services\CouponRedeemer;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Testing\TestResponse;
@@ -120,6 +121,42 @@ class DiscountCouponTest extends TestCase
 
         $this->assertSame(1, $coupon->fresh()->times_used);
         $this->assertSame(1, $coupon->fresh()->remainingUses());
+    }
+
+    public function test_the_last_use_cannot_be_claimed_twice_by_requests_arriving_together(): void
+    {
+        $coupon = DiscountCoupon::factory()->for($this->event)->create(['code' => 'LAST1', 'usage_limit' => 1]);
+        $redeemer = app(CouponRedeemer::class);
+
+        // Both requests look the coupon up while it still has one use left...
+        $first = $redeemer->find($this->event, 'LAST1');
+        $second = $redeemer->find($this->event, 'LAST1');
+        $this->assertNotNull($first);
+        $this->assertNotNull($second);
+
+        // ...but only one of them gets to claim it.
+        $this->assertTrue($redeemer->claim($first));
+        $this->assertFalse($redeemer->claim($second));
+        $this->assertSame(1, $coupon->fresh()->times_used);
+    }
+
+    public function test_a_request_that_loses_the_last_use_is_charged_full_price(): void
+    {
+        $coupon = DiscountCoupon::factory()->for($this->event)->create(['code' => 'LAST1', 'usage_limit' => 1]);
+        $stale = app(CouponRedeemer::class)->find($this->event, 'LAST1');
+        $coupon->update(['times_used' => 1]);
+
+        $this->mock(CouponRedeemer::class, function ($mock) use ($stale) {
+            $mock->makePartial();
+            $mock->shouldReceive('find')->andReturn($stale);
+        });
+
+        $this->request(['coupon_code' => 'LAST1', 'email' => 'late@example.com']);
+
+        $ticket = Ticket::where('email', 'late@example.com')->firstOrFail();
+        $this->assertSame(0, (int) $ticket->discount_amount);
+        $this->assertNull($ticket->discount_coupon_id);
+        $this->assertSame(1, $coupon->fresh()->times_used);
     }
 
     public function test_the_price_is_remembered_even_if_the_ticket_type_changes_later(): void

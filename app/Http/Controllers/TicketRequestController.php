@@ -50,6 +50,11 @@ class TicketRequestController extends Controller
             // ticket type whose price changes, must not rewrite what this attendee was quoted.
             $ticketType = TicketType::findOrFail($validated['ticket_type_id']);
             $coupon = $this->coupons->find($event, $validated['coupon_code'] ?? null);
+
+            if ($coupon !== null && ! $this->coupons->claim($coupon)) {
+                $coupon = null;
+            }
+
             $pricing = $this->coupons->priceFor($ticketType, $coupon);
 
             $isOtherCategory = ($validated['influencer_category_id'] ?? null) === 'other';
@@ -66,10 +71,6 @@ class TicketRequestController extends Controller
                 'phone' => $validated['phone'],
                 'status' => TicketStatus::Pending,
             ]);
-
-            if ($coupon !== null) {
-                $this->coupons->recordUse($coupon);
-            }
 
             $ticket->update(['ticket_number' => $this->generateTicketNumber($event, $ticket)]);
 

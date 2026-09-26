@@ -51,13 +51,20 @@ class CouponRedeemer
     }
 
     /**
-     * Count one use against a coupon.
+     * Take one use of a coupon, if one is still left.
      *
-     * Incremented atomically in the database rather than read-modify-written in PHP, so two
-     * people redeeming the last use of a coupon at the same moment cannot both succeed.
+     * find() only checked the coupon as it was when it was read; another request may have
+     * taken the last use since. The limit is re-checked in the same UPDATE that counts the
+     * use, so of two requests racing for the last one, exactly one gets it and the other is
+     * told no and charged full price.
      */
-    public function recordUse(DiscountCoupon $coupon): void
+    public function claim(DiscountCoupon $coupon): bool
     {
-        $coupon->newQuery()->whereKey($coupon->getKey())->increment('times_used');
+        $claimed = $coupon->newQuery()
+            ->whereKey($coupon->getKey())
+            ->where(fn ($query) => $query->whereNull('usage_limit')->orWhereColumn('times_used', '<', 'usage_limit'))
+            ->increment('times_used');
+
+        return $claimed === 1;
     }
 }
