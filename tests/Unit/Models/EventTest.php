@@ -103,6 +103,9 @@ class EventTest extends TestCase
 
     public function test_check_in_is_closed_before_the_configured_opening_time(): void
     {
+        // Pinned to midday: an hour either side of 23:30 or 00:30 would cross midnight.
+        $this->travelTo(today()->setTime(12, 0));
+
         $event = Event::factory()->create([
             'start_date' => now()->toDateString(),
             'end_date' => now()->toDateString(),
@@ -114,6 +117,9 @@ class EventTest extends TestCase
 
     public function test_check_in_is_open_after_the_configured_opening_time(): void
     {
+        // Pinned to midday: an hour either side of 23:30 or 00:30 would cross midnight.
+        $this->travelTo(today()->setTime(12, 0));
+
         $event = Event::factory()->create([
             'start_date' => now()->toDateString(),
             'end_date' => now()->toDateString(),

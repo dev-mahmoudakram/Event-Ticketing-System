@@ -214,6 +214,9 @@ class TicketCheckInTest extends TestCase
 
     public function test_a_ticket_is_refused_before_the_configured_opening_time(): void
     {
+        // Pinned to midday: an hour either side of 23:30 or 00:30 would cross midnight.
+        $this->travelTo(today()->setTime(12, 0));
+
         $this->event->update(['check_in_starts_at' => now()->addHour()->format('H:i:s')]);
         $ticket = $this->ticket();
 
@@ -224,6 +227,9 @@ class TicketCheckInTest extends TestCase
 
     public function test_a_ticket_is_accepted_after_the_configured_opening_time(): void
     {
+        // Pinned to midday: an hour either side of 23:30 or 00:30 would cross midnight.
+        $this->travelTo(today()->setTime(12, 0));
+
         $this->event->update(['check_in_starts_at' => now()->subHour()->format('H:i:s')]);
         $ticket = $this->ticket();
 
@@ -234,6 +240,9 @@ class TicketCheckInTest extends TestCase
 
     public function test_the_manual_box_also_refuses_a_scan_before_check_in_opens(): void
     {
+        // Pinned to midday: an hour either side of 23:30 or 00:30 would cross midnight.
+        $this->travelTo(today()->setTime(12, 0));
+
         $this->event->update(['check_in_starts_at' => now()->addHour()->format('H:i:s')]);
         $ticket = $this->ticket();
 
