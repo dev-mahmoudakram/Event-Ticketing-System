@@ -41,13 +41,14 @@ class WorkshopController extends Controller
     public function create(Event $event): View
     {
         return view('admin.workshops.form', [
-            'event' => $event, 'workshop' => new Workshop, 'speakers' => $event->speakers,
+            'event' => $event, 'workshop' => new Workshop, 'speakers' => $event->speakers, 'locations' => $event->locations,
         ]);
     }
 
     public function store(WorkshopRequest $request, Event $event): RedirectResponse
     {
-        $event->workshops()->create($request->validated());
+        $workshop = $event->workshops()->create($request->safe()->except('speaker_ids'));
+        $workshop->syncSpeakersInOrder($request->validated('speaker_ids') ?? []);
 
         return redirect()->route('admin.events.workshops.index', $event);
     }
@@ -57,14 +58,15 @@ class WorkshopController extends Controller
         $this->assertBelongsToEvent($event, $workshop);
 
         return view('admin.workshops.form', [
-            'event' => $event, 'workshop' => $workshop, 'speakers' => $event->speakers,
+            'event' => $event, 'workshop' => $workshop, 'speakers' => $event->speakers, 'locations' => $event->locations,
         ]);
     }
 
     public function update(WorkshopRequest $request, Event $event, Workshop $workshop): RedirectResponse
     {
         $this->assertBelongsToEvent($event, $workshop);
-        $workshop->update($request->validated());
+        $workshop->update($request->safe()->except('speaker_ids'));
+        $workshop->syncSpeakersInOrder($request->validated('speaker_ids') ?? []);
 
         return redirect()->route('admin.events.workshops.index', $event);
     }

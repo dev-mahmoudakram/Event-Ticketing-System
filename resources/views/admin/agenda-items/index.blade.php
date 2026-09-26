@@ -7,6 +7,11 @@
         <x-admin.button href="{{ route('agenda.show', $event) }}" variant="secondary" target="_blank" rel="noopener">{{ __('View agenda') }}</x-admin.button>
     </x-admin.page-header>
 
+    <p class="mb-4 text-sm text-hub-dark/60">
+        {{ __('Workshops appear on the agenda from their own schedule.') }}
+        <a class="text-hub-purple hover:underline" href="{{ route('admin.events.workshops.index', $event) }}">{{ __('Manage workshops') }}</a>
+    </p>
+
     @if($items->isEmpty())
         <x-admin.empty-state :message="__('No agenda items yet.')" />
     @else
@@ -16,6 +21,9 @@
                     <th>{{ __('Day') }}</th>
                     <th>{{ __('Time') }}</th>
                     <th>{{ __('Title') }}</th>
+                    <th>{{ __('Type') }}</th>
+                    <th>{{ __('Location') }}</th>
+                    <th>{{ __('Speakers') }}</th>
                     <th></th>
                 </tr>
             </thead>
@@ -23,13 +31,16 @@
                 @foreach($items as $item)
                     <tr>
                         <td>{{ $item->day_date->toDateString() }}</td>
-                        <td>{{ $item->start_time->format('H:i') }}–{{ $item->end_time->format('H:i') }}</td>
-                        <td>{{ $item->title_en }}</td>
+                        <td dir="ltr">{{ $item->start_time->format('H:i') }}–{{ $item->end_time->format('H:i') }}</td>
+                        <td>{{ $item->title() }}</td>
+                        <td>{{ $item->sessionType->name() }}</td>
+                        <td>{{ $item->location?->name() ?? '—' }}</td>
+                        <td>{{ $item->speakers_count }}</td>
                         <td class="text-end">
                             <a href="{{ route('admin.events.agenda-items.edit', [$event, $item]) }}" class="text-hub-purple hover:underline">{{ __('Edit') }}</a>
                             <form method="POST" action="{{ route('admin.events.agenda-items.destroy', [$event, $item]) }}" class="inline" data-confirm="{{ __('Are you sure? This cannot be undone.') }}">
                                 @csrf @method('DELETE')
-                                <x-admin.button type="submit" variant="danger" class="ml-2">{{ __('Delete') }}</x-admin.button>
+                                <x-admin.button type="submit" variant="danger" class="ms-2">{{ __('Delete') }}</x-admin.button>
                             </form>
                         </td>
                     </tr>

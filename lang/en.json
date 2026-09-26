@@ -852,5 +852,15 @@
     "Show as a break (a slim line on the agenda)": "Show as a break (a slim line on the agenda)",
     "Saved.": "Saved.",
     "Deleted.": "Deleted.",
-    "In use by :count session — move it first.|In use by :count sessions or workshops — move them first.": "In use by :count session — move it first.|In use by :count sessions or workshops — move them first."
+    "In use by :count session — move it first.|In use by :count sessions or workshops — move them first.": "In use by :count session — move it first.|In use by :count sessions or workshops — move them first.",
+    "Move up": "Move up",
+    "Move down": "Move down",
+    "Add speaker": "Add speaker",
+    "Add speaker…": "Add speaker…",
+    "Add": "Add",
+    "No location": "No location",
+    "Manage types": "Manage types",
+    "Manage locations": "Manage locations",
+    "Workshops appear on the agenda from their own schedule.": "Workshops appear on the agenda from their own schedule.",
+    "Manage workshops": "Manage workshops"
 }

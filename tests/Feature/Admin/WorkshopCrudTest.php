@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Tests\Feature\Admin;
 
 use App\Models\Event;
+use App\Models\Location;
 use App\Models\Speaker;
 use App\Models\User;
 use App\Models\Workshop;
@@ -15,66 +16,87 @@ class WorkshopCrudTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_admin_can_create_a_workshop_with_a_speaker(): void
+    private User $admin;
+
+    private Event $event;
+
+    protected function setUp(): void
     {
-        $admin = User::factory()->create();
-        $event = Event::factory()->create();
-        $speaker = Speaker::factory()->for($event)->create();
+        parent::setUp();
 
-        $response = $this->actingAs($admin)->post(route('admin.events.workshops.store', $event), [
-            'slug' => 'ai-workshop',
-            'name_ar' => 'ورشة', 'name_en' => 'AI Workshop',
-            'capacity' => 30, 'sort_order' => 0,
-        ]);
+        $this->admin = User::factory()->create();
+        $this->event = Event::factory()->create(['start_date' => '2026-08-15', 'end_date' => '2026-08-16']);
+    }
 
-        $response->assertRedirect(route('admin.events.workshops.index', $event));
-        $this->assertDatabaseHas('workshops', ['event_id' => $event->id, 'slug' => 'ai-workshop']);
+    /** @return array<string, mixed> */
+    private function payload(array $overrides = []): array
+    {
+        return $overrides + [
+            'slug' => 'ai-workshop', 'name_ar' => 'ورشة', 'name_en' => 'AI Workshop', 'capacity' => 30,
+            'day_date' => '2026-08-15', 'start_time' => '14:00', 'end_time' => '15:30',
+        ];
+    }
+
+    public function test_admin_creates_a_scheduled_workshop_with_speakers_and_location(): void
+    {
+        $location = Location::factory()->for($this->event)->create();
+        [$a, $b] = Speaker::factory()->for($this->event)->count(2)->create()->all();
+
+        $this->actingAs($this->admin)->post(route('admin.events.workshops.store', $this->event), $this->payload([
+            'location_id' => $location->id, 'speaker_ids' => [$b->id, $a->id],
+        ]))->assertRedirect(route('admin.events.workshops.index', $this->event));
+
+        $workshop = Workshop::where('slug', 'ai-workshop')->sole();
+        $this->assertSame('14:00', $workshop->start_time->format('H:i'));
+        $this->assertTrue($workshop->location->is($location));
+        $this->assertSame([$b->id, $a->id], $workshop->speakers->pluck('id')->all());
+    }
+
+    public function test_a_workshop_needs_a_day_and_times_within_the_event(): void
+    {
+        $this->actingAs($this->admin)->post(route('admin.events.workshops.store', $this->event), $this->payload([
+            'day_date' => '', 'start_time' => '', 'end_time' => '',
+        ]))->assertSessionHasErrors(['day_date', 'start_time', 'end_time']);
+
+        $this->actingAs($this->admin)->post(route('admin.events.workshops.store', $this->event), $this->payload([
+            'day_date' => '2026-09-01', 'start_time' => '15:00', 'end_time' => '14:00',
+        ]))->assertSessionHasErrors(['day_date', 'end_time']);
     }
 
     public function test_creating_a_workshop_requires_a_unique_slug(): void
     {
-        $admin = User::factory()->create();
-        $event = Event::factory()->create();
         Workshop::factory()->create(['slug' => 'ai-workshop']);
 
-        $response = $this->actingAs($admin)->post(route('admin.events.workshops.store', $event), [
-            'slug' => 'ai-workshop', 'name_ar' => 'ورشة', 'name_en' => 'AI Workshop', 'capacity' => 30,
-        ]);
+        $this->actingAs($this->admin)->post(route('admin.events.workshops.store', $this->event), $this->payload())
+            ->assertSessionHasErrors('slug');
+    }
 
-        $response->assertSessionHasErrors('slug');
+    public function test_speakers_and_location_must_belong_to_this_event(): void
+    {
+        $this->actingAs($this->admin)->post(route('admin.events.workshops.store', $this->event), $this->payload([
+            'location_id' => Location::factory()->create()->id,
+            'speaker_ids' => [Speaker::factory()->create()->id],
+        ]))->assertSessionHasErrors(['location_id', 'speaker_ids.0']);
     }
 
     public function test_admin_can_delete_a_workshop(): void
     {
-        $admin = User::factory()->create();
-        $event = Event::factory()->create();
-        $workshop = Workshop::factory()->for($event)->create();
+        $workshop = Workshop::factory()->for($this->event)->create();
 
-        $response = $this->actingAs($admin)->delete(route('admin.events.workshops.destroy', [$event, $workshop]));
+        $this->actingAs($this->admin)->delete(route('admin.events.workshops.destroy', [$this->event, $workshop]))
+            ->assertRedirect(route('admin.events.workshops.index', $this->event));
 
-        $response->assertRedirect(route('admin.events.workshops.index', $event));
-        $this->assertDatabaseMissing('workshops', ['id' => $workshop->id]);
+        $this->assertModelMissing($workshop);
     }
 
-    public function test_admin_can_view_the_index_page_with_records(): void
+    public function test_the_index_and_edit_pages_load(): void
     {
-        $admin = User::factory()->create();
-        $event = Event::factory()->create();
-        Workshop::factory()->for($event)->create();
+        $workshop = Workshop::factory()->for($this->event)->create();
 
-        $response = $this->actingAs($admin)->get(route('admin.events.workshops.index', $event));
-
-        $response->assertOk();
-    }
-
-    public function test_admin_can_view_the_edit_page(): void
-    {
-        $admin = User::factory()->create();
-        $event = Event::factory()->create();
-        $workshop = Workshop::factory()->for($event)->create();
-
-        $response = $this->actingAs($admin)->get(route('admin.events.workshops.edit', [$event, $workshop]));
-
-        $response->assertOk();
+        $this->actingAs($this->admin)->get(route('admin.events.workshops.index', $this->event))->assertOk();
+        $this->actingAs($this->admin)->get(route('admin.events.workshops.edit', [$this->event, $workshop]))
+            ->assertOk()
+            ->assertSee('data-speaker-picker', false)
+            ->assertSee('name="day_date"', false);
     }
 }

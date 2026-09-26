@@ -16,20 +16,24 @@ class AgendaItemController extends Controller
 {
     public function index(Event $event): View
     {
-        return view('admin.agenda-items.index', ['event' => $event, 'items' => $event->agendaItems]);
+        return view('admin.agenda-items.index', [
+            'event' => $event,
+            'items' => $event->agendaItems()->with(['sessionType', 'location'])->withCount('speakers')->get(),
+        ]);
     }
 
     public function create(Event $event): View
     {
         return view('admin.agenda-items.form', [
             'event' => $event, 'item' => new AgendaItem,
-            'speakers' => $event->speakers, 'types' => $event->sessionTypes,
+            'speakers' => $event->speakers, 'types' => $event->sessionTypes, 'locations' => $event->locations,
         ]);
     }
 
     public function store(AgendaItemRequest $request, Event $event): RedirectResponse
     {
-        $event->agendaItems()->create($request->validated());
+        $item = $event->agendaItems()->create($request->safe()->except('speaker_ids'));
+        $item->syncSpeakersInOrder($request->validated('speaker_ids') ?? []);
 
         return redirect()->route('admin.events.agenda-items.index', $event);
     }
@@ -40,14 +44,15 @@ class AgendaItemController extends Controller
 
         return view('admin.agenda-items.form', [
             'event' => $event, 'item' => $agendaItem,
-            'speakers' => $event->speakers, 'types' => $event->sessionTypes,
+            'speakers' => $event->speakers, 'types' => $event->sessionTypes, 'locations' => $event->locations,
         ]);
     }
 
     public function update(AgendaItemRequest $request, Event $event, AgendaItem $agendaItem): RedirectResponse
     {
         $this->assertBelongsToEvent($event, $agendaItem);
-        $agendaItem->update($request->validated());
+        $agendaItem->update($request->safe()->except('speaker_ids'));
+        $agendaItem->syncSpeakersInOrder($request->validated('speaker_ids') ?? []);
 
         return redirect()->route('admin.events.agenda-items.index', $event);
     }

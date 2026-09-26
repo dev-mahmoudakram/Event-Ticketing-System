@@ -897,5 +897,15 @@
     "Show as a break (a slim line on the agenda)": "عرضها كاستراحة (سطر مختصر في الجدول)",
     "Saved.": "تم الحفظ.",
     "Deleted.": "تم الحذف.",
-    "In use by :count session — move it first.|In use by :count sessions or workshops — move them first.": "مستخدم في جلسة واحدة — انقلها أولًا.|مستخدم في :count جلسات أو ورش — انقلها أولًا."
+    "In use by :count session — move it first.|In use by :count sessions or workshops — move them first.": "مستخدم في جلسة واحدة — انقلها أولًا.|مستخدم في :count جلسات أو ورش — انقلها أولًا.",
+    "Move up": "تحريك لأعلى",
+    "Move down": "تحريك لأسفل",
+    "Add speaker": "إضافة متحدث",
+    "Add speaker…": "إضافة متحدث…",
+    "Add": "إضافة",
+    "No location": "بدون مكان",
+    "Manage types": "إدارة الأنواع",
+    "Manage locations": "إدارة الأماكن",
+    "Workshops appear on the agenda from their own schedule.": "تظهر ورش العمل في الجدول من مواعيدها الخاصة.",
+    "Manage workshops": "إدارة ورش العمل"
 }
