@@ -41,6 +41,19 @@
 </div>
 
 <nav class="flex-1 overflow-y-auto px-3 py-4 flex flex-col gap-1">
+    @unless(auth()->user()?->isAdmin())
+    {{-- Check-in staff only ever see the desks; every admin page would answer 403. --}}
+    <a href="{{ route('check-in.events') }}" class="adm-nav-link {{ request()->routeIs('check-in.events') ? 'is-active' : '' }}">
+        {{ __('Registration Desk') }}
+    </a>
+    <div class="adm-nav-branch mt-1 flex flex-col gap-0.5">
+        @foreach($sidebarEvents as $sidebarEvent)
+            <a href="{{ route('check-in.index', $sidebarEvent) }}" class="adm-nav-link adm-nav-sub {{ request()->routeIs('check-in.index') && $currentEventId === $sidebarEvent->id ? 'is-active' : '' }}">
+                {{ app()->getLocale() === 'ar' ? $sidebarEvent->name_ar : $sidebarEvent->name_en }}
+            </a>
+        @endforeach
+    </div>
+    @else
     <a href="{{ route('admin.dashboard') }}" class="adm-nav-link {{ request()->routeIs('admin.dashboard') ? 'is-active' : '' }}">
         {{ __('Dashboard') }}
     </a>
@@ -129,6 +142,11 @@
         </div>
         </div>
     </div>
+
+    <a href="{{ route('admin.staff.index') }}" class="adm-nav-link mt-4 {{ request()->routeIs('admin.staff.*') ? 'is-active' : '' }}">
+        {{ __('Staff') }}
+    </a>
+    @endunless
 </nav>
 
 <form method="POST" action="{{ route('admin.logout') }}" class="px-5 py-4 border-t border-hub-purple/10">

@@ -33,7 +33,9 @@ class AuthController extends Controller
 
         $request->session()->regenerate();
 
-        return redirect()->route('admin.dashboard');
+        return $request->user()->isAdmin()
+            ? redirect()->route('admin.dashboard')
+            : redirect()->route('check-in.events');
     }
 
     public function logout(Request $request): RedirectResponse

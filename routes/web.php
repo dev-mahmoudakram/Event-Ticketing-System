@@ -27,6 +27,7 @@ use App\Http\Controllers\Admin\SpeakerRequestController as AdminSpeakerRequestCo
 use App\Http\Controllers\Admin\SponsorController;
 use App\Http\Controllers\Admin\SponsorRequestController as AdminSponsorRequestController;
 use App\Http\Controllers\Admin\SponsorTierController;
+use App\Http\Controllers\Admin\StaffController;
 use App\Http\Controllers\Admin\TestimonialController;
 use App\Http\Controllers\Admin\TicketCheckInController;
 use App\Http\Controllers\Admin\TicketRequestFieldController;
@@ -97,6 +98,7 @@ Route::get('tickets/{ticket}/{ticketId}', [TicketController::class, 'show'])->na
 // The registration desk. Checking somebody in changes their ticket, so every route here is
 // a POST behind a login — a QR code alone can never admit anyone.
 Route::middleware('auth')->prefix('check-in')->name('check-in.')->group(function () {
+    Route::get('/', [TicketCheckInController::class, 'events'])->name('events');
     Route::get('{event}', [TicketCheckInController::class, 'index'])->name('index');
     Route::post('{event}/scan', [TicketCheckInController::class, 'scan'])->name('scan');
     Route::post('{event}', [TicketCheckInController::class, 'store'])->name('store');
@@ -107,8 +109,10 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::post('login', [AuthController::class, 'login'])->middleware('throttle:6,1');
     Route::post('logout', [AuthController::class, 'logout'])->name('logout')->middleware('auth');
 
-    Route::middleware('auth')->group(function () {
+    // Everything here is for admins only; check-in staff are limited to the desk above.
+    Route::middleware(['auth', 'admin'])->group(function () {
         Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
+        Route::resource('staff', StaffController::class)->except('show')->parameters(['staff' => 'user']);
 
         // Creators Hub (the site root) is not an event, so its copy lives outside the
         // per-event content screens.

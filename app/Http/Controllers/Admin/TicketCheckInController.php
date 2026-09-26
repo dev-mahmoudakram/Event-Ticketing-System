@@ -16,6 +16,16 @@ class TicketCheckInController extends Controller
 {
     public function __construct(private readonly TicketCheckIn $checkIn) {}
 
+    /**
+     * Where check-in staff land after logging in: pick the event whose door they're on.
+     */
+    public function events(): View
+    {
+        return view('check-in.events', [
+            'events' => Event::orderByDesc('start_date')->get(['id', 'slug', 'name_ar', 'name_en', 'start_date']),
+        ]);
+    }
+
     public function index(Event $event): View
     {
         return view('check-in.index', [
