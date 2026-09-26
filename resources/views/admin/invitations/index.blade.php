@@ -38,7 +38,7 @@
                         <td>{{ $invitation->ticketType?->name_en }}</td>
                         <td><input type="text" readonly value="{{ route('invitations.verify', [$event, $invitation->token]) }}" class="adm-input w-64" aria-label="{{ __('Invitation link') }}" onclick="this.select()"></td>
                         <td><code>{{ $invitation->otp }}</code></td>
-                        <td>{{ $invitation->status === \App\Enums\InvitationStatus::Unused && $invitation->expires_at->isPast() ? __('Expired') : __(ucfirst($invitation->status->value)) }}</td>
+                        <td>{{ $invitation->status === \App\Enums\InvitationStatus::Unused && $invitation->expires_at->isPast() ? __('Expired') : $invitation->status->label() }}</td>
                         <td>{{ $invitation->expires_at->format('Y-m-d') }}</td>
                         <td>
                             @if($invitation->isUsable())
