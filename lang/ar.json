@@ -791,5 +791,6 @@
     "Admins can use every page. Check-in staff can only open the registration desk to scan tickets.": "يمكن للمسؤولين استخدام كل الصفحات. أما فريق التسجيل فيمكنه فقط فتح مكتب التسجيل لمسح التذاكر.",
     "Confirm password": "تأكيد كلمة المرور",
     "New password (leave blank to keep the current one)": "كلمة مرور جديدة (اتركها فارغة للإبقاء على الحالية)",
-    "Choose the event you are checking people in for.": "اختر الفعالية التي تسجّل الحضور لها."
+    "Choose the event you are checking people in for.": "اختر الفعالية التي تسجّل الحضور لها.",
+    "View your ticket": "عرض تذكرتك"
 }

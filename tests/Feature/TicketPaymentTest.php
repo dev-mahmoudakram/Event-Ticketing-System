@@ -9,9 +9,12 @@ use App\Mail\TicketIssued;
 use App\Models\Event;
 use App\Models\Ticket;
 use App\Models\TicketType;
+use App\Services\TicketIssuer;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\URL;
+use RuntimeException;
 use Tests\TestCase;
 
 class TicketPaymentTest extends TestCase
@@ -83,6 +86,49 @@ class TicketPaymentTest extends TestCase
 
         $this->get($url)->assertForbidden();
         $this->assertSame(TicketStatus::PaymentPending, $ticket->fresh()->status);
+    }
+
+    public function test_the_page_links_to_the_issued_ticket(): void
+    {
+        Mail::fake();
+        $ticket = $this->paymentPendingTicket();
+
+        $response = $this->get($this->paymentUrl($ticket));
+
+        $ticket->refresh();
+        $response->assertSee(route('tickets.show', [$ticket, $ticket->ticket_id]), false);
+    }
+
+    public function test_a_mail_failure_still_issues_the_ticket_and_shows_its_link(): void
+    {
+        $ticket = $this->paymentPendingTicket();
+        Mail::shouldReceive('to')->once()->andThrow(new RuntimeException('Mail server down'));
+        Log::spy();
+
+        $response = $this->get($this->paymentUrl($ticket));
+
+        $ticket->refresh();
+        $response->assertOk();
+        $this->assertSame(TicketStatus::TicketIssued, $ticket->status);
+        $response->assertSee(route('tickets.show', [$ticket, $ticket->ticket_id]), false);
+        Log::shouldHaveReceived('error')->once();
+    }
+
+    public function test_a_stale_second_visit_cannot_issue_a_second_qr_code(): void
+    {
+        Mail::fake();
+        $ticket = $this->paymentPendingTicket();
+        $issuer = app(TicketIssuer::class);
+
+        // Two visits that both loaded the ticket while it was still awaiting payment.
+        $firstCopy = $ticket->fresh();
+        $secondCopy = $ticket->fresh();
+
+        $this->assertTrue($issuer->issue($firstCopy, 'payment_link', TicketStatus::PaymentPending));
+        $issuedId = $ticket->fresh()->ticket_id;
+        $this->assertFalse($issuer->issue($secondCopy, 'payment_link', TicketStatus::PaymentPending));
+
+        $this->assertSame($issuedId, $ticket->fresh()->ticket_id);
     }
 
     public function test_opening_the_link_again_does_not_reissue_the_ticket(): void

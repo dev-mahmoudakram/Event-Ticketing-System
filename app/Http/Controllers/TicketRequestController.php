@@ -13,6 +13,7 @@ use App\Models\Ticket;
 use App\Models\TicketRequestField;
 use App\Models\TicketType;
 use App\Services\CouponRedeemer;
+use App\Services\TicketIssuer;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -27,7 +28,10 @@ class TicketRequestController extends Controller
 {
     private const REQUESTS_PER_EMAIL_PER_DAY = 3;
 
-    public function __construct(private readonly CouponRedeemer $coupons) {}
+    public function __construct(
+        private readonly CouponRedeemer $coupons,
+        private readonly TicketIssuer $issuer,
+    ) {}
 
     public function store(TicketRequestStoreRequest $request, Event $event): RedirectResponse|JsonResponse
     {
@@ -72,7 +76,7 @@ class TicketRequestController extends Controller
                 'status' => TicketStatus::Pending,
             ]);
 
-            $ticket->update(['ticket_number' => $this->generateTicketNumber($event, $ticket)]);
+            $ticket->update(['ticket_number' => $this->issuer->referenceFor($ticket)]);
 
             foreach ($fields as $field) {
                 $this->storeAnswerFor($ticket, $field, $request);
@@ -138,12 +142,5 @@ class TicketRequestController extends Controller
                 'follower_count' => $supportsFollowerCount ? $request->input($inputKey.'_followers') : null,
             ]);
         }
-    }
-
-    private function generateTicketNumber(Event $event, Ticket $ticket): string
-    {
-        $prefix = strtoupper(str_replace('-', '', $event->slug));
-
-        return $prefix.'-'.str_pad((string) $ticket->id, 6, '0', STR_PAD_LEFT);
     }
 }

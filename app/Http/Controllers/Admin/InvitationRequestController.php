@@ -8,24 +8,23 @@ use App\Enums\InvitationRequestStatus;
 use App\Enums\TicketStatus;
 use App\Http\Controllers\Controller;
 use App\Mail\InvitationRequestRejected;
-use App\Mail\TicketIssued;
 use App\Models\Event;
 use App\Models\InvitationRequest;
-use App\Services\TicketQrCode;
-use App\Services\WorkshopBooker;
+use App\Services\TicketIssuer;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Str;
 use Illuminate\View\View;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Throwable;
 
 class InvitationRequestController extends Controller
 {
+    public function __construct(private readonly TicketIssuer $issuer) {}
+
     public function index(Event $event, Request $request): View
     {
         $status = $request->query('status', InvitationRequestStatus::Pending->value);
@@ -75,24 +74,14 @@ class InvitationRequestController extends Controller
                     'name' => $request->name,
                     'email' => $request->email,
                     'phone' => $request->phone,
-                    'status' => TicketStatus::TicketIssued,
-                    'is_paid' => true,
-                    'payment_method' => 'invitation',
+                    'status' => TicketStatus::Approved,
                 ]);
-                $ticket->update([
-                    'ticket_number' => strtoupper(str_replace('-', '', $event->slug)).'-'.str_pad((string) $ticket->id, 6, '0', STR_PAD_LEFT),
-                    'ticket_id' => Str::random(40),
-                ]);
+                $ticket->update(['ticket_number' => $this->issuer->referenceFor($ticket)]);
+                $this->issuer->issue($ticket, 'invitation', TicketStatus::Approved);
 
-                (new WorkshopBooker)->issueKeyFor($ticket->fresh('ticketType'));
-                $ticket->refresh();
-                $qrImage = (new TicketQrCode)->pngFor($ticket);
-
-                if ($qrImage === null) {
-                    throw new \RuntimeException('Issued ticket has no QR payload.');
-                }
-
-                Mail::to($ticket->email)->send(new TicketIssued($ticket, $qrImage));
+                // Sent before the transaction commits on purpose: if the email fails, nothing is
+                // saved and the admin sees an error and can simply approve again.
+                $this->issuer->send($ticket);
                 $request->update(['ticket_id' => $ticket->id, 'status' => InvitationRequestStatus::Approved]);
 
                 return true;
