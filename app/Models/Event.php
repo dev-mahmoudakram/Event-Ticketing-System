@@ -200,6 +200,16 @@ class Event extends Model
         return $this->hasMany(SponsorRequest::class)->latest();
     }
 
+    public function invitations(): HasMany
+    {
+        return $this->hasMany(Invitation::class)->latest();
+    }
+
+    public function invitationRequests(): HasMany
+    {
+        return $this->hasMany(InvitationRequest::class)->latest();
+    }
+
     public function ticketTypes(): HasMany
     {
         return $this->hasMany(TicketType::class)->orderBy('sort_order');

@@ -8,6 +8,8 @@
         ['prefix' => 'admin.events.sponsors', 'route' => 'admin.events.sponsors.index', 'label' => __('Partners')],
         ['prefix' => 'admin.events.sponsor-tiers', 'route' => 'admin.events.sponsor-tiers.index', 'label' => __('Sponsor Tiers')],
         ['prefix' => 'admin.events.sponsor-requests', 'route' => 'admin.events.sponsor-requests.index', 'label' => __('Sponsor Requests')],
+        ['prefix' => 'admin.events.invitations', 'route' => 'admin.events.invitations.index', 'label' => __('Invitations')],
+        ['prefix' => 'admin.events.invitation-requests', 'route' => 'admin.events.invitation-requests.index', 'label' => __('Invitation Requests')],
         ['prefix' => 'admin.events.ticket-types', 'route' => 'admin.events.ticket-types.index', 'label' => __('Ticket Types')],
         ['prefix' => 'admin.events.request-form-fields', 'route' => 'admin.events.request-form-fields.index', 'label' => __('Request Form')],
         ['prefix' => 'admin.events.influencer-categories', 'route' => 'admin.events.influencer-categories.index', 'label' => __('Influencer Categories')],

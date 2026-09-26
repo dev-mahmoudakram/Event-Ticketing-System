@@ -17,6 +17,11 @@
 
 @section('content')
     @include('landing.partials.nav', ['event' => $event, 'onLandingPage' => true])
+    @if(session('invitation_request_success'))
+        <div role="status" class="fixed top-24 left-1/2 z-50 w-[min(90vw,36rem)] -translate-x-1/2 rounded-xl bg-ccs-black px-6 py-4 text-center text-white shadow-xl">
+            {{ __('We received your request. We will email you after reviewing it.') }}
+        </div>
+    @endif
     @include('landing.partials.hero', ['event' => $event])
     @include('landing.partials.reel', ['event' => $event])
     @include('landing.partials.about', ['event' => $event])

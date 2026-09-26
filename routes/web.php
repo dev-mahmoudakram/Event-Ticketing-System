@@ -14,6 +14,8 @@ use App\Http\Controllers\Admin\GalleryPhotoController;
 use App\Http\Controllers\Admin\HeroSlideController;
 use App\Http\Controllers\Admin\HubPartnerController;
 use App\Http\Controllers\Admin\InfluencerCategoryController;
+use App\Http\Controllers\Admin\InvitationController as AdminInvitationController;
+use App\Http\Controllers\Admin\InvitationRequestController as AdminInvitationRequestController;
 use App\Http\Controllers\Admin\LandingPageContentController;
 use App\Http\Controllers\Admin\NewsletterSubscriberController as AdminNewsletterSubscriberController;
 use App\Http\Controllers\Admin\PlatformReportController;
@@ -36,6 +38,8 @@ use App\Http\Controllers\AwardsController;
 use App\Http\Controllers\ContactMessageController;
 use App\Http\Controllers\EventsController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\InvitationController;
+use App\Http\Controllers\InvitationRequestController;
 use App\Http\Controllers\LandingPageController;
 use App\Http\Controllers\NewsletterSubscriberController;
 use App\Http\Controllers\SpeakerController as PublicSpeakerController;
@@ -75,6 +79,10 @@ Route::prefix('events/{event}')->middleware(EnsureEventIsPublished::class)->grou
     Route::post('/become-a-speaker', [SpeakerRequestController::class, 'store'])->name('speaker-requests.store');
     Route::post('/contact', [ContactMessageController::class, 'store'])->name('contact.store');
     Route::post('/newsletter', [NewsletterSubscriberController::class, 'store'])->name('newsletter.store');
+    Route::get('/invite/{token}', [InvitationController::class, 'show'])->name('invitations.verify');
+    Route::post('/invite/{token}', [InvitationController::class, 'verify'])->middleware('throttle:invitation-otp')->name('invitations.verify.attempt');
+    Route::get('/invite/{token}/request', [InvitationRequestController::class, 'create'])->name('invitations.create');
+    Route::post('/invite/{token}/request', [InvitationRequestController::class, 'store'])->name('invitations.store');
 });
 
 // Payment link route for ticket payment completion
@@ -131,6 +139,12 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::resource('events.influencer-categories', InfluencerCategoryController::class)->except('show');
         Route::patch('events/{event}/influencer-categories-settings', [InfluencerCategoryController::class, 'updateSettings'])
             ->name('events.influencer-categories.update-settings');
+        Route::get('events/{event}/invitations', [AdminInvitationController::class, 'index'])->name('events.invitations.index');
+        Route::post('events/{event}/invitations', [AdminInvitationController::class, 'store'])->name('events.invitations.store');
+        Route::patch('events/{event}/invitations/{invitation}/revoke', [AdminInvitationController::class, 'revoke'])->name('events.invitations.revoke');
+        Route::get('events/{event}/invitation-requests', [AdminInvitationRequestController::class, 'index'])->name('events.invitation-requests.index');
+        Route::patch('events/{event}/invitation-requests/{invitationRequest}/{status}', [AdminInvitationRequestController::class, 'updateStatus'])
+            ->name('events.invitation-requests.update-status');
         Route::resource('events.sponsors', SponsorController::class)->except('show');
         Route::get('events/{event}/sponsor-requests', [AdminSponsorRequestController::class, 'index'])->name('events.sponsor-requests.index');
         Route::patch('events/{event}/sponsor-requests/{sponsorRequest}/{status}', [AdminSponsorRequestController::class, 'updateStatus'])

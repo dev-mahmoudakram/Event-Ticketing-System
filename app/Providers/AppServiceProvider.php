@@ -1,10 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Providers;
 
 use App\Models\Event;
 use App\Support\SiteText;
+use Illuminate\Cache\RateLimiting\Limit;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Blade;
+use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 
@@ -23,6 +28,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        RateLimiter::for('invitation-otp', fn (Request $request) => Limit::perMinute(5)
+            ->by($request->ip().'|'.$request->route('token')));
+
         // @site('hero.headline') prints admin-edited Creators Hub copy, falling back to the
         // wording the page ships with. Escaped like any other Blade echo.
         Blade::directive('site', function (string $expression) {
