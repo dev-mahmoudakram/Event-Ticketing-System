@@ -212,3 +212,82 @@
     transition: none;
   }
 }
+
+/* Schedule cards (resources/views/components/schedule-card.blade.php) */
+.ccs-schedule-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  height: 100%;
+  padding: 1.5rem;
+  border-radius: 1.25rem;
+  background: rgb(255 255 255 / 0.03);
+  border: 1px solid rgb(255 255 255 / 0.1);
+  cursor: pointer;
+  text-align: start;
+  transition: border-color 0.2s ease, transform 0.2s ease;
+}
+
+.ccs-schedule-card:hover,
+.ccs-schedule-card:focus-visible {
+  border-color: rgba(255, 126, 113, 0.5);
+  border-color: color-mix(in srgb, var(--color-ccs-coral) 50%, transparent);
+  transform: translateY(-2px);
+  outline: none;
+}
+
+.ccs-schedule-pill {
+  display: inline-flex;
+  width: fit-content;
+  padding: 0.3rem 0.8rem;
+  border-radius: 9999px;
+  background: rgba(250, 212, 139, 0.1);
+  background: color-mix(in srgb, var(--color-ccs-gold) 10%, transparent);
+  color: var(--color-ccs-gold);
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.ccs-schedule-book {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.7rem 1.25rem;
+  border-radius: 0.75rem;
+  background: var(--color-ccs-coral);
+  color: var(--color-ccs-red);
+  font-weight: 800;
+  font-size: 0.9rem;
+  transition: filter 0.2s ease;
+}
+
+.ccs-schedule-book:hover {
+  filter: brightness(1.06);
+}
+
+.ccs-schedule-book.is-full {
+  background: rgb(255 255 255 / 0.08);
+  color: rgb(255 255 255 / 0.55);
+  cursor: not-allowed;
+}
+
+.ccs-schedule-break {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.85rem 1.25rem;
+  border-radius: 0.9rem;
+  border: 1px dashed rgb(255 255 255 / 0.15);
+  color: rgb(255 255 255 / 0.7);
+  font-weight: 600;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ccs-schedule-card {
+    transition: none;
+  }
+
+  .ccs-schedule-card:hover {
+    transform: none;
+  }
+}

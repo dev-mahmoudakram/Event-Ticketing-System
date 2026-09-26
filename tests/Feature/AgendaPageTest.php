@@ -6,7 +6,11 @@ namespace Tests\Feature;
 
 use App\Models\AgendaItem;
 use App\Models\Event;
+use App\Models\Location;
 use App\Models\Speaker;
+use App\Models\Ticket;
+use App\Models\Workshop;
+use App\Models\WorkshopBooking;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -14,51 +18,106 @@ class AgendaPageTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_agenda_page_lists_items_grouped_by_day(): void
+    public function test_the_agenda_shows_a_career_style_card_for_each_session(): void
     {
         $event = Event::factory()->create();
-        AgendaItem::factory()->for($event)->create([
-            'title_en' => 'Opening Keynote',
-            'day_date' => '2026-08-15',
+        $stage = Location::factory()->for($event)->create(['name_en' => 'Main Stage']);
+        $withPhoto = Speaker::factory()->for($event)->create(['name_en' => 'Maya Chen', 'photo_path' => 'speakers/maya.jpg']);
+        $noPhoto = Speaker::factory()->for($event)->create(['name_en' => 'Omar Ali', 'photo_path' => null]);
+        $item = AgendaItem::factory()->for($event)->ofType('Panel')->create([
+            'title_en' => 'Worth the Hype?', 'day_date' => '2026-08-15', 'start_time' => '11:15', 'end_time' => '12:00',
+            'location_id' => $stage->id, 'description_en' => '<p>Are certificates a must?</p>',
         ]);
+        $item->syncSpeakersInOrder([$withPhoto->id, $noPhoto->id]);
 
-        $response = $this->get(route('agenda.show', $event).'?lang=en');
-
-        $response->assertStatus(200);
-        $response->assertSee('Opening Keynote');
+        $this->get(route('agenda.show', $event).'?lang=en')
+            ->assertOk()
+            ->assertSee('id="session-'.$item->id.'"', false)
+            ->assertSee('11:15 – 12:00')
+            ->assertSee('Panel')
+            ->assertSee('Main Stage')
+            ->assertSee('Maya Chen')
+            ->assertSee('speakers/maya.jpg', false)
+            ->assertSee('>O<', false)
+            ->assertSee('Are certificates a must?');
     }
 
-    public function test_agenda_page_shows_real_session_details(): void
+    public function test_more_than_four_speakers_collapse_into_a_count(): void
     {
         $event = Event::factory()->create();
-        $speaker = Speaker::factory()->for($event)->create(['name_en' => 'Maya Chen']);
-        AgendaItem::factory()->for($event)->create([
-            'title_en' => 'Opening Keynote', 'start_time' => '09:00',
-        ])->syncSpeakersInOrder([$speaker->id]);
+        $item = AgendaItem::factory()->for($event)->create();
+        $item->syncSpeakersInOrder(Speaker::factory()->for($event)->count(6)->create()->pluck('id')->all());
 
-        $response = $this->get(route('agenda.show', $event).'?lang=en');
+        $this->get(route('agenda.show', $event).'?lang=en')->assertSee('+2 more');
+    }
 
-        $response->assertSee('Opening Keynote');
-        $response->assertSee('Maya Chen');
-        $response->assertSee('09:00');
+    public function test_workshops_appear_with_a_booking_button_and_sessions_without(): void
+    {
+        $event = Event::factory()->create();
+        AgendaItem::factory()->for($event)->create(['day_date' => '2026-08-15']);
+        $workshop = Workshop::factory()->for($event)->create(['day_date' => '2026-08-15', 'capacity' => 20]);
+        // Capacity 0 means unlimited, so "full" is a one-seat workshop whose seat is taken.
+        $full = Workshop::factory()->for($event)->create(['day_date' => '2026-08-15', 'capacity' => 1]);
+        WorkshopBooking::create(['ticket_id' => Ticket::factory()->for($event)->create()->id, 'workshop_id' => $full->id]);
+
+        $page = $this->get(route('agenda.show', $event).'?lang=en')->assertOk();
+
+        $page->assertSee('id="workshop-'.$workshop->id.'"', false)
+            ->assertSee(route('workshops.book', [$event, $workshop]), false)
+            ->assertSee('Book your seat');
+        $this->assertSame(1, substr_count($page->getContent(), 'data-book-seat'));
+        $this->assertStringContainsString('20 seats left', $page->getContent());
+        $page->assertDontSee(route('workshops.book', [$event, $full]), false);
+    }
+
+    public function test_break_sessions_render_as_a_slim_line(): void
+    {
+        $event = Event::factory()->create();
+        $break = AgendaItem::factory()->for($event)->ofType('Break')->create(['title_en' => 'Coffee']);
+
+        $this->get(route('agenda.show', $event).'?lang=en')
+            ->assertSee('data-break-entry="session-'.$break->id.'"', false);
+    }
+
+    public function test_every_card_has_a_matching_detail_template(): void
+    {
+        $event = Event::factory()->create();
+        AgendaItem::factory()->for($event)->count(2)->create();
+        Workshop::factory()->for($event)->create();
+
+        $html = $this->get(route('agenda.show', $event))->getContent();
+        preg_match_all('/data-schedule-open="([a-z]+-\d+)"/', $html, $cards);
+
+        $this->assertCount(3, $cards[1]);
+        foreach ($cards[1] as $anchor) {
+            $this->assertStringContainsString('id="detail-'.$anchor.'"', $html);
+        }
+    }
+
+    public function test_day_tabs_and_type_filters_appear_for_a_multi_day_event(): void
+    {
+        $event = Event::factory()->create();
+        AgendaItem::factory()->for($event)->ofType('Keynote')->create(['day_date' => '2026-08-15']);
+        AgendaItem::factory()->for($event)->ofType('Panel')->create(['day_date' => '2026-08-16']);
+
+        $this->get(route('agenda.show', $event).'?lang=en')
+            ->assertSee('data-day-tab="0"', false)
+            ->assertSee('data-day-tab="1"', false)
+            ->assertSee('data-type-filter="all"', false)
+            ->assertSee('Keynote');
     }
 
     public function test_agenda_page_shows_empty_state_when_no_items(): void
     {
         $event = Event::factory()->create();
 
-        $response = $this->get(route('agenda.show', $event).'?lang=en');
-
-        $response->assertStatus(200);
-        $response->assertSee('No agenda items yet.');
+        $this->get(route('agenda.show', $event).'?lang=en')->assertOk()->assertSee('No agenda items yet.');
     }
 
     public function test_agenda_page_links_back_to_landing_page(): void
     {
         $event = Event::factory()->create();
 
-        $response = $this->get(route('agenda.show', $event));
-
-        $response->assertSee(route('landing.show', $event), false);
+        $this->get(route('agenda.show', $event))->assertSee(route('landing.show', $event), false);
     }
 }

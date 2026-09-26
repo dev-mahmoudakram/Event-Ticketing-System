@@ -6,7 +6,7 @@
 @section('content')
     @include('landing.partials.nav', ['event' => $event, 'onLandingPage' => false])
 
-    <section class="ccs-section scroll-mt-24 pt-32 pb-24" x-data="{ day: 0 }">
+    <section class="ccs-section scroll-mt-24 pt-32 pb-24">
         <a href="{{ route('landing.show', $event) }}" class="inline-flex items-center gap-2 text-sm font-semibold text-gray-400 hover:text-white transition-colors mb-10">
             <span aria-hidden="true">&larr;</span> {{ __('Back to :event', ['event' => app()->getLocale() === 'ar' ? $event->name_ar : $event->name_en]) }}
         </a>
@@ -21,36 +21,41 @@
         </h1>
 
         @if($days->isNotEmpty())
-            @if($days->count() > 1)
-                <div class="flex gap-3 mb-10 flex-wrap">
-                    @foreach($days as $index => $sessions)
-                        <button type="button" @click="day = {{ $index }}" :class="day === {{ $index }} ? 'bg-ccs-red border-ccs-red' : 'border-white/10'" class="px-6 py-3.5 rounded-lg border text-sm font-bold text-gray-300 transition-colors duration-300">
-                            {{ __('Day :n', ['n' => $index + 1]) }} &middot; {{ $sessions->first()->day_date->format('M j') }}
-                        </button>
-                    @endforeach
-                </div>
-            @endif
-
-            @foreach($days as $index => $sessions)
-                <div x-show="day === {{ $index }}" x-cloak x-transition class="relative">
-                    <div class="absolute left-1.25 top-2 bottom-2 w-px bg-white/10"></div>
-                    <div class="flex flex-col gap-10">
-                        @foreach($sessions as $item)
-                            <div class="relative pl-10">
-                                <span class="absolute left-0 top-1.5 w-2.75 h-2.75 rounded-full bg-ccs-gold"></span>
-                                <div class="flex flex-wrap items-center gap-3 mb-2">
-                                    <span class="text-sm font-bold text-gray-400 tabular-nums">{{ $item->start_time->format('H:i') }}</span>
-                                    <span class="text-xs font-bold uppercase tracking-wide text-ccs-coral border border-ccs-coral/40 rounded-md px-3 py-1.5 whitespace-nowrap">{{ $item->sessionType->name() }}</span>
-                                </div>
-                                <div class="font-display font-bold text-lg mb-1">{{ app()->getLocale() === 'ar' ? $item->title_ar : $item->title_en }}</div>
-                                @if($item->speakers->isNotEmpty())
-                                    <div class="text-sm text-gray-500">{{ $item->speakers->map(fn ($speaker) => app()->getLocale() === 'ar' ? $speaker->name_ar : $speaker->name_en)->implode('، ') }}</div>
-                                @endif
-                            </div>
+            <div x-data="{ day: 0, type: 'all' }">
+                @if($days->count() > 1)
+                    <div class="flex gap-3 mb-6 flex-wrap" role="tablist">
+                        @foreach($days as $index => $entries)
+                            <button type="button" role="tab" data-day-tab="{{ $index }}" @click="day = {{ $index }}; type = 'all'"
+                                    :aria-selected="day === {{ $index }}"
+                                    :class="day === {{ $index }} ? 'bg-ccs-red border-ccs-red text-white' : 'border-white/10 text-gray-300'"
+                                    class="px-6 py-3.5 rounded-lg border text-sm font-bold transition-colors duration-300">
+                                {{ __('Day :n', ['n' => $index + 1]) }} &middot; {{ $entries->first()->day()->translatedFormat('j M') }}
+                            </button>
                         @endforeach
                     </div>
-                </div>
-            @endforeach
+                @endif
+
+                @foreach($days as $index => $entries)
+                    <div x-show="day === {{ $index }}" x-cloak>
+                        <div class="flex gap-2 mb-8 flex-wrap">
+                            <button type="button" data-type-filter="all" @click="type = 'all'" :class="type === 'all' ? 'bg-ccs-coral text-ccs-red border-ccs-coral' : 'border-white/15 text-gray-300'" class="px-4 py-2 rounded-full border text-sm font-bold">{{ __('All') }}</button>
+                            @foreach($entries->unique(fn ($entry) => $entry->typeKey()) as $entry)
+                                <button type="button" data-type-filter="{{ $entry->typeKey() }}" @click="type = '{{ $entry->typeKey() }}'" :class="type === '{{ $entry->typeKey() }}' ? 'bg-ccs-coral text-ccs-red border-ccs-coral' : 'border-white/15 text-gray-300'" class="px-4 py-2 rounded-full border text-sm font-bold">{{ $entry->typeLabel() }}</button>
+                            @endforeach
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            @foreach($entries as $entry)
+                                <div x-show="type === 'all' || type === '{{ $entry->typeKey() }}'" class="{{ $entry->isBreak() ? 'md:col-span-2 lg:col-span-3' : '' }}">
+                                    <x-schedule-card :entry="$entry" :event="$event" />
+                                </div>
+                            @endforeach
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+
+            <x-schedule-popup />
         @else
             <p class="text-gray-400" data-reveal>{{ __('No agenda items yet.') }}</p>
         @endif

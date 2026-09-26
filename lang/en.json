@@ -862,5 +862,8 @@
     "Manage types": "Manage types",
     "Manage locations": "Manage locations",
     "Workshops appear on the agenda from their own schedule.": "Workshops appear on the agenda from their own schedule.",
-    "Manage workshops": "Manage workshops"
+    "Manage workshops": "Manage workshops",
+    "+:count more": "+:count more",
+    "Book your seat": "Book your seat",
+    ":count seat left|:count seats left": ":count seat left|:count seats left"
 }

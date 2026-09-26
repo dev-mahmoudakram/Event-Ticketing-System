@@ -9,6 +9,7 @@ import initInlineActions from './inline-actions';
 import initNiceSelects from './nice-select';
 import initFollowerCounts from './follower-count';
 import unsavedGuard from './unsaved-guard';
+import schedulePopup from './schedule-popup';
 import intlTelInput from 'intl-tel-input/intlTelInputWithUtils';
 import 'intl-tel-input/styles';
 
@@ -16,6 +17,7 @@ window.Alpine = Alpine;
 
 Alpine.data('ticketScanner', ticketScanner);
 Alpine.data('unsavedGuard', unsavedGuard);
+Alpine.data('schedulePopup', schedulePopup);
 
 Alpine.store('ticketRequest', {
     open: false,

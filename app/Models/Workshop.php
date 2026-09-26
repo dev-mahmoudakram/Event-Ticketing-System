@@ -89,7 +89,8 @@ class Workshop extends Model
             return null;
         }
 
-        return max(0, (int) $this->capacity - $this->bookings()->count());
+        // Uses the eager-loaded count when there is one, so a page of cards doesn't query per card.
+        return max(0, (int) $this->capacity - ($this->bookings_count ?? $this->bookings()->count()));
     }
 
     public function isFull(): bool
