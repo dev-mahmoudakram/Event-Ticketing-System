@@ -134,6 +134,19 @@ class SpeakerRequestTest extends TestCase
         $this->assertDatabaseCount('speaker_requests', 0);
     }
 
+    public function test_a_bio_longer_than_two_thousand_characters_is_refused(): void
+    {
+        $event = Event::factory()->create(['status' => EventStatus::Published]);
+        $payload = $this->validPayload();
+        $payload['bio_en'] = str_repeat('a', 2001);
+        $payload['bio_ar'] = str_repeat('ب', 2001);
+
+        $response = $this->post(route('speaker-requests.store', $event), $payload);
+
+        $response->assertSessionHasErrors(['bio_en', 'bio_ar']);
+        $this->assertDatabaseCount('speaker_requests', 0);
+    }
+
     public function test_photo_is_required(): void
     {
         $event = Event::factory()->create(['status' => EventStatus::Published]);

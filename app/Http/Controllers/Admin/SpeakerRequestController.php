@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Admin;
 
 use App\Enums\SpeakerRequestStatus;
+use App\Http\Controllers\Concerns\HandlesMediaUploads;
 use App\Http\Controllers\Controller;
 use App\Models\Event;
 use App\Models\SpeakerRequest;
@@ -17,6 +18,8 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class SpeakerRequestController extends Controller
 {
+    use HandlesMediaUploads;
+
     public function index(Event $event, Request $request): View
     {
         $status = $request->query('status', SpeakerRequestStatus::Pending->value);
@@ -55,7 +58,7 @@ class SpeakerRequestController extends Controller
                     'title_en' => $locked->title_en,
                     'bio_ar' => $locked->bio_ar,
                     'bio_en' => $locked->bio_en,
-                    'photo_path' => $locked->photo_path,
+                    'photo_path' => $this->copyStoredMedia($locked->photo_path, 'speakers'),
                     'sort_order' => $event->speakers()->max('sort_order') + 1,
                 ]);
             }

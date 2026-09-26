@@ -53,13 +53,13 @@
 
                 <div>
                     <label for="speaker-bio-en" class="block text-sm text-gray-300 mb-1">{{ __('Bio (English)') }}</label>
-                    <textarea id="speaker-bio-en" name="bio_en" rows="3" class="w-full border border-gray-600 bg-gray-900 text-white rounded px-3 py-2">{{ old('bio_en') }}</textarea>
+                    <textarea id="speaker-bio-en" name="bio_en" rows="3" maxlength="2000" class="w-full border border-gray-600 bg-gray-900 text-white rounded px-3 py-2">{{ old('bio_en') }}</textarea>
                     @error('bio_en') <p class="text-red-400 text-sm mt-1">{{ $message }}</p> @enderror
                 </div>
 
                 <div>
                     <label for="speaker-bio-ar" class="block text-sm text-gray-300 mb-1">{{ __('Bio (Arabic)') }}</label>
-                    <textarea id="speaker-bio-ar" name="bio_ar" dir="rtl" rows="3" class="w-full border border-gray-600 bg-gray-900 text-white rounded px-3 py-2">{{ old('bio_ar') }}</textarea>
+                    <textarea id="speaker-bio-ar" name="bio_ar" dir="rtl" rows="3" maxlength="2000" class="w-full border border-gray-600 bg-gray-900 text-white rounded px-3 py-2">{{ old('bio_ar') }}</textarea>
                     @error('bio_ar') <p class="text-red-400 text-sm mt-1">{{ $message }}</p> @enderror
                 </div>
 

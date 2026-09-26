@@ -6,9 +6,11 @@ namespace Tests\Feature\Admin;
 
 use App\Enums\SpeakerRequestStatus;
 use App\Models\Event;
+use App\Models\Speaker;
 use App\Models\SpeakerRequest;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 
 class SpeakerRequestQueueTest extends TestCase
@@ -52,6 +54,8 @@ class SpeakerRequestQueueTest extends TestCase
 
     public function test_approve_moves_request_to_approved_and_creates_a_speaker(): void
     {
+        Storage::fake('public');
+        Storage::disk('public')->put('speaker-requests/photo.png', 'image-bytes');
         $admin = User::factory()->create();
         $event = Event::factory()->create();
         $speakerRequest = SpeakerRequest::factory()->for($event)->create([
@@ -74,8 +78,13 @@ class SpeakerRequestQueueTest extends TestCase
             'name_en' => 'Jane Creator',
             'name_ar' => 'جين',
             'title_en' => 'Product Designer',
-            'photo_path' => 'speaker-requests/photo.png',
         ]);
+
+        // The speaker gets its own copy, so deleting it leaves the request's file alone.
+        $copy = Speaker::query()->sole()->photo_path;
+        $this->assertNotSame('speaker-requests/photo.png', $copy);
+        $this->assertStringStartsWith('speakers/', $copy);
+        Storage::disk('public')->assertExists([$copy, 'speaker-requests/photo.png']);
     }
 
     public function test_reject_moves_request_to_rejected_and_creates_no_speaker(): void

@@ -6,6 +6,7 @@ namespace App\Http\Controllers\Concerns;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 trait HandlesMediaUploads
 {
@@ -34,6 +35,31 @@ trait HandlesMediaUploads
         }
 
         Storage::disk('public')->delete($path);
+    }
+
+    /**
+     * Copy a stored file into another directory and return the copy's path, so two records
+     * never share one file and deleting either can't take the other's image with it.
+     *
+     * Absolute URLs are returned untouched; a path whose file is gone returns null.
+     */
+    protected function copyStoredMedia(?string $path, string $directory): ?string
+    {
+        if (blank($path) || str_starts_with($path, 'http://') || str_starts_with($path, 'https://') || str_starts_with($path, '/')) {
+            return $path;
+        }
+
+        $disk = Storage::disk('public');
+
+        if (! $disk->exists($path)) {
+            return null;
+        }
+
+        $extension = pathinfo($path, PATHINFO_EXTENSION);
+        $copy = $directory.'/'.Str::random(40).($extension !== '' ? '.'.$extension : '');
+        $disk->copy($path, $copy);
+
+        return $copy;
     }
 
     /**

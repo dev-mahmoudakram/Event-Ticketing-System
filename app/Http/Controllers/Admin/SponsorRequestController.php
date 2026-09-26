@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Admin;
 
 use App\Enums\SponsorRequestStatus;
+use App\Http\Controllers\Concerns\HandlesMediaUploads;
 use App\Http\Controllers\Controller;
 use App\Models\Event;
 use App\Models\SponsorRequest;
@@ -18,6 +19,8 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class SponsorRequestController extends Controller
 {
+    use HandlesMediaUploads;
+
     public function index(Event $event, Request $request): View
     {
         $status = $request->query('status', SponsorRequestStatus::Pending->value);
@@ -64,7 +67,7 @@ class SponsorRequestController extends Controller
                 $event->sponsors()->create([
                     'name_ar' => $locked->name_ar,
                     'name_en' => $locked->name_en,
-                    'logo_path' => $locked->logo_path,
+                    'logo_path' => $this->copyStoredMedia($locked->logo_path, 'sponsors'),
                     'sponsor_tier_id' => $validated['sponsor_tier_id'],
                     'website_url' => $locked->website_url,
                     'sort_order' => $event->sponsors()->max('sort_order') + 1,

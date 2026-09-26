@@ -6,10 +6,12 @@ namespace Tests\Feature\Admin;
 
 use App\Enums\SponsorRequestStatus;
 use App\Models\Event;
+use App\Models\Sponsor;
 use App\Models\SponsorRequest;
 use App\Models\SponsorTier;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 
 class SponsorRequestQueueTest extends TestCase
@@ -53,6 +55,8 @@ class SponsorRequestQueueTest extends TestCase
 
     public function test_approve_moves_request_to_approved_and_creates_a_sponsor(): void
     {
+        Storage::fake('public');
+        Storage::disk('public')->put('sponsor-requests/logo.png', 'image-bytes');
         $admin = User::factory()->create();
         $event = Event::factory()->create();
         $tier = SponsorTier::factory()->for($event)->create(['name_en' => 'Gold']);
@@ -75,10 +79,15 @@ class SponsorRequestQueueTest extends TestCase
             'event_id' => $event->id,
             'name_en' => 'Acme Interiors',
             'name_ar' => 'أكمي',
-            'logo_path' => 'sponsor-requests/logo.png',
             'sponsor_tier_id' => $tier->id,
             'website_url' => 'https://acme.example.com',
         ]);
+
+        // The sponsor gets its own copy, so deleting it leaves the request's file alone.
+        $copy = Sponsor::query()->sole()->logo_path;
+        $this->assertNotSame('sponsor-requests/logo.png', $copy);
+        $this->assertStringStartsWith('sponsors/', $copy);
+        Storage::disk('public')->assertExists([$copy, 'sponsor-requests/logo.png']);
     }
 
     public function test_approve_without_a_tier_is_rejected(): void
