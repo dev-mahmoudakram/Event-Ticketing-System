@@ -808,5 +808,20 @@
     "followers": "followers",
     "Enter a number like 30000, 30k or 1.2m.": "Enter a number like 30000, 30k or 1.2m.",
     "e.g. 30k": "e.g. 30k",
-    ":count followers": ":count followers"
+    ":count followers": ":count followers",
+    "Landing page": "Landing page",
+    "Agenda and workshops": "Agenda and workshops",
+    "Speaker requests": "Speaker requests",
+    "Sponsor requests": "Sponsor requests",
+    "Ticket setup": "Ticket setup",
+    "Ticket requests": "Ticket requests",
+    "Discount coupons": "Discount coupons",
+    "Event reports": "Event reports",
+    "Inbox": "Inbox",
+    "Hub site": "Hub site",
+    "Overview": "Overview",
+    "Event setup": "Event setup",
+    "Speakers and sponsors": "Speakers and sponsors",
+    "Tickets and sales": "Tickets and sales",
+    "Event day": "Event day"
 }
