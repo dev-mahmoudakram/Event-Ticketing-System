@@ -8,6 +8,7 @@ use App\Enums\AgendaItemType;
 use App\Models\Event;
 use App\Support\SiteContentRegistry;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\File;
 use Tests\TestCase;
 
 class HubTranslationCoverageTest extends TestCase
@@ -57,6 +58,37 @@ class HubTranslationCoverageTest extends TestCase
         }
 
         $this->assertSame([], $untranslated, 'These landing page defaults would render in English on the Arabic page: '.implode(', ', $untranslated));
+    }
+
+    /**
+     * Sweeps every literal __('...') key in the views and app code — public pages, admin,
+     * check-in and emails alike. Presence is what's checked: a few strings (sample email
+     * addresses, the brand name) are rightly the same in both languages.
+     */
+    public function test_every_literal_translation_key_exists_in_arabic(): void
+    {
+        $arabic = $this->arabicStrings();
+        $missing = [];
+
+        $files = [...File::allFiles(resource_path('views')), ...File::allFiles(app_path())];
+
+        foreach ($files as $file) {
+            preg_match_all('/(?:__|@lang|trans)\(\s*(\'(?:\\\\.|[^\'\\\\])*\'|"(?:\\\\.|[^"\\\\])*")/', $file->getContents(), $matches);
+
+            foreach ($matches[1] as $literal) {
+                $key = stripcslashes(substr($literal, 1, -1));
+
+                if (preg_match('/^[a-z_]+\.[a-z0-9_.]+$/', $key) === 1) {
+                    continue;
+                }
+
+                if (! array_key_exists($key, $arabic)) {
+                    $missing[$key] = $file->getRelativePathname();
+                }
+            }
+        }
+
+        $this->assertSame([], $missing, 'These strings have no Arabic translation: '.json_encode($missing, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
     }
 
     public function test_event_dates_are_written_in_the_reading_language(): void
