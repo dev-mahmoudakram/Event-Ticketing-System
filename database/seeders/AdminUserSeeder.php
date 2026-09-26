@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Database\Seeders;
 
+use App\Models\Role;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
@@ -38,6 +39,7 @@ class AdminUserSeeder extends Seeder
                 'name' => config('admin.seed_name'),
                 'password' => Hash::make($password),
                 'email_verified_at' => now(),
+                'role_id' => Role::system()->id,
             ],
         );
 

@@ -17,7 +17,7 @@
         </div>
     @endif
 
-    <p class="mb-5 text-sm text-hub-dark/60">{{ __('Admins can use every page. Check-in staff can only open the registration desk to scan tickets.') }}</p>
+    <p class="mb-5 text-sm text-hub-dark/60">{{ __('What each person can open depends on their role. Admins can use every page, including Staff and Roles.') }}</p>
 
     <x-admin.table>
         <thead>
@@ -28,7 +28,7 @@
                 <tr>
                     <td>{{ $member->name }}@if($member->is(auth()->user())) <span class="text-hub-dark/50">({{ __('you') }})</span>@endif</td>
                     <td>{{ $member->email }}</td>
-                    <td>{{ $member->role->label() }}</td>
+                    <td>{{ $member->role?->name }}</td>
                     <td class="text-end">
                         <a href="{{ route('admin.staff.edit', $member) }}" class="text-hub-purple hover:underline">{{ __('Edit') }}</a>
                         @unless($member->is(auth()->user()))

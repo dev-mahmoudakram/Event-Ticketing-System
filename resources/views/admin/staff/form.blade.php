@@ -10,9 +10,10 @@
         <x-admin.field name="name" label="{{ __('Name') }}" :value="old('name', $user->name)" required />
         <x-admin.field type="email" name="email" label="{{ __('Email') }}" :value="old('email', $user->email)" required />
 
-        <x-admin.field type="select" name="role" label="{{ __('Role') }}" required>
-            @foreach(\App\Enums\UserRole::cases() as $role)
-                <option value="{{ $role->value }}" @selected(old('role', $user->role?->value) === $role->value)>{{ $role->label() }}</option>
+        <x-admin.field type="select" name="role_id" label="{{ __('Role') }}" required>
+            <option value="">{{ __('Choose a role') }}</option>
+            @foreach($roles as $role)
+                <option value="{{ $role->id }}" @selected((string) old('role_id', $user->role_id) === (string) $role->id)>{{ $role->name }}</option>
             @endforeach
         </x-admin.field>
 

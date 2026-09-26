@@ -775,7 +775,6 @@
     "Too many attempts. Please wait a minute and try again.": "Too many attempts. Please wait a minute and try again.",
     "This email has already sent the maximum number of ticket requests today. Please try again tomorrow.": "This email has already sent the maximum number of ticket requests today. Please try again tomorrow.",
     "Admin": "Admin",
-    "Check-in staff": "Check-in staff",
     "Staff": "Staff",
     "Role": "Role",
     "you": "you",
@@ -788,7 +787,6 @@
     "You can't remove your own account.": "You can't remove your own account.",
     "You can't remove your own admin access.": "You can't remove your own admin access.",
     "At least one admin is required.": "At least one admin is required.",
-    "Admins can use every page. Check-in staff can only open the registration desk to scan tickets.": "Admins can use every page. Check-in staff can only open the registration desk to scan tickets.",
     "Confirm password": "Confirm password",
     "New password (leave blank to keep the current one)": "New password (leave blank to keep the current one)",
     "Choose the event you are checking people in for.": "Choose the event you are checking people in for.",
@@ -823,5 +821,7 @@
     "Event setup": "Event setup",
     "Speakers and sponsors": "Speakers and sponsors",
     "Tickets and sales": "Tickets and sales",
-    "Event day": "Event day"
+    "Event day": "Event day",
+    "Choose a role": "Choose a role",
+    "What each person can open depends on their role. Admins can use every page, including Staff and Roles.": "What each person can open depends on their role. Admins can use every page, including Staff and Roles."
 }

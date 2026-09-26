@@ -775,7 +775,6 @@
     "Too many attempts. Please wait a minute and try again.": "محاولات كثيرة جدًا. يرجى الانتظار دقيقة ثم المحاولة مرة أخرى.",
     "This email has already sent the maximum number of ticket requests today. Please try again tomorrow.": "أرسل هذا البريد الإلكتروني الحد الأقصى لطلبات التذاكر اليوم. يرجى المحاولة مرة أخرى غدًا.",
     "Admin": "مسؤول",
-    "Check-in staff": "فريق التسجيل",
     "Staff": "الفريق",
     "Role": "الدور",
     "you": "أنت",
@@ -788,7 +787,6 @@
     "You can't remove your own account.": "لا يمكنك حذف حسابك.",
     "You can't remove your own admin access.": "لا يمكنك إزالة صلاحية المسؤول عن نفسك.",
     "At least one admin is required.": "يجب أن يبقى مسؤول واحد على الأقل.",
-    "Admins can use every page. Check-in staff can only open the registration desk to scan tickets.": "يمكن للمسؤولين استخدام كل الصفحات. أما فريق التسجيل فيمكنه فقط فتح مكتب التسجيل لمسح التذاكر.",
     "Confirm password": "تأكيد كلمة المرور",
     "New password (leave blank to keep the current one)": "كلمة مرور جديدة (اتركها فارغة للإبقاء على الحالية)",
     "Choose the event you are checking people in for.": "اختر الفعالية التي تسجّل الحضور لها.",
@@ -868,5 +866,7 @@
     "Event setup": "إعداد الفعالية",
     "Speakers and sponsors": "المتحدثون والرعاة",
     "Tickets and sales": "التذاكر والمبيعات",
-    "Event day": "يوم الفعالية"
+    "Event day": "يوم الفعالية",
+    "Choose a role": "اختر دورًا",
+    "What each person can open depends on their role. Admins can use every page, including Staff and Roles.": "ما يمكن لكل شخص فتحه يعتمد على دوره. يمكن للمسؤولين استخدام كل الصفحات، بما فيها الفريق والأدوار."
 }

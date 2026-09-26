@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Requests\Admin;
 
-use App\Enums\UserRole;
+use App\Models\Role;
 use App\Models\User;
 use Closure;
 use Illuminate\Foundation\Http\FormRequest;
@@ -26,11 +26,14 @@ class StaffRequest extends FormRequest
         return [
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'email:rfc', 'max:255', Rule::unique('users', 'email')->ignore($staff?->id)],
-            'role' => [
+            'role_id' => [
                 'required',
-                Rule::enum(UserRole::class),
+                'integer',
+                Rule::exists('roles', 'id'),
                 function (string $attribute, mixed $value, Closure $fail) use ($staff): void {
-                    if ($staff === null || $value === UserRole::Admin->value || ! $staff->isAdmin()) {
+                    $newRole = Role::find($value);
+
+                    if ($staff === null || $newRole === null || $newRole->is_system || ! $staff->isAdmin()) {
                         return;
                     }
 
@@ -38,12 +41,17 @@ class StaffRequest extends FormRequest
                     // it from the last admin would leave nobody able to manage the site.
                     if ($staff->is($this->user())) {
                         $fail(__('You can\'t remove your own admin access.'));
-                    } elseif (User::where('role', UserRole::Admin)->count() <= 1) {
+                    } elseif (User::admins()->count() <= 1) {
                         $fail(__('At least one admin is required.'));
                     }
                 },
             ],
             'password' => [$staff === null ? 'required' : 'nullable', 'confirmed', Password::min(8)],
         ];
+    }
+
+    public function attributes(): array
+    {
+        return ['role_id' => __('Role')];
     }
 }

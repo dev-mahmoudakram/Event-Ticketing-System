@@ -4,10 +4,11 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Admin;
 
-use App\Enums\UserRole;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\StaffRequest;
+use App\Models\Role;
 use App\Models\User;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -16,12 +17,14 @@ class StaffController extends Controller
 {
     public function index(): View
     {
-        return view('admin.staff.index', ['staff' => User::orderBy('role')->orderBy('name')->get()]);
+        return view('admin.staff.index', [
+            'staff' => User::with('role')->orderBy('role_id')->orderBy('name')->get(),
+        ]);
     }
 
     public function create(): View
     {
-        return view('admin.staff.form', ['user' => new User(['role' => UserRole::CheckIn])]);
+        return view('admin.staff.form', ['user' => new User, 'roles' => $this->roles()]);
     }
 
     public function store(StaffRequest $request): RedirectResponse
@@ -33,7 +36,7 @@ class StaffController extends Controller
 
     public function edit(User $user): View
     {
-        return view('admin.staff.form', ['user' => $user]);
+        return view('admin.staff.form', ['user' => $user, 'roles' => $this->roles()]);
     }
 
     public function update(StaffRequest $request, User $user): RedirectResponse
@@ -56,12 +59,22 @@ class StaffController extends Controller
             return redirect()->route('admin.staff.index')->with('error', __('You can\'t remove your own account.'));
         }
 
-        if ($user->isAdmin() && User::where('role', UserRole::Admin)->count() <= 1) {
+        if ($user->isAdmin() && User::admins()->count() <= 1) {
             return redirect()->route('admin.staff.index')->with('error', __('At least one admin is required.'));
         }
 
         $user->delete();
 
         return redirect()->route('admin.staff.index')->with('success', __('Staff member removed.'));
+    }
+
+    /**
+     * The Admin role first, then the rest by name.
+     *
+     * @return Collection<int, Role>
+     */
+    private function roles(): Collection
+    {
+        return Role::orderByDesc('is_system')->orderBy('name')->get();
     }
 }

@@ -2,9 +2,11 @@
 
 namespace App\Models;
 
-use App\Enums\UserRole;
+use App\Enums\Permission;
 use Database\Factories\UserFactory;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
@@ -22,7 +24,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
-        'role',
+        'role_id',
     ];
 
     /**
@@ -45,12 +47,33 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
-            'role' => UserRole::class,
         ];
     }
 
+    /** @return BelongsTo<Role, $this> */
+    public function role(): BelongsTo
+    {
+        return $this->belongsTo(Role::class);
+    }
+
+    public function hasPermission(Permission $permission): bool
+    {
+        return $this->role?->grants($permission) ?? false;
+    }
+
+    /**
+     * Holds the built-in Admin role: every page, plus Staff and Roles.
+     */
     public function isAdmin(): bool
     {
-        return $this->role === UserRole::Admin;
+        return (bool) $this->role?->is_system;
+    }
+
+    /**
+     * @param  Builder<User>  $query
+     */
+    public function scopeAdmins(Builder $query): void
+    {
+        $query->whereHas('role', fn (Builder $role) => $role->where('is_system', true));
     }
 }
