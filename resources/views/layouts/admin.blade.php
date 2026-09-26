@@ -12,7 +12,7 @@
     <meta name="robots" content="noindex, nofollow">
     @vite(['resources/css/app.css', 'resources/scss/app.scss', 'resources/js/app.js'])
 </head>
-<body class="adm-body min-h-screen" x-data="{ menu: false }">
+<body class="adm-body min-h-screen" x-data="{ menu: false }" data-confirm-yes="{{ __('Confirm') }}" data-confirm-no="{{ __('Cancel') }}" data-confirm-delete="{{ __('Delete') }}">
     {{-- The sidebar slides in on small screens and is simply always there on large ones. --}}
     <div
         x-show="menu"

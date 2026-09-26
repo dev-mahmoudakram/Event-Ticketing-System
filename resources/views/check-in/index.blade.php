@@ -31,18 +31,19 @@
 
                 <div class="flex flex-wrap items-center gap-3">
                     {{-- Only worth showing once there is a choice to make. --}}
-                    <select
-                        class="adm-input py-2 text-sm"
-                        x-show="cameras.length > 1"
-                        x-cloak
-                        x-model="cameraId"
-                        @change="useCamera($event.target.value)"
-                        aria-label="{{ __('Camera') }}"
-                    >
-                        <template x-for="camera in cameras" :key="camera.id">
-                            <option :value="camera.id" x-text="camera.label"></option>
-                        </template>
-                    </select>
+                    <div class="min-w-48" x-show="cameras.length > 1" x-cloak>
+                        <select
+                            class="adm-input py-2 text-sm"
+                            data-nice-select
+                            x-model="cameraId"
+                            @change="useCamera($event.target.value)"
+                            aria-label="{{ __('Camera') }}"
+                        >
+                            <template x-for="camera in cameras" :key="camera.id">
+                                <option :value="camera.id" x-text="camera.label"></option>
+                            </template>
+                        </select>
+                    </div>
 
                     <button type="button" class="adm-btn adm-btn-primary" @click="toggle()" x-text="running ? labels.stop : labels.start"></button>
                 </div>

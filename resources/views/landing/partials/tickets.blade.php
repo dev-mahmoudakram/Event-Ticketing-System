@@ -30,7 +30,9 @@
             $activeTicketTypes = $event->ticketTypes->where('is_active', true);
         @endphp
 
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 items-start">
+        {{-- Each card spans six shared rows (name, price, description, button, workshops, features)
+             through subgrid, so every card is as tall as the tallest and their buttons line up. --}}
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
             @foreach($activeTicketTypes as $ticketType)
                 @php
                     $slotCount = $ticketType->workshop_slot_count;
@@ -42,8 +44,8 @@
                     // a ticket table should not editorialize about which tier is worth more.
                     $isPopular = $ticketType->is_popular;
                 @endphp
-                <div data-reveal data-reveal-delay="{{ min($loop->iteration, 5) }}" class="{{ $isPopular ? 'md:-mt-4' : '' }}">
-                    <div class="h-full rounded-2xl py-9 px-[30px] flex flex-col relative transition-transform duration-300 hover:-translate-y-1 {{ $isPopular ? 'bg-gradient-to-b from-ccs-coral/[0.12] to-white/[0.04] border-2 border-ccs-coral shadow-[0_0_40px_-12px_rgba(255,126,113,0.5)] md:scale-105' : 'bg-white/[0.03] border border-white/10' }}">
+                <div data-reveal data-reveal-delay="{{ min($loop->iteration, 5) }}" class="md:grid md:grid-rows-subgrid md:row-span-6 md:gap-y-0 {{ $isPopular ? 'md:-mt-4' : '' }}">
+                    <div class="h-full rounded-2xl py-9 px-[30px] flex flex-col md:grid md:grid-rows-subgrid md:row-span-6 md:gap-y-0 relative transition-transform duration-300 hover:-translate-y-1 {{ $isPopular ? 'bg-gradient-to-b from-ccs-coral/[0.12] to-white/[0.04] border-2 border-ccs-coral shadow-[0_0_40px_-12px_rgba(255,126,113,0.5)] md:scale-105' : 'bg-white/[0.03] border border-white/10' }}">
                         @if($isPopular)
                             <div class="absolute top-0 inset-x-0 -translate-y-1/2 flex justify-center">
                                 <span class="text-[11px] font-extrabold uppercase tracking-[0.12em] bg-ccs-coral text-ccs-red px-4 py-1.5 rounded-full whitespace-nowrap">{{ $ticketType->popularLabel() }}</span>
@@ -60,28 +62,24 @@
                             <span class="text-sm font-bold text-gray-500 uppercase tracking-wide">{{ $ticketType->currency }}</span>
                         </div>
 
-                        @if($description)
-                            {{-- Sanitized on save (SanitizedRichText cast on TicketType) —
-                                 safe to render unescaped. --}}
-                            <div class="ccs-richtext text-sm text-gray-400 leading-relaxed mb-6">{!! $description !!}</div>
-                        @endif
+                        {{-- Always rendered, even empty, so the card keeps its six rows. Sanitized on
+                             save (SanitizedRichText cast on TicketType) — safe to render unescaped. --}}
+                        <div class="ccs-richtext text-sm text-gray-400 leading-relaxed {{ $description ? 'mb-6' : '' }}">{!! $description !!}</div>
 
-                        <button type="button" @click="$store.ticketRequest.show('{{ $ticketType->id }}')" class="text-center p-[14px] rounded-lg text-sm font-bold transition-transform duration-200 hover:scale-[1.03] mb-7 {{ $isPopular ? 'bg-ccs-coral text-ccs-red' : 'ccs-btn-red' }}">
+                        <button type="button" @click="$store.ticketRequest.show('{{ $ticketType->id }}')" class="self-start w-full text-center p-[14px] rounded-lg text-sm font-bold transition-transform duration-200 hover:scale-[1.03] mb-7 {{ $isPopular ? 'bg-ccs-coral text-ccs-red' : 'ccs-btn-red' }}">
                             {{ __('Request This Ticket') }}
                         </button>
 
-                        <div class="text-xs font-bold uppercase tracking-[0.08em] text-ccs-gold mb-4">{{ $slotLabel }}</div>
+                        <div class="self-start text-xs font-bold uppercase tracking-[0.08em] text-ccs-gold mb-4">{{ $slotLabel }}</div>
 
-                        @if($ticketType->features->isNotEmpty())
-                            <div class="flex flex-col gap-3.5">
-                                @foreach($ticketType->features as $feature)
-                                    <div class="flex gap-2.5 items-start text-sm text-gray-300">
-                                        <x-bi-check-circle-fill class="shrink-0 mt-0.5 text-[15px] text-ccs-teal-light" />
-                                        <span>{{ app()->getLocale() === 'ar' ? $feature->text_ar : $feature->text_en }}</span>
-                                    </div>
-                                @endforeach
-                            </div>
-                        @endif
+                        <div class="flex flex-col gap-3.5 self-start">
+                            @foreach($ticketType->features as $feature)
+                                <div class="flex gap-2.5 items-start text-sm text-gray-300">
+                                    <x-bi-check-circle-fill class="shrink-0 mt-0.5 text-[15px] text-ccs-teal-light" />
+                                    <span>{{ app()->getLocale() === 'ar' ? $feature->text_ar : $feature->text_en }}</span>
+                                </div>
+                            @endforeach
+                        </div>
                     </div>
                 </div>
             @endforeach

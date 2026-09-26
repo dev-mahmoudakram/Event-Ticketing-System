@@ -6,6 +6,7 @@ import initCharts from './charts';
 import initRichTextEditors from './richtext-editor';
 import initSortableLists from './sortable';
 import initInlineActions from './inline-actions';
+import initNiceSelects from './nice-select';
 import unsavedGuard from './unsaved-guard';
 import intlTelInput from 'intl-tel-input/intlTelInputWithUtils';
 import 'intl-tel-input/styles';
@@ -57,12 +58,22 @@ if (phoneInput) {
 
 function filterInputCharacters(inputEl, disallowedPattern) {
     inputEl.addEventListener('input', () => {
+        const cleaned = inputEl.value.replace(disallowedPattern, '');
+
+        if (cleaned === inputEl.value) {
+            return;
+        }
+
+        // Email inputs report no cursor position and refuse setSelectionRange, so the cursor
+        // is only put back where the browser exposes one.
         const cursorPos = inputEl.selectionStart;
-        const originalLength = inputEl.value.length;
-        inputEl.value = inputEl.value.replace(disallowedPattern, '');
-        const removed = originalLength - inputEl.value.length;
-        const newCursorPos = Math.max(0, cursorPos - removed);
-        inputEl.setSelectionRange(newCursorPos, newCursorPos);
+        const removed = inputEl.value.length - cleaned.length;
+        inputEl.value = cleaned;
+
+        if (cursorPos !== null) {
+            const newCursorPos = Math.max(0, cursorPos - removed);
+            inputEl.setSelectionRange(newCursorPos, newCursorPos);
+        }
     });
 }
 
@@ -114,6 +125,14 @@ async function announceTicketRequested(form, { message, reference }) {
     });
 }
 
+document.querySelectorAll('form.ccs-form:not(#ticket-request-form)').forEach((form) => {
+    form.addEventListener('submit', () => {
+        const submitButton = form.querySelector('.ccs-form-submit');
+        submitButton?.classList.add('is-loading');
+        submitButton?.setAttribute('aria-busy', 'true');
+    });
+});
+
 const ticketRequestForm = document.getElementById('ticket-request-form');
 if (ticketRequestForm) {
     ticketRequestForm.addEventListener('submit', async (event) => {
@@ -121,20 +140,21 @@ if (ticketRequestForm) {
 
         const feedback = document.getElementById('ticket-request-feedback');
         const submitButton = ticketRequestForm.querySelector('button[type="submit"]');
-        const originalButtonText = submitButton.textContent;
         const genericError = ticketRequestForm.dataset.genericError;
 
         ticketRequestForm.querySelectorAll('[id^="error-"]').forEach((el) => {
             el.textContent = '';
             el.classList.add('hidden');
         });
+        ticketRequestForm.querySelectorAll('[aria-invalid]').forEach((el) => el.removeAttribute('aria-invalid'));
         if (feedback) {
             feedback.textContent = '';
             feedback.classList.add('hidden');
         }
 
         submitButton.disabled = true;
-        submitButton.textContent = '...';
+        submitButton.classList.add('is-loading');
+        submitButton.setAttribute('aria-busy', 'true');
 
         try {
             const response = await fetch(ticketRequestForm.action, {
@@ -146,13 +166,17 @@ if (ticketRequestForm) {
             const data = await response.json().catch(() => ({}));
 
             if (response.status === 422) {
+                let firstError = null;
                 Object.entries(data.errors ?? {}).forEach(([field, messages]) => {
                     const errorEl = document.getElementById('error-' + field);
                     if (errorEl) {
                         errorEl.textContent = messages[0];
                         errorEl.classList.remove('hidden');
+                        firstError ??= errorEl;
                     }
+                    ticketRequestForm.querySelector(`[name="${CSS.escape(field)}"]:not([type="hidden"])`)?.setAttribute('aria-invalid', 'true');
                 });
+                firstError?.scrollIntoView({ block: 'center', behavior: 'smooth' });
             } else if (response.ok) {
                 ticketRequestForm.reset();
                 await announceTicketRequested(ticketRequestForm, { message: data.message || '', reference: data.reference });
@@ -169,7 +193,8 @@ if (ticketRequestForm) {
             }
         } finally {
             submitButton.disabled = false;
-            submitButton.textContent = originalButtonText;
+            submitButton.classList.remove('is-loading');
+            submitButton.removeAttribute('aria-busy');
         }
     });
 }
@@ -195,3 +220,4 @@ initCharts();
 initRichTextEditors();
 initSortableLists();
 initInlineActions();
+initNiceSelects();

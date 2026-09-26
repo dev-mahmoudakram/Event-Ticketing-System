@@ -31,7 +31,7 @@
                 x-transition:leave-end="opacity-0"
             >
                 <div class="flex items-center justify-between mb-6">
-                    <h2 class="font-display text-xl font-bold">{{ __('Request Your Ticket') }}</h2>
+                    <h2 class="font-display text-2xl font-extrabold">{{ __('Request Your Ticket') }}</h2>
                     <button type="button" @click="$store.ticketRequest.open = false" class="text-gray-400 hover:text-white text-2xl leading-none transition-colors" aria-label="{{ __('Close') }}">&times;</button>
                 </div>
 
@@ -46,7 +46,7 @@
                     method="POST"
                     action="{{ route('ticket-requests.store', $event) }}"
                     enctype="multipart/form-data"
-                    class="flex flex-col gap-4"
+                    class="ccs-form"
                     data-generic-error="{{ __('Something went wrong. Please try again.') }}"
                     data-success-title="{{ __('Ticket requested') }}"
                     data-success-reference-label="{{ __('Your reference number') }}"
@@ -57,7 +57,7 @@
                     @csrf
 
                     <div>
-                        <label for="ticket_type_id" class="block text-sm text-gray-300 mb-1">{{ __('Ticket Type') }}</label>
+                        <label for="ticket_type_id" class="ccs-form-label">{{ __('Ticket Type') }} <span class="ccs-form-required" aria-hidden="true">*</span></label>
                         <x-nice-select
                             id="ticket_type_id"
                             name="ticket_type_id"
@@ -67,114 +67,107 @@
                                 'label' => (app()->getLocale() === 'ar' ? $ticketType->name_ar : $ticketType->name_en).' — '.$ticketType->price.' '.$ticketType->currency,
                             ])->values()->all()"
                         />
-                        <p id="error-ticket_type_id" class="text-red-400 text-sm mt-1 {{ $errors->has('ticket_type_id') ? '' : 'hidden' }}">{{ $errors->first('ticket_type_id') }}</p>
+                        <p id="error-ticket_type_id" class="ccs-form-error {{ $errors->has('ticket_type_id') ? '' : 'hidden' }}">{{ $errors->first('ticket_type_id') }}</p>
                     </div>
 
                     <div>
-                        <label for="name" class="block text-sm text-gray-300 mb-1">{{ __('Name') }}</label>
-                        <input id="name" type="text" name="name" value="{{ old('name') }}" placeholder="{{ __('e.g. Ahmed Hassan') }}" class="w-full border border-gray-600 bg-gray-900 text-white rounded px-3 py-2">
-                        <p id="error-name" class="text-red-400 text-sm mt-1 {{ $errors->has('name') ? '' : 'hidden' }}">{{ $errors->first('name') }}</p>
+                        <label for="name" class="ccs-form-label">{{ __('Name') }} <span class="ccs-form-required" aria-hidden="true">*</span></label>
+                        <input id="name" type="text" name="name" value="{{ old('name') }}" placeholder="{{ __('e.g. Ahmed Hassan') }}" autocomplete="name" aria-required="true" class="ccs-form-input">
+                        <p id="error-name" class="ccs-form-error {{ $errors->has('name') ? '' : 'hidden' }}">{{ $errors->first('name') }}</p>
                     </div>
 
-                    <div>
-                        <label for="email" class="block text-sm text-gray-300 mb-1">{{ __('Email') }}</label>
-                        <input id="email" type="email" name="email" value="{{ old('email') }}" placeholder="{{ __('name@example.com') }}" class="w-full border border-gray-600 bg-gray-900 text-white rounded px-3 py-2">
-                        <p id="error-email" class="text-red-400 text-sm mt-1 {{ $errors->has('email') ? '' : 'hidden' }}">{{ $errors->first('email') }}</p>
-                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                            <label for="email" class="ccs-form-label">{{ __('Email') }} <span class="ccs-form-required" aria-hidden="true">*</span></label>
+                            <input id="email" type="email" name="email" value="{{ old('email') }}" placeholder="{{ __('name@example.com') }}" autocomplete="email" dir="ltr" aria-required="true" class="ccs-form-input">
+                            <p id="error-email" class="ccs-form-error {{ $errors->has('email') ? '' : 'hidden' }}">{{ $errors->first('email') }}</p>
+                        </div>
 
-                    <div>
-                        <label for="phone" class="block text-sm text-gray-300 mb-1">{{ __('Phone') }}</label>
-                        <input id="phone" type="tel" name="phone" value="{{ old('phone') }}" class="w-full border border-gray-600 bg-gray-900 text-white rounded px-3 py-2">
-                        <p id="error-phone" class="text-red-400 text-sm mt-1 {{ $errors->has('phone') ? '' : 'hidden' }}">{{ $errors->first('phone') }}</p>
+                        <div>
+                            <label for="phone" class="ccs-form-label">{{ __('Phone') }} <span class="ccs-form-required" aria-hidden="true">*</span></label>
+                            <input id="phone" type="tel" name="phone" value="{{ old('phone') }}" autocomplete="tel" aria-required="true" class="ccs-form-input">
+                            <p id="error-phone" class="ccs-form-error {{ $errors->has('phone') ? '' : 'hidden' }}">{{ $errors->first('phone') }}</p>
+                        </div>
                     </div>
 
                     @if($event->influencerCategories->isNotEmpty())
                         <div x-data="{ influencerCategoryId: '{{ old('influencer_category_id') }}' }">
-                            <label for="influencer_category_id" class="block text-sm text-gray-300 mb-1">
+                            <label for="influencer_category_id" class="ccs-form-label">
                                 {{ __('Influencer Category') }}
-                                @unless($event->require_influencer_category)
-                                    <span class="text-gray-500">({{ __('optional') }})</span>
-                                @endunless
+                                @if($event->require_influencer_category)
+                                    <span class="ccs-form-required" aria-hidden="true">*</span>
+                                @else
+                                    <span class="ccs-form-optional">({{ __('optional') }})</span>
+                                @endif
                             </label>
                             <x-nice-select
                                 id="influencer_category_id"
                                 name="influencer_category_id"
                                 model="influencerCategoryId"
+                                :placeholder="__('Choose a category')"
                                 :options="$event->influencerCategories->map(fn ($category) => [
                                     'value' => (string) $category->id,
                                     'label' => app()->getLocale() === 'ar' ? $category->name_ar : $category->name_en,
                                 ])->push(['value' => 'other', 'label' => __('Other')])->values()->all()"
                             />
-                            <p id="error-influencer_category_id" class="text-red-400 text-sm mt-1 {{ $errors->has('influencer_category_id') ? '' : 'hidden' }}">{{ $errors->first('influencer_category_id') }}</p>
+                            <p id="error-influencer_category_id" class="ccs-form-error {{ $errors->has('influencer_category_id') ? '' : 'hidden' }}">{{ $errors->first('influencer_category_id') }}</p>
 
                             <div x-show="influencerCategoryId === 'other'" x-cloak class="mt-3">
-                                <input type="text" name="influencer_category_other" value="{{ old('influencer_category_other') }}" placeholder="{{ __('Tell us your category') }}" class="w-full border border-gray-600 bg-gray-900 text-white rounded px-3 py-2">
-                                <p id="error-influencer_category_other" class="text-red-400 text-sm mt-1 {{ $errors->has('influencer_category_other') ? '' : 'hidden' }}">{{ $errors->first('influencer_category_other') }}</p>
+                                <input type="text" name="influencer_category_other" value="{{ old('influencer_category_other') }}" placeholder="{{ __('Tell us your category') }}" aria-label="{{ __('Tell us your category') }}" class="ccs-form-input">
+                                <p id="error-influencer_category_other" class="ccs-form-error {{ $errors->has('influencer_category_other') ? '' : 'hidden' }}">{{ $errors->first('influencer_category_other') }}</p>
                             </div>
                         </div>
                     @endif
 
+                    @foreach($event->ticketRequestFields as $field)
+                        @php
+                            $inputKey = 'field_'.$field->id;
+                            $fieldLabel = app()->getLocale() === 'ar' ? $field->label_ar : $field->label_en;
+                        @endphp
+
+                        @if($field->type === \App\Enums\TicketRequestFieldType::Instagram)
+                            <x-social-field platform="instagram" :name="$inputKey" :followers-name="$inputKey.'_followers'" :label="$fieldLabel" :required="$field->is_required" />
+                        @elseif($field->type === \App\Enums\TicketRequestFieldType::SocialLink)
+                            <x-social-field :platform="$field->platform" :name="$inputKey" :followers-name="$inputKey.'_followers'" :label="$fieldLabel" :required="$field->is_required" />
+                        @else
+                            <div>
+                                <label class="ccs-form-label">
+                                    {{ $fieldLabel }}
+                                    @if($field->is_required)<span class="ccs-form-required" aria-hidden="true">*</span>@endif
+                                </label>
+
+                                @if($field->type === \App\Enums\TicketRequestFieldType::Portfolio)
+                                    <div x-data="{ mode: '{{ old($inputKey.'_mode', 'url') }}' }" class="flex flex-col gap-3">
+                                        <div class="flex gap-4 text-sm text-white/80">
+                                            <label class="flex items-center gap-2"><input type="radio" name="{{ $inputKey }}_mode" value="url" x-model="mode" class="accent-ccs-coral"> {{ __('URL') }}</label>
+                                            <label class="flex items-center gap-2"><input type="radio" name="{{ $inputKey }}_mode" value="pdf" x-model="mode" class="accent-ccs-coral"> {{ __('PDF') }}</label>
+                                        </div>
+                                        <input x-show="mode === 'url'" type="url" name="{{ $inputKey }}_url" value="{{ old($inputKey.'_url') }}" placeholder="https://" dir="ltr" aria-label="{{ $fieldLabel }}" class="ccs-form-input">
+                                        <div x-show="mode === 'pdf'" x-cloak>
+                                            <x-file-dropzone :name="$inputKey.'_file'" accept=".pdf" />
+                                        </div>
+                                    </div>
+                                    <p id="error-{{ $inputKey }}_mode" class="ccs-form-error {{ $errors->has($inputKey.'_mode') ? '' : 'hidden' }}">{{ $errors->first($inputKey.'_mode') }}</p>
+                                    <p id="error-{{ $inputKey }}_url" class="ccs-form-error {{ $errors->has($inputKey.'_url') ? '' : 'hidden' }}">{{ $errors->first($inputKey.'_url') }}</p>
+                                    <p id="error-{{ $inputKey }}_file" class="ccs-form-error {{ $errors->has($inputKey.'_file') ? '' : 'hidden' }}">{{ $errors->first($inputKey.'_file') }}</p>
+                                @elseif($field->type === \App\Enums\TicketRequestFieldType::Cv)
+                                    <x-file-dropzone :name="$inputKey" accept=".pdf,.doc,.docx" />
+                                    <p id="error-{{ $inputKey }}" class="ccs-form-error {{ $errors->has($inputKey) ? '' : 'hidden' }}">{{ $errors->first($inputKey) }}</p>
+                                @endif
+                            </div>
+                        @endif
+                    @endforeach
+
                     {{-- Only offered when this event actually runs codes. --}}
                     @if($event->discountCoupons()->where('is_active', true)->exists())
                         <div>
-                            <label for="coupon_code" class="block text-sm text-gray-300 mb-1">{{ __('Discount code') }} <span class="text-gray-500">({{ __('optional') }})</span></label>
-                            <input id="coupon_code" type="text" name="coupon_code" value="{{ old('coupon_code') }}" autocapitalize="characters" placeholder="{{ __('Enter your code') }}" class="w-full border border-gray-600 bg-gray-900 text-white rounded px-3 py-2 uppercase">
-                            <p id="error-coupon_code" class="text-red-400 text-sm mt-1 {{ $errors->has('coupon_code') ? '' : 'hidden' }}">{{ $errors->first('coupon_code') }}</p>
+                            <label for="coupon_code" class="ccs-form-label">{{ __('Discount code') }} <span class="ccs-form-optional">({{ __('optional') }})</span></label>
+                            <input id="coupon_code" type="text" name="coupon_code" value="{{ old('coupon_code') }}" autocapitalize="characters" placeholder="{{ __('Enter your code') }}" dir="ltr" class="ccs-form-input uppercase">
+                            <p id="error-coupon_code" class="ccs-form-error {{ $errors->has('coupon_code') ? '' : 'hidden' }}">{{ $errors->first('coupon_code') }}</p>
                         </div>
                     @endif
 
-                    @foreach($event->ticketRequestFields as $field)
-                        @php $inputKey = 'field_'.$field->id; @endphp
-                        <div>
-                            <label class="block text-sm text-gray-300 mb-1">
-                                {{ app()->getLocale() === 'ar' ? $field->label_ar : $field->label_en }}
-                                @if($field->is_required)<span class="text-red-400">*</span>@endif
-                            </label>
-
-                            @if($field->type === \App\Enums\TicketRequestFieldType::Instagram)
-                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                                    <div>
-                                        <input type="url" name="{{ $inputKey }}" value="{{ old($inputKey) }}" placeholder="https://instagram.com/" class="w-full border border-gray-600 bg-gray-900 text-white rounded px-3 py-2">
-                                        <p id="error-{{ $inputKey }}" class="text-red-400 text-sm mt-1 {{ $errors->has($inputKey) ? '' : 'hidden' }}">{{ $errors->first($inputKey) }}</p>
-                                    </div>
-                                    <div>
-                                        <input type="number" min="0" name="{{ $inputKey }}_followers" value="{{ old($inputKey.'_followers') }}" placeholder="{{ __('Follower count') }}" class="w-full border border-gray-600 bg-gray-900 text-white rounded px-3 py-2">
-                                        <p id="error-{{ $inputKey }}_followers" class="text-red-400 text-sm mt-1 {{ $errors->has($inputKey.'_followers') ? '' : 'hidden' }}">{{ $errors->first($inputKey.'_followers') }}</p>
-                                    </div>
-                                </div>
-                            @elseif($field->type === \App\Enums\TicketRequestFieldType::Portfolio)
-                                <div x-data="{ mode: '{{ old($inputKey.'_mode', 'url') }}' }" class="flex flex-col gap-3">
-                                    <div class="flex gap-4 text-sm">
-                                        <label class="flex items-center gap-2"><input type="radio" name="{{ $inputKey }}_mode" value="url" x-model="mode"> {{ __('URL') }}</label>
-                                        <label class="flex items-center gap-2"><input type="radio" name="{{ $inputKey }}_mode" value="pdf" x-model="mode"> {{ __('PDF') }}</label>
-                                    </div>
-                                    <input x-show="mode === 'url'" type="url" name="{{ $inputKey }}_url" value="{{ old($inputKey.'_url') }}" placeholder="https://" class="w-full border border-gray-600 bg-gray-900 text-white rounded px-3 py-2">
-                                    <div x-show="mode === 'pdf'" x-cloak>
-                                        <x-file-dropzone :name="$inputKey.'_file'" accept=".pdf" />
-                                    </div>
-                                </div>
-                                <p id="error-{{ $inputKey }}_mode" class="text-red-400 text-sm mt-1 {{ $errors->has($inputKey.'_mode') ? '' : 'hidden' }}">{{ $errors->first($inputKey.'_mode') }}</p>
-                                <p id="error-{{ $inputKey }}_url" class="text-red-400 text-sm mt-1 {{ $errors->has($inputKey.'_url') ? '' : 'hidden' }}">{{ $errors->first($inputKey.'_url') }}</p>
-                                <p id="error-{{ $inputKey }}_file" class="text-red-400 text-sm mt-1 {{ $errors->has($inputKey.'_file') ? '' : 'hidden' }}">{{ $errors->first($inputKey.'_file') }}</p>
-                            @elseif($field->type === \App\Enums\TicketRequestFieldType::Cv)
-                                <x-file-dropzone :name="$inputKey" accept=".pdf,.doc,.docx" />
-                                <p id="error-{{ $inputKey }}" class="text-red-400 text-sm mt-1 {{ $errors->has($inputKey) ? '' : 'hidden' }}">{{ $errors->first($inputKey) }}</p>
-                            @elseif($field->type === \App\Enums\TicketRequestFieldType::SocialLink)
-                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                                    <div>
-                                        <input type="url" name="{{ $inputKey }}" value="{{ old($inputKey) }}" placeholder="{{ \App\Support\SocialPlatforms::all()[$field->platform]['placeholder'] ?? 'https://' }}" class="w-full border border-gray-600 bg-gray-900 text-white rounded px-3 py-2">
-                                        <p id="error-{{ $inputKey }}" class="text-red-400 text-sm mt-1 {{ $errors->has($inputKey) ? '' : 'hidden' }}">{{ $errors->first($inputKey) }}</p>
-                                    </div>
-                                    <div>
-                                        <input type="number" min="0" name="{{ $inputKey }}_followers" value="{{ old($inputKey.'_followers') }}" placeholder="{{ __('Follower count') }}" class="w-full border border-gray-600 bg-gray-900 text-white rounded px-3 py-2">
-                                        <p id="error-{{ $inputKey }}_followers" class="text-red-400 text-sm mt-1 {{ $errors->has($inputKey.'_followers') ? '' : 'hidden' }}">{{ $errors->first($inputKey.'_followers') }}</p>
-                                    </div>
-                                </div>
-                            @endif
-                        </div>
-                    @endforeach
-
-                    <button type="submit" class="px-6 py-3 rounded bg-ccs-red hover:bg-ccs-maroon text-white font-bold transition-opacity disabled:opacity-60">{{ __('Submit Request') }}</button>
+                    <button type="submit" class="ccs-form-submit">{{ __('Submit Request') }}</button>
                 </form>
             </div>
         </div>

@@ -1,0 +1,238 @@
+/* ---------------------------------------------------------------------------
+   Public forms on the event pages — the ticket request modal and the invitation form share
+   these, so the two read as one product. Dark ground, coral as the one accent.
+   --------------------------------------------------------------------------- */
+
+.ccs-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.15rem;
+}
+
+.ccs-form-label {
+  display: flex;
+  align-items: baseline;
+  gap: 0.35rem;
+  margin-bottom: 0.45rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: rgb(255 255 255 / 0.82);
+}
+
+.ccs-form-required {
+  color: var(--color-ccs-coral);
+}
+
+.ccs-form-optional {
+  font-weight: 500;
+  color: rgb(255 255 255 / 0.4);
+}
+
+.ccs-form-input {
+  width: 100%;
+  min-height: 3rem;
+  padding: 0.7rem 0.95rem;
+  border: 1px solid rgb(255 255 255 / 0.12);
+  border-radius: 0.8rem;
+  background: rgb(255 255 255 / 0.04);
+  color: #fff;
+  font-size: 0.95rem;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+}
+
+.ccs-form-input::placeholder {
+  color: rgb(255 255 255 / 0.35);
+}
+
+.ccs-form-input:hover {
+  border-color: rgb(255 255 255 / 0.22);
+}
+
+.ccs-form-input:focus,
+.ccs-form-input:focus-within,
+.ccs-select.is-open .ccs-form-input {
+  outline: none;
+  border-color: var(--color-ccs-coral);
+  background: rgb(255 255 255 / 0.06);
+  box-shadow: 0 0 0 3px rgba(255, 126, 113, 0.18);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-ccs-coral) 18%, transparent);
+}
+
+.ccs-form-input[aria-invalid='true'],
+.ccs-form-field.has-error .ccs-form-input {
+  border-color: #ff8a80;
+}
+
+/* Number inputs lose their spinners — a follower count is typed, not nudged. */
+.ccs-form-input[type='number'] {
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+
+.ccs-form-input[type='number']::-webkit-inner-spin-button,
+.ccs-form-input[type='number']::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.ccs-form-error {
+  margin-top: 0.4rem;
+  font-size: 0.82rem;
+  color: #ff9b90;
+}
+
+/* A social profile: the link takes the room, the follower count sits beside it. */
+.ccs-form-social {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 11rem;
+  gap: 0.6rem;
+  align-items: start;
+}
+
+@media (max-width: 30rem) {
+  .ccs-form-social {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.ccs-form-affix {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding-block: 0;
+}
+
+.ccs-form-affix > input {
+  flex: 1;
+  min-width: 0;
+  min-height: 2.9rem;
+  background: transparent;
+  border: 0;
+  outline: none;
+  color: inherit;
+  font: inherit;
+}
+
+.ccs-form-affix > input::placeholder {
+  color: rgb(255 255 255 / 0.35);
+}
+
+.ccs-form-affix-icon {
+  width: 1.1rem;
+  height: 1.1rem;
+  flex-shrink: 0;
+  color: var(--color-ccs-coral);
+}
+
+.ccs-form-affix-text {
+  flex-shrink: 0;
+  font-size: 0.8rem;
+  color: rgb(255 255 255 / 0.45);
+}
+
+/* The submit: the same coral as the featured ticket's button, never a dark block. */
+.ccs-form-submit {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  width: 100%;
+  min-height: 3.25rem;
+  margin-top: 0.35rem;
+  border-radius: 0.8rem;
+  background: var(--color-ccs-coral);
+  color: var(--color-ccs-red);
+  font-weight: 800;
+  font-size: 1rem;
+  transition: transform 0.2s ease, filter 0.2s ease, opacity 0.2s ease;
+}
+
+.ccs-form-submit:hover:not(:disabled) {
+  filter: brightness(1.06);
+  transform: translateY(-1px);
+}
+
+.ccs-form-submit:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 3px;
+}
+
+.ccs-form-submit:disabled {
+  opacity: 0.7;
+  cursor: progress;
+}
+
+.ccs-form-submit.is-loading::before {
+  content: '';
+  width: 1.05rem;
+  height: 1.05rem;
+  border-radius: 9999px;
+  border: 2px solid currentColor;
+  border-inline-end-color: transparent;
+  animation: ccs-form-spin 0.7s linear infinite;
+}
+
+@keyframes ccs-form-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* The public dropdown (resources/views/components/nice-select.blade.php). */
+.ccs-select {
+  position: relative;
+}
+
+.ccs-select-trigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  text-align: start;
+  cursor: pointer;
+}
+
+.ccs-select-trigger .is-placeholder {
+  color: rgb(255 255 255 / 0.35);
+}
+
+.ccs-select-list {
+  position: absolute;
+  z-index: 50;
+  inset-inline: 0;
+  top: calc(100% + 0.35rem);
+  max-height: 15rem;
+  overflow-y: auto;
+  padding: 0.35rem;
+  background: #1d2629;
+  border: 1px solid rgb(255 255 255 / 0.12);
+  border-radius: 0.8rem;
+  box-shadow: 0 20px 40px -20px rgb(0 0 0 / 0.7);
+}
+
+.ccs-select-option {
+  padding: 0.6rem 0.75rem;
+  border-radius: 0.55rem;
+  cursor: pointer;
+}
+
+.ccs-select-option.is-active {
+  background: rgb(255 255 255 / 0.08);
+}
+
+.ccs-select-option[aria-selected='true'] {
+  font-weight: 700;
+  color: var(--color-ccs-coral);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ccs-form-input,
+  .ccs-form-submit {
+    transition: none;
+  }
+
+  .ccs-form-submit.is-loading::before {
+    animation-duration: 1.6s;
+  }
+}

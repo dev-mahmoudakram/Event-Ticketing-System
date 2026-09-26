@@ -1,3 +1,5 @@
+import confirmDialog from './confirm-dialog';
+
 /**
  * Warn before leaving a form with edits that were never saved.
  *
@@ -42,9 +44,15 @@ export default function unsavedGuard(message) {
                     return;
                 }
 
-                if (! window.confirm(this.message)) {
-                    event.preventDefault();
-                }
+                // Held while the dialog is open, then followed only on a yes.
+                event.preventDefault();
+
+                confirmDialog(this.message).then((leave) => {
+                    if (leave) {
+                        this.dirty = false;
+                        window.location.assign(link.href);
+                    }
+                });
             });
         },
 
