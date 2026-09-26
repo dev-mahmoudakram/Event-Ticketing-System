@@ -14,6 +14,7 @@ use App\Models\Invitation;
 use App\Models\InvitationRequest;
 use App\Models\TicketType;
 use App\Models\User;
+use App\Services\EventReport;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Mail;
 use RuntimeException;
@@ -46,6 +47,24 @@ class InvitationRequestQueueTest extends TestCase
         $this->patch($url)->assertRedirect();
         $this->assertDatabaseCount('tickets', 1);
         Mail::assertSentCount(1);
+    }
+
+    public function test_an_invitation_ticket_adds_nothing_to_revenue(): void
+    {
+        Mail::fake();
+        [$event, $invitationRequest] = $this->makeRequest();
+
+        $this->actingAs(User::factory()->create())->patch(route(
+            'admin.events.invitation-requests.update-status', [$event, $invitationRequest, 'approved']
+        ))->assertSessionHas('success');
+
+        $ticket = $invitationRequest->fresh()->ticket;
+        $this->assertSame(0, (int) $ticket->price);
+        $this->assertSame(0, (int) $ticket->discount_amount);
+
+        $revenue = (new EventReport($event->fresh()))->revenue();
+        $this->assertSame(0, $revenue['collected']);
+        $this->assertSame(0, $revenue['discounted']);
     }
 
     public function test_rejection_sends_mail_without_creating_a_ticket(): void

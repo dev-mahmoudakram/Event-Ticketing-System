@@ -63,12 +63,14 @@ class InvitationRequestController extends Controller
                     return true;
                 }
 
-                $invitation = $request->invitation()->with('ticketType')->firstOrFail();
+                $invitation = $request->invitation()->firstOrFail();
                 $ticket = $event->tickets()->create([
                     'ticket_type_id' => $invitation->ticket_type_id,
                     'influencer_category_id' => $request->influencer_category_id,
                     'influencer_category_other' => $request->influencer_category_other,
-                    'price' => $invitation->ticketType->price,
+                    // An invited guest pays nothing, so the ticket is recorded at zero: every
+                    // revenue report sums price over paid tickets.
+                    'price' => 0,
                     'discount_amount' => 0,
                     'name' => $request->name,
                     'email' => $request->email,
