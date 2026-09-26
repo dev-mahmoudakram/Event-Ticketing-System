@@ -85,4 +85,28 @@ class DatabaseSeederTest extends TestCase
             $this->assertStringNotContainsString('fake()', $source, basename($seeder).' calls fake(), which is unavailable without dev dependencies.');
         }
     }
+
+    public function test_production_refuses_to_seed_the_admin_with_the_development_password(): void
+    {
+        $this->app['env'] = 'production';
+
+        try {
+            app(AdminUserSeeder::class)->run();
+            $this->fail('The seeder should refuse the development password in production.');
+        } catch (\RuntimeException $exception) {
+            $this->assertStringContainsString('ADMIN_SEED_PASSWORD', $exception->getMessage());
+        }
+
+        $this->assertDatabaseCount('users', 0);
+    }
+
+    public function test_production_seeds_the_admin_once_a_real_password_is_set(): void
+    {
+        $this->app['env'] = 'production';
+        config(['admin.seed_password' => 'a-real-secret']);
+
+        app(AdminUserSeeder::class)->run();
+
+        $this->assertDatabaseHas('users', ['email' => config('admin.seed_email')]);
+    }
 }
