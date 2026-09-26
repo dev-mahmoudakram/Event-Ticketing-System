@@ -55,7 +55,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', [HomeController::class, 'show'])->name('home');
 Route::get('/events', [EventsController::class, 'index'])->name('events.index');
-Route::post('/contact', [ContactMessageController::class, 'storeGeneral'])->name('contact.store.general');
+Route::post('/contact', [ContactMessageController::class, 'storeGeneral'])->middleware('throttle:light-forms')->name('contact.store.general');
 
 Route::prefix('events/{event}')->middleware(EnsureEventIsPublished::class)->group(function () {
     Route::get('/', [LandingPageController::class, 'show'])->name('landing.show');
@@ -72,13 +72,13 @@ Route::prefix('events/{event}')->middleware(EnsureEventIsPublished::class)->grou
     Route::post('/workshops/leave', [WorkshopBookingController::class, 'forget'])->name('workshops.forget');
 
     Route::get('/workshops/{workshop}', [WorkshopController::class, 'show'])->name('workshops.show');
-    Route::post('/request', [TicketRequestController::class, 'store'])->name('ticket-requests.store');
+    Route::post('/request', [TicketRequestController::class, 'store'])->middleware('throttle:public-forms')->name('ticket-requests.store');
     Route::get('/become-a-sponsor', [SponsorRequestController::class, 'create'])->name('sponsor-requests.create');
-    Route::post('/become-a-sponsor', [SponsorRequestController::class, 'store'])->name('sponsor-requests.store');
+    Route::post('/become-a-sponsor', [SponsorRequestController::class, 'store'])->middleware('throttle:public-forms')->name('sponsor-requests.store');
     Route::get('/become-a-speaker', [SpeakerRequestController::class, 'create'])->name('speaker-requests.create');
-    Route::post('/become-a-speaker', [SpeakerRequestController::class, 'store'])->name('speaker-requests.store');
-    Route::post('/contact', [ContactMessageController::class, 'store'])->name('contact.store');
-    Route::post('/newsletter', [NewsletterSubscriberController::class, 'store'])->name('newsletter.store');
+    Route::post('/become-a-speaker', [SpeakerRequestController::class, 'store'])->middleware('throttle:public-forms')->name('speaker-requests.store');
+    Route::post('/contact', [ContactMessageController::class, 'store'])->middleware('throttle:light-forms')->name('contact.store');
+    Route::post('/newsletter', [NewsletterSubscriberController::class, 'store'])->middleware('throttle:light-forms')->name('newsletter.store');
     Route::get('/invite/{token}', [InvitationController::class, 'show'])->name('invitations.verify');
     Route::post('/invite/{token}', [InvitationController::class, 'verify'])->middleware('throttle:invitation-otp')->name('invitations.verify.attempt');
     Route::get('/invite/{token}/request', [InvitationRequestController::class, 'create'])->name('invitations.create');

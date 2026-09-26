@@ -19,15 +19,31 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\RateLimiter;
+use Illuminate\Support\Str;
+use Illuminate\Validation\ValidationException;
 
 class TicketRequestController extends Controller
 {
+    private const REQUESTS_PER_EMAIL_PER_DAY = 3;
+
     public function __construct(private readonly CouponRedeemer $coupons) {}
 
     public function store(TicketRequestStoreRequest $request, Event $event): RedirectResponse|JsonResponse
     {
         $validated = $request->validated();
         $fields = $event->ticketRequestFields;
+
+        // Every request emails the address typed in, so one address is capped per event per
+        // day: otherwise the form could be used to mail a stranger over and over. Only requests
+        // that go through count, so fixing a typo doesn't use up an attempt.
+        $emailKey = 'ticket-request-email|'.$event->id.'|'.Str::lower(trim($validated['email']));
+
+        if (RateLimiter::tooManyAttempts($emailKey, self::REQUESTS_PER_EMAIL_PER_DAY)) {
+            throw ValidationException::withMessages([
+                'email' => __('This email has already sent the maximum number of ticket requests today. Please try again tomorrow.'),
+            ]);
+        }
 
         $ticket = DB::transaction(function () use ($validated, $event, $fields, $request) {
             // The price is settled here and copied onto the ticket: a coupon that expires, or a
@@ -63,6 +79,8 @@ class TicketRequestController extends Controller
 
             return $ticket;
         });
+
+        RateLimiter::hit($emailKey, 60 * 60 * 24);
 
         try {
             Mail::to($ticket->email)->send(new TicketRequestReceived($ticket));

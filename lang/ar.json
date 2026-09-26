@@ -771,5 +771,7 @@
     "Request rejected successfully.": "تم رفض الطلب بنجاح.",
     "This request has already been reviewed.": "تمت مراجعة هذا الطلب بالفعل.",
     "The request was not changed because it could not be completed.": "لم يتم تغيير الطلب لتعذر إتمام العملية.",
-    "This ticket type already has tickets or invitations, so it can't be deleted. Turn off \"Active\" to stop selling it.": "نوع التذكرة هذا لديه تذاكر أو دعوات بالفعل، لذا لا يمكن حذفه. أوقف خيار \"نشط\" لإيقاف بيعه."
+    "This ticket type already has tickets or invitations, so it can't be deleted. Turn off \"Active\" to stop selling it.": "نوع التذكرة هذا لديه تذاكر أو دعوات بالفعل، لذا لا يمكن حذفه. أوقف خيار \"نشط\" لإيقاف بيعه.",
+    "Too many attempts. Please wait a minute and try again.": "محاولات كثيرة جدًا. يرجى الانتظار دقيقة ثم المحاولة مرة أخرى.",
+    "This email has already sent the maximum number of ticket requests today. Please try again tomorrow.": "أرسل هذا البريد الإلكتروني الحد الأقصى لطلبات التذاكر اليوم. يرجى المحاولة مرة أخرى غدًا."
 }

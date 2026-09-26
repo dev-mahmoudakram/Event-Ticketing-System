@@ -773,5 +773,7 @@
     "Request rejected successfully.": "Request rejected successfully.",
     "This request has already been reviewed.": "This request has already been reviewed.",
     "The request was not changed because it could not be completed.": "The request was not changed because it could not be completed.",
-    "This ticket type already has tickets or invitations, so it can't be deleted. Turn off \"Active\" to stop selling it.": "This ticket type already has tickets or invitations, so it can't be deleted. Turn off \"Active\" to stop selling it."
+    "This ticket type already has tickets or invitations, so it can't be deleted. Turn off \"Active\" to stop selling it.": "This ticket type already has tickets or invitations, so it can't be deleted. Turn off \"Active\" to stop selling it.",
+    "Too many attempts. Please wait a minute and try again.": "Too many attempts. Please wait a minute and try again.",
+    "This email has already sent the maximum number of ticket requests today. Please try again tomorrow.": "This email has already sent the maximum number of ticket requests today. Please try again tomorrow."
 }
