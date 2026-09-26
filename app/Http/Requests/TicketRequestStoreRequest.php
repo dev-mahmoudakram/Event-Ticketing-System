@@ -72,4 +72,29 @@ class TicketRequestStoreRequest extends FormRequest
 
         return $rules;
     }
+
+    /**
+     * Names the admin-defined fields by the label the visitor sees, so an error reads
+     * "The Instagram field is required." rather than "The field 1 field is required."
+     *
+     * @return array<string, string>
+     */
+    public function attributes(): array
+    {
+        /** @var Event $event */
+        $event = $this->route('event');
+        $attributes = [];
+
+        foreach ($event->ticketRequestFields as $field) {
+            $inputKey = 'field_'.$field->id;
+            $label = app()->getLocale() === 'ar' ? $field->label_ar : $field->label_en;
+
+            foreach (['', '_mode', '_url', '_file'] as $suffix) {
+                $attributes[$inputKey.$suffix] = $label;
+            }
+            $attributes[$inputKey.'_followers'] = __('Follower count');
+        }
+
+        return $attributes;
+    }
 }

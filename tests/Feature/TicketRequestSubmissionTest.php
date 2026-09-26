@@ -229,6 +229,34 @@ class TicketRequestSubmissionTest extends TestCase
         $response->assertSessionHasErrors('field_'.$field->id);
     }
 
+    public function test_a_dynamic_field_error_names_the_field_by_its_label(): void
+    {
+        $event = Event::factory()->create(['status' => EventStatus::Published]);
+        $ticketType = TicketType::factory()->for($event)->create();
+        $field = TicketRequestField::factory()->for($event)->create(['type' => 'instagram', 'is_required' => true, 'label_en' => 'Instagram', 'label_ar' => 'إنستغرام']);
+
+        $response = $this->postJson(route('ticket-requests.store', $event).'?lang=en', [
+            'ticket_type_id' => $ticketType->id, 'name' => 'Test', 'email' => 'test@example.com', 'phone' => '+201001234567',
+            'field_'.$field->id.'_followers' => 'many',
+        ]);
+
+        $response->assertJsonValidationErrors(['field_'.$field->id, 'field_'.$field->id.'_followers']);
+        $this->assertStringContainsString('Instagram', $response->json('errors.field_'.$field->id.'.0'));
+        $this->assertStringNotContainsString('field 1', $response->json('errors.field_'.$field->id.'.0'));
+        $this->assertStringContainsString('Follower count', $response->json('errors.field_'.$field->id.'_followers.0'));
+    }
+
+    public function test_validation_errors_are_in_arabic_on_the_arabic_site(): void
+    {
+        $event = Event::factory()->create(['status' => EventStatus::Published]);
+        TicketType::factory()->for($event)->create();
+
+        $response = $this->postJson(route('ticket-requests.store', $event).'?lang=ar', []);
+
+        $response->assertJsonValidationErrors(['name']);
+        $this->assertSame('حقل الاسم مطلوب.', $response->json('errors.name.0'));
+    }
+
     public function test_instagram_answer_is_stored(): void
     {
         $event = Event::factory()->create(['status' => EventStatus::Published]);
