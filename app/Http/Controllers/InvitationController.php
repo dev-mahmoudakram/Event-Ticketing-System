@@ -35,6 +35,9 @@ class InvitationController extends Controller
             return back()->withErrors(['otp' => __('That code is not correct.')]);
         }
 
+        // A fresh session ID once the code is proven, so an ID planted before verification
+        // can't ride along into the invitee's form.
+        $request->session()->regenerate();
         $request->session()->put('invitation_verified.'.$event->id, $invitation->id);
 
         return redirect()->route('invitations.create', [$event, $token]);

@@ -57,8 +57,11 @@ class AppServiceProvider extends ServiceProvider
 
     private function configureRateLimiting(): void
     {
-        RateLimiter::for('invitation-otp', fn (Request $request) => Limit::perMinute(5)
-            ->by($request->ip().'|'.$request->route('token')));
+        // Per IP stops one visitor hammering a link; per link stops a guesser who rotates IPs.
+        RateLimiter::for('invitation-otp', fn (Request $request) => [
+            Limit::perMinute(5)->by('ip|'.$request->ip().'|'.$request->route('token')),
+            Limit::perHour(15)->by('link|'.$request->route('token')),
+        ]);
 
         // Forms that email the address typed in, or store an upload. Unlimited, a script could
         // make this domain spam a third party or fill the disk.

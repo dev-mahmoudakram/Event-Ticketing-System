@@ -44,6 +44,39 @@ class InvitationVerificationTest extends TestCase
         $this->assertNull(session('invitation_verified.'.$event->id));
     }
 
+    public function test_guessing_from_many_addresses_still_locks_the_link(): void
+    {
+        $event = Event::factory()->create(['status' => EventStatus::Published]);
+        $ticketType = TicketType::factory()->for($event)->create();
+        $invitation = Invitation::factory()->for($event)->for($ticketType)->create(['otp' => '123456']);
+        $url = route('invitations.verify.attempt', [$event, $invitation->token]);
+
+        for ($attempt = 0; $attempt < 15; $attempt++) {
+            $this->withServerVariables(['REMOTE_ADDR' => '10.0.0.'.$attempt])
+                ->post($url, ['otp' => '000000'])
+                ->assertSessionHasErrors('otp');
+        }
+
+        $this->withServerVariables(['REMOTE_ADDR' => '10.0.1.1'])
+            ->post($url, ['otp' => '123456'])
+            ->assertStatus(429);
+    }
+
+    public function test_the_session_id_changes_once_the_code_is_accepted(): void
+    {
+        $event = Event::factory()->create(['status' => EventStatus::Published]);
+        $ticketType = TicketType::factory()->for($event)->create();
+        $invitation = Invitation::factory()->for($event)->for($ticketType)->create(['otp' => '123456']);
+
+        $this->get(route('invitations.verify', [$event, $invitation->token]));
+        $before = session()->getId();
+
+        $this->post(route('invitations.verify.attempt', [$event, $invitation->token]), ['otp' => '123456']);
+
+        $this->assertNotSame($before, session()->getId());
+        $this->assertSame($invitation->id, session('invitation_verified.'.$event->id));
+    }
+
     public function test_unknown_expired_used_and_revoked_links_show_the_same_invalid_page(): void
     {
         $event = Event::factory()->create(['status' => EventStatus::Published]);
