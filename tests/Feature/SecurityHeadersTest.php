@@ -6,6 +6,7 @@ namespace Tests\Feature;
 
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\File;
 use Tests\TestCase;
 
 class SecurityHeadersTest extends TestCase
@@ -41,6 +42,23 @@ class SecurityHeadersTest extends TestCase
             ->get(route('admin.events.index'))
             ->assertOk()
             ->assertHeader('X-Frame-Options', 'SAMEORIGIN');
+    }
+
+    /**
+     * Inline onclick/onsubmit handlers stop working once the policy enforces without
+     * 'unsafe-inline' — use data-confirm, data-select-on-click or data-print instead.
+     */
+    public function test_no_view_uses_inline_event_handlers(): void
+    {
+        $offenders = [];
+
+        foreach (File::allFiles(resource_path('views')) as $file) {
+            if (preg_match('/\son(?:click|submit|change|input|load|error|focus|blur|key\w+|mouse\w+)\s*=/i', $file->getContents()) === 1) {
+                $offenders[] = $file->getRelativePathname();
+            }
+        }
+
+        $this->assertSame([], $offenders);
     }
 
     public function test_hsts_is_sent_only_over_https(): void

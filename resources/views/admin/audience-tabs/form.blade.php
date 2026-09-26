@@ -98,7 +98,7 @@
 
                                 <div class="flex items-center gap-3 shrink-0">
                                     <a href="{{ route('admin.audience-tabs.cards.edit', [$tab, $card]) }}" class="text-sm font-semibold text-hub-purple hover:underline">{{ __('Edit') }}</a>
-                                    <form method="POST" action="{{ route('admin.audience-tabs.cards.destroy', [$tab, $card]) }}" onsubmit="return confirm('{{ __('Delete this card? This cannot be undone.') }}')">
+                                    <form method="POST" action="{{ route('admin.audience-tabs.cards.destroy', [$tab, $card]) }}" data-confirm="{{ __('Delete this card? This cannot be undone.') }}">
                                         @csrf @method('DELETE')
                                         <x-admin.button type="submit" variant="danger">{{ __('Delete') }}</x-admin.button>
                                     </form>

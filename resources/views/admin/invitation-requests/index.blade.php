@@ -36,11 +36,11 @@
                         <td>{{ __(ucfirst($invitationRequest->status->value)) }}</td>
                         <td>
                             @if($invitationRequest->status === \App\Enums\InvitationRequestStatus::Pending)
-                                <form method="POST" action="{{ route('admin.events.invitation-requests.update-status', [$event, $invitationRequest, 'approved']) }}" class="inline" onsubmit="return confirm('{{ __('Are you sure? This cannot be undone.') }}')">
+                                <form method="POST" action="{{ route('admin.events.invitation-requests.update-status', [$event, $invitationRequest, 'approved']) }}" class="inline" data-confirm="{{ __('Are you sure? This cannot be undone.') }}">
                                     @csrf @method('PATCH')
                                     <x-admin.button type="submit">{{ __('Approve') }}</x-admin.button>
                                 </form>
-                                <form method="POST" action="{{ route('admin.events.invitation-requests.update-status', [$event, $invitationRequest, 'rejected']) }}" class="inline" onsubmit="return confirm('{{ __('Are you sure? This cannot be undone.') }}')">
+                                <form method="POST" action="{{ route('admin.events.invitation-requests.update-status', [$event, $invitationRequest, 'rejected']) }}" class="inline" data-confirm="{{ __('Are you sure? This cannot be undone.') }}">
                                     @csrf @method('PATCH')
                                     <x-admin.button type="submit" variant="danger">{{ __('Reject') }}</x-admin.button>
                                 </form>

@@ -855,5 +855,7 @@
     "We received your ticket request": "استلمنا طلب التذكرة",
     "We received your ticket request.": "استلمنا طلب التذكرة.",
     "e.g. Ahmed Hassan": "مثال: أحمد حسن",
-    "name@example.com": "name@example.com"
+    "name@example.com": "name@example.com",
+    "Use lowercase English letters, numbers and single dashes only, e.g. ccs-2026.": "استخدم أحرفًا إنجليزية صغيرة وأرقامًا وشرطات مفردة فقط، مثل ccs-2026.",
+    "Delete this event and its :count ticket? This cannot be undone.|Delete this event and all :count of its tickets? This cannot be undone.": "حذف هذه الفعالية بدون تذاكر؟ لا يمكن التراجع عن هذا الإجراء.|حذف هذه الفعالية وتذكرتها الوحيدة؟ لا يمكن التراجع عن هذا الإجراء.|حذف هذه الفعالية وتذكرتيها؟ لا يمكن التراجع عن هذا الإجراء.|حذف هذه الفعالية و:count تذاكر مرتبطة بها؟ لا يمكن التراجع عن هذا الإجراء.|حذف هذه الفعالية و:count تذكرة مرتبطة بها؟ لا يمكن التراجع عن هذا الإجراء.|حذف هذه الفعالية و:count تذكرة مرتبطة بها؟ لا يمكن التراجع عن هذا الإجراء."
 }

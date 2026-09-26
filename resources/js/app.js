@@ -5,6 +5,7 @@ import ticketScanner from './ticket-scanner';
 import initCharts from './charts';
 import initRichTextEditors from './richtext-editor';
 import initSortableLists from './sortable';
+import initInlineActions from './inline-actions';
 import unsavedGuard from './unsaved-guard';
 import intlTelInput from 'intl-tel-input/intlTelInputWithUtils';
 import 'intl-tel-input/styles';
@@ -81,6 +82,13 @@ if (emailInput) {
  * has been waiting through the form for actually lands. SweetAlert2 is fetched only once a
  * request succeeds, which keeps it out of the bundle every other page loads.
  */
+function escapeHtml(text) {
+    const holder = document.createElement('div');
+    holder.textContent = String(text ?? '');
+
+    return holder.innerHTML;
+}
+
 async function announceTicketRequested(form, { message, reference }) {
     const { default: Swal } = await import('sweetalert2');
     const stillMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -93,9 +101,9 @@ async function announceTicketRequested(form, { message, reference }) {
         html: reference
             // <bdi> keeps a Latin reference number intact inside an Arabic paragraph.
             ? `<p class="ticket-success-label">${form.dataset.successReferenceLabel}</p>
-               <p class="ticket-success-reference"><bdi>${reference}</bdi></p>
+               <p class="ticket-success-reference"><bdi>${escapeHtml(reference)}</bdi></p>
                <p class="ticket-success-note">${form.dataset.successNote}</p>`
-            : `<p class="ticket-success-note">${message}</p>`,
+            : `<p class="ticket-success-note">${escapeHtml(message)}</p>`,
         confirmButtonText: form.dataset.successConfirm,
         buttonsStyling: false,
         customClass: {
@@ -186,3 +194,4 @@ initAutoplayVideo();
 initCharts();
 initRichTextEditors();
 initSortableLists();
+initInlineActions();

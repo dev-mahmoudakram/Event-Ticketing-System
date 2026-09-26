@@ -797,5 +797,7 @@
     "Showing :from–:to of :total": "Showing :from–:to of :total",
     "Previous": "Previous",
     "Next": "Next",
-    "Page :page of :pages": "Page :page of :pages"
+    "Page :page of :pages": "Page :page of :pages",
+    "Use lowercase English letters, numbers and single dashes only, e.g. ccs-2026.": "Use lowercase English letters, numbers and single dashes only, e.g. ccs-2026.",
+    "Delete this event and its :count ticket? This cannot be undone.|Delete this event and all :count of its tickets? This cannot be undone.": "Delete this event and its :count ticket? This cannot be undone.|Delete this event and all :count of its tickets? This cannot be undone."
 }

@@ -69,7 +69,7 @@
                                     @csrf @method('PATCH')
                                     <x-admin.button type="submit">{{ __('Approve') }}</x-admin.button>
                                 </form>
-                                <form method="POST" action="{{ route('admin.events.ticket-requests.update-status', [$event, $ticket, 'rejected']) }}" class="inline" onsubmit="return confirm('{{ __('Are you sure? This cannot be undone.') }}')">
+                                <form method="POST" action="{{ route('admin.events.ticket-requests.update-status', [$event, $ticket, 'rejected']) }}" class="inline" data-confirm="{{ __('Are you sure? This cannot be undone.') }}">
                                     @csrf @method('PATCH')
                                     <x-admin.button type="submit" variant="danger" class="ml-2">{{ __('Reject') }}</x-admin.button>
                                 </form>

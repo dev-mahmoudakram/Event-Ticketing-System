@@ -70,7 +70,7 @@
                         <td class="text-end" x-data="{ approveOpen: false }">
                             @if($sponsorRequest->status === \App\Enums\SponsorRequestStatus::Pending)
                                 <x-admin.button type="button" @click="approveOpen = true">{{ __('Approve') }}</x-admin.button>
-                                <form method="POST" action="{{ route('admin.events.sponsor-requests.update-status', [$event, $sponsorRequest, 'rejected']) }}" class="inline" onsubmit="return confirm('{{ __('Are you sure? This cannot be undone.') }}')">
+                                <form method="POST" action="{{ route('admin.events.sponsor-requests.update-status', [$event, $sponsorRequest, 'rejected']) }}" class="inline" data-confirm="{{ __('Are you sure? This cannot be undone.') }}">
                                     @csrf @method('PATCH')
                                     <x-admin.button type="submit" variant="danger" class="ml-2">{{ __('Reject') }}</x-admin.button>
                                 </form>

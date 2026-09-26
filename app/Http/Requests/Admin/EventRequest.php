@@ -22,7 +22,7 @@ class EventRequest extends FormRequest
         $imageLimit = UploadLimit::effectiveKilobytes((int) config('media.max_image_kb'));
 
         return [
-            'slug' => ['required', 'string', 'max:255', Rule::unique('events', 'slug')->ignore($eventId)],
+            'slug' => ['required', 'string', 'max:255', 'regex:/^[a-z0-9]+(?:-[a-z0-9]+)*$/', Rule::unique('events', 'slug')->ignore($eventId)],
             'name_ar' => ['required', 'string', 'max:255'],
             'name_en' => ['required', 'string', 'max:255'],
             'tagline_ar' => ['nullable', 'string', 'max:255'],
@@ -58,6 +58,14 @@ class EventRequest extends FormRequest
             'favicon' => __('Favicon'),
             'apple_touch_icon' => __('Apple Touch Icon'),
             'share_image' => __('Link Preview Image'),
+        ];
+    }
+
+    /** @return array<string, string> */
+    public function messages(): array
+    {
+        return [
+            'slug.regex' => __('Use lowercase English letters, numbers and single dashes only, e.g. ccs-2026.'),
         ];
     }
 }

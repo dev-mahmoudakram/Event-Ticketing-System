@@ -9,9 +9,9 @@
             <div class="mb-6 rounded-2xl border border-hub-purple/30 bg-hub-lavender px-6 py-5" role="status">
                 <p class="font-bold mb-3">{{ __('Invitation created. Copy the link and code to send to the invitee.') }}</p>
                 <label for="generated-link" class="block text-sm mb-1">{{ __('Link') }}</label>
-                <input id="generated-link" type="text" readonly value="{{ route('invitations.verify', [$event, $generated->token]) }}" class="w-full mb-3 adm-input" onclick="this.select()">
+                <input id="generated-link" type="text" readonly value="{{ route('invitations.verify', [$event, $generated->token]) }}" class="w-full mb-3 adm-input" data-select-on-click>
                 <label for="generated-code" class="block text-sm mb-1">{{ __('One-time code') }}</label>
-                <input id="generated-code" type="text" readonly value="{{ $generated->otp }}" class="w-full adm-input" onclick="this.select()">
+                <input id="generated-code" type="text" readonly value="{{ $generated->otp }}" class="w-full adm-input" data-select-on-click>
             </div>
         @endif
     @endif
@@ -36,13 +36,13 @@
                 @foreach($invitations as $invitation)
                     <tr>
                         <td>{{ $invitation->ticketType?->name_en }}</td>
-                        <td><input type="text" readonly value="{{ route('invitations.verify', [$event, $invitation->token]) }}" class="adm-input w-64" aria-label="{{ __('Invitation link') }}" onclick="this.select()"></td>
+                        <td><input type="text" readonly value="{{ route('invitations.verify', [$event, $invitation->token]) }}" class="adm-input w-64" aria-label="{{ __('Invitation link') }}" data-select-on-click></td>
                         <td><code>{{ $invitation->otp }}</code></td>
                         <td>{{ $invitation->status === \App\Enums\InvitationStatus::Unused && $invitation->expires_at->isPast() ? __('Expired') : $invitation->status->label() }}</td>
                         <td>{{ $invitation->expires_at->format('Y-m-d') }}</td>
                         <td>
                             @if($invitation->isUsable())
-                                <form method="POST" action="{{ route('admin.events.invitations.revoke', [$event, $invitation]) }}" onsubmit="return confirm('{{ __('Are you sure? This cannot be undone.') }}')">
+                                <form method="POST" action="{{ route('admin.events.invitations.revoke', [$event, $invitation]) }}" data-confirm="{{ __('Are you sure? This cannot be undone.') }}">
                                     @csrf @method('PATCH')
                                     <x-admin.button type="submit" variant="danger">{{ __('Revoke') }}</x-admin.button>
                                 </form>

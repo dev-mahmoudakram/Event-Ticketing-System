@@ -98,6 +98,28 @@ class EventCrudTest extends TestCase
         $response->assertSessionHasErrors(['name_ar', 'name_en']);
     }
 
+    /**
+     * The slug ends up in URLs and in the ticket reference shown to attendees, so only
+     * lowercase letters, digits and single dashes are allowed.
+     */
+    public function test_an_event_slug_must_be_url_safe(): void
+    {
+        $admin = User::factory()->create();
+
+        foreach (['CCS-2027', 'ccs 2027', 'ccs--2027', '-ccs', 'ccs<b>', 'قمة'] as $slug) {
+            $this->actingAs($admin)->post(route('admin.events.store'), [
+                'slug' => $slug,
+                'name_ar' => 'قمة صناع المحتوى',
+                'name_en' => 'Content Creators Summit 2027',
+                'start_date' => '2027-08-15',
+                'end_date' => '2027-08-16',
+                'status' => 'draft',
+            ])->assertSessionHasErrors('slug');
+        }
+
+        $this->assertDatabaseCount('events', 0);
+    }
+
     public function test_admin_can_update_an_event(): void
     {
         $admin = User::factory()->create();
@@ -142,6 +164,22 @@ class EventCrudTest extends TestCase
         $this->assertDatabaseMissing('ticket_types', ['id' => $ticketType->id]);
         $this->assertDatabaseMissing('tickets', ['id' => $ticket->id]);
         $this->assertDatabaseMissing('invitations', ['id' => $invitation->id]);
+    }
+
+    public function test_the_delete_warning_says_how_many_tickets_go_with_the_event(): void
+    {
+        $admin = User::factory()->create();
+        $event = Event::factory()->create();
+        Ticket::factory()->for($event)->count(3)->create();
+        Event::factory()->create();
+
+        app()->setLocale('en');
+
+        $this->actingAs($admin)->get(route('admin.events.index', ['lang' => 'en']))
+            ->assertOk()
+            ->assertSee('data-confirm="Delete this event and all 3 of its tickets? This cannot be undone."', false)
+            ->assertSee('data-confirm="Are you sure? This cannot be undone."', false)
+            ->assertDontSee('onsubmit=', false);
     }
 
     public function test_admin_can_view_the_index_page_with_records(): void

@@ -24,7 +24,7 @@
                         <td>{{ $event->status->value }}</td>
                         <td class="text-end">
                             <a href="{{ route('admin.events.edit', $event) }}" class="text-hub-purple hover:underline">{{ __('Edit') }}</a>
-                            <form method="POST" action="{{ route('admin.events.destroy', $event) }}" class="inline" onsubmit="return confirm('{{ __('Are you sure? This cannot be undone.') }}')">
+                            <form method="POST" action="{{ route('admin.events.destroy', $event) }}" class="inline" data-confirm="{{ $event->tickets_count > 0 ? trans_choice('Delete this event and its :count ticket? This cannot be undone.|Delete this event and all :count of its tickets? This cannot be undone.', $event->tickets_count) : __('Are you sure? This cannot be undone.') }}">
                                 @csrf @method('DELETE')
                                 <x-admin.button type="submit" variant="danger" class="ml-2">{{ __('Delete') }}</x-admin.button>
                             </form>

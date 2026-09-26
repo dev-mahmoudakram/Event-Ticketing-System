@@ -20,7 +20,7 @@
             </div>
 
             <div class="flex flex-wrap justify-center gap-3 mt-8 print:hidden">
-                <button type="button" onclick="window.print()" class="hub-pill hub-pill-solid text-sm">{{ __('Print this ticket') }}</button>
+                <button type="button" data-print class="hub-pill hub-pill-solid text-sm">{{ __('Print this ticket') }}</button>
                 <a href="{{ route('landing.show', $ticket->event) }}" class="hub-pill hub-pill-outline text-sm">{{ __('Back to the event') }}</a>
             </div>
 

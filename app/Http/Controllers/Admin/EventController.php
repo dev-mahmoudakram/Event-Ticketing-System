@@ -30,7 +30,7 @@ class EventController extends Controller
 
     public function index(): View
     {
-        return view('admin.events.index', ['events' => Event::orderBy('start_date')->get()]);
+        return view('admin.events.index', ['events' => Event::withCount('tickets')->orderBy('start_date')->get()]);
     }
 
     public function create(): View
