@@ -56,6 +56,14 @@ final class ScheduleEntry
         return $this->model instanceof AgendaItem ? 't'.$this->model->session_type_id : 'workshop';
     }
 
+    /**
+     * Sessions always have times; a workshop may not have been given one yet.
+     */
+    public function isScheduled(): bool
+    {
+        return ! ($this->model instanceof Workshop) || $this->model->isScheduled();
+    }
+
     public function isBreak(): bool
     {
         return $this->model instanceof AgendaItem && $this->model->sessionType->is_break;

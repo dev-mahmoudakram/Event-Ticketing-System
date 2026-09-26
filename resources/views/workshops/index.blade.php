@@ -15,20 +15,14 @@
         <h1 class="font-display text-3xl md:text-5xl font-extrabold mb-12 max-w-xl" data-reveal>{{ __('Choose your own workshops.') }}</h1>
 
         @if($workshops->isNotEmpty())
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 @foreach($workshops as $workshop)
                     <div data-reveal data-reveal-delay="{{ min($loop->iteration, 5) }}">
-                        <div class="h-full bg-white/5 border border-white/10 rounded-2xl p-7 flex flex-col gap-4 transition-transform duration-300 hover:-translate-y-1">
-                            <h2 class="font-display text-lg font-bold">{{ app()->getLocale() === 'ar' ? $workshop->name_ar : $workshop->name_en }}</h2>
-                            {{-- Sanitized on save (SanitizedRichText cast on Workshop) — safe
-                                 to render unescaped. --}}
-                            <div class="ccs-richtext text-sm text-gray-400 leading-relaxed flex-1">{!! app()->getLocale() === 'ar' ? $workshop->description_ar : $workshop->description_en !!}</div>
-                            <p class="text-xs uppercase tracking-wide text-gray-500">{{ trans_choice(':count seat|:count seats', $workshop->capacity, ['count' => $workshop->capacity]) }}</p>
-                            <a href="{{ route('workshops.show', [$event, $workshop]) }}" class="text-sm font-bold text-ccs-gold border-b border-transparent hover:border-ccs-gold transition-colors w-fit">{{ __('View Workshop') }}</a>
-                        </div>
+                        <x-schedule-card :entry="\App\Support\ScheduleEntry::forWorkshop($workshop)" :event="$event" />
                     </div>
                 @endforeach
             </div>
+            <x-schedule-popup />
         @else
             <p class="text-gray-400" data-reveal>{{ __('No workshops yet.') }}</p>
         @endif

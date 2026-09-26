@@ -15,7 +15,7 @@ class WorkshopController extends Controller
     {
         return view('workshops.index', [
             'event' => $event,
-            'workshops' => $event->workshops()->with('speakers')->get(),
+            'workshops' => $event->workshops()->with(['speakers', 'location'])->withCount('bookings')->get(),
         ]);
     }
 

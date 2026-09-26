@@ -865,5 +865,6 @@
     "Manage workshops": "Manage workshops",
     "+:count more": "+:count more",
     "Book your seat": "Book your seat",
-    ":count seat left|:count seats left": ":count seat left|:count seats left"
+    ":count seat left|:count seats left": ":count seat left|:count seats left",
+    "Time to be announced": "Time to be announced"
 }

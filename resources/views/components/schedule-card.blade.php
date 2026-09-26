@@ -24,7 +24,11 @@
              aria-label="{{ $entry->title() }}" class="ccs-schedule-card">
         <div class="flex items-center gap-2 text-sm text-gray-300">
             <x-bi-clock class="w-4 h-4 text-ccs-gold" aria-hidden="true" />
-            <span dir="ltr" class="tabular-nums font-semibold">{{ $entry->start() }} – {{ $entry->end() }}</span>
+            @if($entry->isScheduled())
+                <span dir="ltr" class="tabular-nums font-semibold">{{ $entry->start() }} – {{ $entry->end() }}</span>
+            @else
+                <span class="text-gray-400">{{ __('Time to be announced') }}</span>
+            @endif
         </div>
 
         <span class="ccs-schedule-pill">{{ $entry->typeLabel() }}</span>
@@ -68,7 +72,11 @@
     <template id="detail-{{ $entry->anchor() }}">
         <div class="flex items-center gap-2 text-sm text-gray-300 mb-3">
             <x-bi-clock class="w-4 h-4 text-ccs-gold" aria-hidden="true" />
-            <span class="tabular-nums font-semibold">{{ $entry->day()->translatedFormat('j M') }} · <span dir="ltr">{{ $entry->start() }} – {{ $entry->end() }}</span></span>
+            @if($entry->isScheduled())
+                <span class="tabular-nums font-semibold">{{ $entry->day()->translatedFormat('j M') }} · <span dir="ltr">{{ $entry->start() }} – {{ $entry->end() }}</span></span>
+            @else
+                <span class="text-gray-400">{{ __('Time to be announced') }}</span>
+            @endif
         </div>
         <span class="ccs-schedule-pill mb-3">{{ $entry->typeLabel() }}</span>
         <h2 class="font-display text-2xl font-extrabold leading-snug mb-4" data-schedule-title>{{ $entry->title() }}</h2>

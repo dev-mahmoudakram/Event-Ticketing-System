@@ -910,5 +910,6 @@
     "Manage workshops": "إدارة ورش العمل",
     "+:count more": "+:count آخرين",
     "Book your seat": "احجز مقعدك",
-    ":count seat left|:count seats left": "بقي مقعد واحد|بقي :count مقاعد"
+    ":count seat left|:count seats left": "بقي مقعد واحد|بقي :count مقاعد",
+    "Time to be announced": "الموعد يُعلن لاحقًا"
 }
