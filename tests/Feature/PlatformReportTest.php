@@ -12,6 +12,7 @@ use App\Models\User;
 use App\Services\PlatformReport;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
 
 class PlatformReportTest extends TestCase
@@ -191,5 +192,24 @@ class PlatformReportTest extends TestCase
             ->get(route('admin.reports.show').'?lang=en')
             ->assertOk()
             ->assertDontSee('data-chart', false);
+    }
+
+    public function test_the_per_event_table_costs_the_same_queries_however_many_events_there_are(): void
+    {
+        $queriesFor = function (): int {
+            DB::flushQueryLog();
+            DB::enableQueryLog();
+            (new PlatformReport)->byEvent();
+            DB::disableQueryLog();
+
+            return count(DB::getQueryLog());
+        };
+
+        Event::factory()->count(2)->create()->each(fn (Event $event) => $this->ticket($event, ['is_paid' => true]));
+        $withTwo = $queriesFor();
+
+        Event::factory()->count(8)->create()->each(fn (Event $event) => $this->ticket($event, ['is_paid' => true]));
+
+        $this->assertSame($withTwo, $queriesFor());
     }
 }

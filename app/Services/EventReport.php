@@ -85,15 +85,18 @@ class EventReport
      */
     public function revenueByTicketType(): Collection
     {
-        return $this->event->ticketTypes->map(function ($type) {
-            $sold = $this->event->tickets()->where('ticket_type_id', $type->id)->where('is_paid', true);
+        $totals = $this->event->tickets()
+            ->where('is_paid', true)
+            ->selectRaw('ticket_type_id, count(*) as sold, sum(coalesce(price, 0) - coalesce(discount_amount, 0)) as revenue')
+            ->groupBy('ticket_type_id')
+            ->get()
+            ->keyBy('ticket_type_id');
 
-            return [
-                'name' => app()->getLocale() === 'ar' ? $type->name_ar : $type->name_en,
-                'sold' => (clone $sold)->count(),
-                'revenue' => (int) ((clone $sold)->sum('price') - (clone $sold)->sum('discount_amount')),
-            ];
-        });
+        return $this->event->ticketTypes->map(fn ($type) => [
+            'name' => app()->getLocale() === 'ar' ? $type->name_ar : $type->name_en,
+            'sold' => (int) ($totals[$type->id]->sold ?? 0),
+            'revenue' => (int) ($totals[$type->id]->revenue ?? 0),
+        ]);
     }
 
     /**
@@ -122,15 +125,21 @@ class EventReport
      */
     public function coupons(): Collection
     {
-        return $this->event->discountCoupons->map(function ($coupon) {
-            $tickets = $this->event->tickets()->where('discount_coupon_id', $coupon->id);
+        $totals = $this->event->tickets()
+            ->whereNotNull('discount_coupon_id')
+            ->selectRaw('discount_coupon_id, count(*) as used, sum(coalesce(discount_amount, 0)) as discounted')
+            ->groupBy('discount_coupon_id')
+            ->get()
+            ->keyBy('discount_coupon_id');
 
-            return [
+        return $this->event->discountCoupons
+            ->filter(fn ($coupon) => isset($totals[$coupon->id]))
+            ->map(fn ($coupon) => [
                 'code' => $coupon->code,
-                'used' => (clone $tickets)->count(),
-                'discounted' => (int) (clone $tickets)->sum('discount_amount'),
-            ];
-        })->filter(fn (array $row) => $row['used'] > 0)->values();
+                'used' => (int) $totals[$coupon->id]->used,
+                'discounted' => (int) $totals[$coupon->id]->discounted,
+            ])
+            ->values();
     }
 
     /**

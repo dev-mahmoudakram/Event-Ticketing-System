@@ -52,20 +52,25 @@ class PlatformReport
      */
     public function byEvent(): Collection
     {
+        $totals = Ticket::query()
+            ->selectRaw('event_id, count(*) as requested')
+            ->selectRaw('sum(case when is_paid = 1 then 1 else 0 end) as paid')
+            ->selectRaw('sum(case when checked_in_at is not null then 1 else 0 end) as arrived')
+            ->selectRaw('sum(case when is_paid = 1 then coalesce(price, 0) - coalesce(discount_amount, 0) else 0 end) as revenue')
+            ->groupBy('event_id')
+            ->get()
+            ->keyBy('event_id');
+
         return Event::query()
             ->orderByDesc('id')
             ->get()
-            ->map(function (Event $event): array {
-                $paid = $event->tickets()->where('is_paid', true);
-
-                return [
-                    'name' => app()->getLocale() === 'ar' ? $event->name_ar : $event->name_en,
-                    'requested' => $event->tickets()->count(),
-                    'paid' => (clone $paid)->count(),
-                    'arrived' => $event->tickets()->whereNotNull('checked_in_at')->count(),
-                    'revenue' => (int) ((clone $paid)->sum('price') - (clone $paid)->sum('discount_amount')),
-                ];
-            });
+            ->map(fn (Event $event): array => [
+                'name' => app()->getLocale() === 'ar' ? $event->name_ar : $event->name_en,
+                'requested' => (int) ($totals[$event->id]->requested ?? 0),
+                'paid' => (int) ($totals[$event->id]->paid ?? 0),
+                'arrived' => (int) ($totals[$event->id]->arrived ?? 0),
+                'revenue' => (int) ($totals[$event->id]->revenue ?? 0),
+            ]);
     }
 
     /**
