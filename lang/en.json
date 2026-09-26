@@ -823,5 +823,7 @@
     "Tickets and sales": "Tickets and sales",
     "Event day": "Event day",
     "Choose a role": "Choose a role",
-    "What each person can open depends on their role. Admins can use every page, including Staff and Roles.": "What each person can open depends on their role. Admins can use every page, including Staff and Roles."
+    "What each person can open depends on their role. Admins can use every page, including Staff and Roles.": "What each person can open depends on their role. Admins can use every page, including Staff and Roles.",
+    "No access yet": "No access yet",
+    "Your role has no access yet. Ask an admin to give it some.": "Your role has no access yet. Ask an admin to give it some."
 }

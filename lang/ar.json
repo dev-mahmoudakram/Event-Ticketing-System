@@ -868,5 +868,7 @@
     "Tickets and sales": "التذاكر والمبيعات",
     "Event day": "يوم الفعالية",
     "Choose a role": "اختر دورًا",
-    "What each person can open depends on their role. Admins can use every page, including Staff and Roles.": "ما يمكن لكل شخص فتحه يعتمد على دوره. يمكن للمسؤولين استخدام كل الصفحات، بما فيها الفريق والأدوار."
+    "What each person can open depends on their role. Admins can use every page, including Staff and Roles.": "ما يمكن لكل شخص فتحه يعتمد على دوره. يمكن للمسؤولين استخدام كل الصفحات، بما فيها الفريق والأدوار.",
+    "No access yet": "لا توجد صلاحيات بعد",
+    "Your role has no access yet. Ask an admin to give it some.": "دورك لا يملك أي صلاحيات بعد. اطلب من أحد المسؤولين منحه بعضها."
 }
