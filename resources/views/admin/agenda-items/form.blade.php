@@ -18,7 +18,7 @@
 
         <x-admin.field type="select" name="type" label="{{ __('Type') }}">
             @foreach($types as $type)
-                <option value="{{ $type->value }}" @selected(old('type', $item->type?->value) === $type->value)>{{ ucfirst($type->value) }}</option>
+                <option value="{{ $type->value }}" @selected(old('type', $item->type?->value) === $type->value)>{{ $type->label() }}</option>
             @endforeach
         </x-admin.field>
 

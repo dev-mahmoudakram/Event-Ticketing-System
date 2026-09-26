@@ -8,7 +8,7 @@
 
     <div class="mb-4 flex gap-2 text-sm">
         @foreach(['pending', 'approved', 'rejected', 'all'] as $option)
-            <a href="{{ route('admin.events.invitation-requests.index', ['event' => $event, 'status' => $option]) }}" class="px-3 py-1.5 rounded {{ $status === $option ? 'bg-hub-purple text-white' : 'border border-hub-purple/20 text-hub-dark/75' }}">{{ __(ucfirst($option)) }}</a>
+            <a href="{{ route('admin.events.invitation-requests.index', ['event' => $event, 'status' => $option]) }}" class="px-3 py-1.5 rounded {{ $status === $option ? 'bg-hub-purple text-white' : 'border border-hub-purple/20 text-hub-dark/75' }}">{{ $option === 'all' ? __('All') : \App\Enums\InvitationRequestStatus::from($option)->label() }}</a>
         @endforeach
     </div>
 
@@ -33,7 +33,7 @@
                                 @endif
                             @endforeach
                         </td>
-                        <td>{{ __(ucfirst($invitationRequest->status->value)) }}</td>
+                        <td>{{ $invitationRequest->status->label() }}</td>
                         <td>
                             @if($invitationRequest->status === \App\Enums\InvitationRequestStatus::Pending)
                                 <form method="POST" action="{{ route('admin.events.invitation-requests.update-status', [$event, $invitationRequest, 'approved']) }}" class="inline" data-confirm="{{ __('Are you sure? This cannot be undone.') }}">

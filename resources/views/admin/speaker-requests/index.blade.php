@@ -20,7 +20,7 @@
         @foreach(['pending', 'approved', 'rejected', 'all'] as $option)
             <a href="{{ route('admin.events.speaker-requests.index', $event) }}?status={{ $option }}"
                class="px-3 py-1.5 rounded {{ $status === $option ? 'bg-hub-purple text-hub-dark' : 'border border-hub-purple/20 text-hub-dark/75' }}">
-                {{ ucfirst($option) }}
+                {{ $option === 'all' ? __('All') : \App\Enums\SpeakerRequestStatus::from($option)->label() }}
             </a>
         @endforeach
     </div>
@@ -56,7 +56,7 @@
                         <td>{{ $speakerRequest->phone }}</td>
                         <td class="max-w-xs">{{ $speakerRequest->bio_en }}</td>
                         <td class="max-w-xs">{{ $speakerRequest->message }}</td>
-                        <td>{{ ucfirst($speakerRequest->status->value) }}</td>
+                        <td>{{ $speakerRequest->status->label() }}</td>
                         <td class="text-end">
                             @if($speakerRequest->status === \App\Enums\SpeakerRequestStatus::Pending)
                                 <form method="POST" action="{{ route('admin.events.speaker-requests.update-status', [$event, $speakerRequest, 'approved']) }}" class="inline">

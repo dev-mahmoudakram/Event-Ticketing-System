@@ -20,7 +20,7 @@
         @foreach(['pending', 'approved', 'rejected', 'payment_pending', 'all'] as $option)
             <a href="{{ route('admin.events.ticket-requests.index', $event) }}?status={{ $option }}"
                class="px-3 py-1.5 rounded {{ $status === $option ? 'bg-hub-purple text-hub-dark' : 'border border-hub-purple/20 text-hub-dark/75' }}">
-                {{ ucfirst(str_replace('_', ' ', $option)) }}
+                {{ $option === 'all' ? __('All') : \App\Enums\TicketStatus::from($option)->label() }}
             </a>
         @endforeach
     </div>
@@ -47,7 +47,7 @@
                         <td>{{ $ticket->email }}</td>
                         <td>{{ $ticket->ticketType->name_en }}</td>
                         <td>{{ $ticket->influencerCategory?->name_en ?? '—' }}</td>
-                        <td>{{ ucfirst(str_replace('_', ' ', $ticket->status->value)) }}</td>
+                        <td>{{ $ticket->status->label() }}</td>
                         <td>
                             @foreach($ticket->answers as $answer)
                                 <div class="text-xs text-hub-dark/60">

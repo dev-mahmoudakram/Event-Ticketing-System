@@ -14,7 +14,7 @@
 
         <x-admin.field type="select" name="type" label="{{ __('Type') }}" x-model="type">
             @foreach(\App\Enums\TicketRequestFieldType::cases() as $type)
-                <option value="{{ $type->value }}" @selected(old('type', $requestField->type?->value) === $type->value)>{{ ucfirst(str_replace('_', ' ', $type->value)) }}</option>
+                <option value="{{ $type->value }}" @selected(old('type', $requestField->type?->value) === $type->value)>{{ $type->label() }}</option>
             @endforeach
         </x-admin.field>
 

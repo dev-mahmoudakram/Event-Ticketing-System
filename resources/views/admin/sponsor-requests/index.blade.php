@@ -20,7 +20,7 @@
         @foreach(['pending', 'approved', 'rejected', 'all'] as $option)
             <a href="{{ route('admin.events.sponsor-requests.index', $event) }}?status={{ $option }}"
                class="px-3 py-1.5 rounded {{ $status === $option ? 'bg-hub-purple text-hub-dark' : 'border border-hub-purple/20 text-hub-dark/75' }}">
-                {{ ucfirst($option) }}
+                {{ $option === 'all' ? __('All') : \App\Enums\SponsorRequestStatus::from($option)->label() }}
             </a>
         @endforeach
     </div>
@@ -66,7 +66,7 @@
                             @endif
                         </td>
                         <td class="max-w-xs">{{ $sponsorRequest->message }}</td>
-                        <td>{{ ucfirst($sponsorRequest->status->value) }}</td>
+                        <td>{{ $sponsorRequest->status->label() }}</td>
                         <td class="text-end" x-data="{ approveOpen: false }">
                             @if($sponsorRequest->status === \App\Enums\SponsorRequestStatus::Pending)
                                 <x-admin.button type="button" @click="approveOpen = true">{{ __('Approve') }}</x-admin.button>

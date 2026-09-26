@@ -22,7 +22,7 @@
             <tbody>
                 @foreach($requestFields as $requestField)
                     <tr>
-                        <td>{{ ucfirst($requestField->type->value) }}</td>
+                        <td>{{ $requestField->type->label() }}</td>
                         <td>{{ $requestField->label_en }}</td>
                         <td>{{ $requestField->is_required ? __('Yes') : __('No') }}</td>
                         <td>{{ $requestField->sort_order }}</td>

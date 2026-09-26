@@ -5,6 +5,11 @@ declare(strict_types=1);
 namespace Tests\Feature;
 
 use App\Enums\AgendaItemType;
+use App\Enums\InvitationRequestStatus;
+use App\Enums\SpeakerRequestStatus;
+use App\Enums\SponsorRequestStatus;
+use App\Enums\TicketRequestFieldType;
+use App\Enums\TicketStatus;
 use App\Models\Event;
 use App\Support\SiteContentRegistry;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -120,16 +125,26 @@ class HubTranslationCoverageTest extends TestCase
     }
 
     /**
-     * The agenda page passes __(ucfirst($item->type->value)) — a lookup key built from the
-     * enum's value at runtime, so it never appears as a literal string anywhere to be found
-     * by a normal grep. Every case is translated here explicitly instead.
+     * Status and type labels come from each enum's label() method rather than a literal in a
+     * view, so they are checked here: every case must read differently in Arabic.
      */
-    public function test_every_agenda_item_type_has_an_arabic_translation(): void
+    public function test_every_enum_label_has_an_arabic_translation(): void
     {
-        $this->assertAllTranslated(array_map(
-            fn (AgendaItemType $type) => ucfirst($type->value),
-            AgendaItemType::cases(),
-        ));
+        $untranslated = [];
+
+        foreach ([TicketStatus::class, SpeakerRequestStatus::class, SponsorRequestStatus::class, InvitationRequestStatus::class, AgendaItemType::class, TicketRequestFieldType::class] as $enum) {
+            foreach ($enum::cases() as $case) {
+                app()->setLocale('en');
+                $english = $case->label();
+                app()->setLocale('ar');
+
+                if ($case->label() === $english) {
+                    $untranslated[] = class_basename($enum).'::'.$case->name;
+                }
+            }
+        }
+
+        $this->assertSame([], $untranslated);
     }
 
     /**

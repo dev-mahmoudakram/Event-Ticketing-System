@@ -40,7 +40,7 @@
                                 <span class="absolute left-0 top-1.5 w-2.75 h-2.75 rounded-full bg-ccs-teal-light"></span>
                                 <div class="flex flex-wrap items-center gap-3 mb-2">
                                     <span class="text-sm font-bold text-gray-400 tabular-nums">{{ $item->start_time->format('H:i') }}</span>
-                                    <span class="text-xs font-bold uppercase tracking-wide text-ccs-coral border border-ccs-coral/40 rounded-md px-3 py-1.5 whitespace-nowrap">{{ __(ucfirst($item->type->value)) }}</span>
+                                    <span class="text-xs font-bold uppercase tracking-wide text-ccs-coral border border-ccs-coral/40 rounded-md px-3 py-1.5 whitespace-nowrap">{{ $item->type->label() }}</span>
                                 </div>
                                 <div class="font-display font-bold text-lg mb-1">{{ app()->getLocale() === 'ar' ? $item->title_ar : $item->title_en }}</div>
                                 @if($item->speaker)
