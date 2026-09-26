@@ -177,6 +177,9 @@
     <a href="{{ route('admin.staff.index') }}" class="adm-nav-link mt-4 {{ request()->routeIs('admin.staff.*') ? 'is-active' : '' }}">
         {{ __('Staff') }}
     </a>
+    <a href="{{ route('admin.roles.index') }}" class="adm-nav-link {{ request()->routeIs('admin.roles.*') ? 'is-active' : '' }}">
+        {{ __('Roles') }}
+    </a>
     @endif
 </nav>
 

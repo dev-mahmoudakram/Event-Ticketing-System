@@ -20,6 +20,7 @@ use App\Http\Controllers\Admin\LandingPageContentController;
 use App\Http\Controllers\Admin\NewsletterSubscriberController as AdminNewsletterSubscriberController;
 use App\Http\Controllers\Admin\PlatformReportController;
 use App\Http\Controllers\Admin\ReelController;
+use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\SiteContentController;
 use App\Http\Controllers\Admin\SiteFaqController;
 use App\Http\Controllers\Admin\SpeakerController;
@@ -115,6 +116,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::middleware(['auth', 'permission'])->group(function () {
         Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
         Route::resource('staff', StaffController::class)->except('show')->parameters(['staff' => 'user']);
+        Route::resource('roles', RoleController::class)->except('show');
 
         // Creators Hub (the site root) is not an event, so its copy lives outside the
         // per-event content screens.

@@ -870,5 +870,21 @@
     "Choose a role": "اختر دورًا",
     "What each person can open depends on their role. Admins can use every page, including Staff and Roles.": "ما يمكن لكل شخص فتحه يعتمد على دوره. يمكن للمسؤولين استخدام كل الصفحات، بما فيها الفريق والأدوار.",
     "No access yet": "لا توجد صلاحيات بعد",
-    "Your role has no access yet. Ask an admin to give it some.": "دورك لا يملك أي صلاحيات بعد. اطلب من أحد المسؤولين منحه بعضها."
+    "Your role has no access yet. Ask an admin to give it some.": "دورك لا يملك أي صلاحيات بعد. اطلب من أحد المسؤولين منحه بعضها.",
+    "Roles": "الأدوار",
+    "New Role": "دور جديد",
+    "Edit Role": "تعديل الدور",
+    "Role name": "اسم الدور",
+    "Permission": "الصلاحية",
+    "Locked": "مقفل",
+    "Everything, including Staff and Roles": "كل شيء، بما في ذلك الفريق والأدوار",
+    "{0} No sections|{1} :count section|[2,*] :count sections": "{0} لا توجد أقسام|{1} قسم واحد|[2,*] :count أقسام",
+    "What this role can open": "ما يمكن لهذا الدور فتحه",
+    "Each tick lets the role view and act in that section, for every event. Staff and Roles stay with admins.": "كل علامة تسمح للدور بعرض ذلك القسم والعمل فيه، لكل الفعاليات. يبقى الفريق والأدوار للمسؤولين فقط.",
+    "Select all": "تحديد الكل",
+    "Role created.": "تم إنشاء الدور.",
+    "Role updated.": "تم تحديث الدور.",
+    "Role deleted.": "تم حذف الدور.",
+    "Move this role's staff to another role before deleting it.": "انقل أعضاء هذا الدور إلى دور آخر قبل حذفه.",
+    "A role decides which sections its staff can open. Give each person a role on the Staff page.": "يحدد الدور الأقسام التي يمكن لأعضائه فتحها. اختر لكل شخص دوره من صفحة الفريق."
 }

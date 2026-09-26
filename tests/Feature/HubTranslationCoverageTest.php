@@ -6,6 +6,7 @@ namespace Tests\Feature;
 
 use App\Enums\AgendaItemType;
 use App\Enums\InvitationRequestStatus;
+use App\Enums\Permission;
 use App\Enums\SpeakerRequestStatus;
 use App\Enums\SponsorRequestStatus;
 use App\Enums\TicketRequestFieldType;
@@ -132,7 +133,7 @@ class HubTranslationCoverageTest extends TestCase
     {
         $untranslated = [];
 
-        foreach ([TicketStatus::class, SpeakerRequestStatus::class, SponsorRequestStatus::class, InvitationRequestStatus::class, AgendaItemType::class, TicketRequestFieldType::class] as $enum) {
+        foreach ([TicketStatus::class, SpeakerRequestStatus::class, SponsorRequestStatus::class, InvitationRequestStatus::class, AgendaItemType::class, Permission::class, TicketRequestFieldType::class] as $enum) {
             foreach ($enum::cases() as $case) {
                 app()->setLocale('en');
                 $english = $case->label();

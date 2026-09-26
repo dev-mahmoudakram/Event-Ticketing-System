@@ -825,5 +825,21 @@
     "Choose a role": "Choose a role",
     "What each person can open depends on their role. Admins can use every page, including Staff and Roles.": "What each person can open depends on their role. Admins can use every page, including Staff and Roles.",
     "No access yet": "No access yet",
-    "Your role has no access yet. Ask an admin to give it some.": "Your role has no access yet. Ask an admin to give it some."
+    "Your role has no access yet. Ask an admin to give it some.": "Your role has no access yet. Ask an admin to give it some.",
+    "Roles": "Roles",
+    "New Role": "New Role",
+    "Edit Role": "Edit Role",
+    "Role name": "Role name",
+    "Permission": "Permission",
+    "Locked": "Locked",
+    "Everything, including Staff and Roles": "Everything, including Staff and Roles",
+    "{0} No sections|{1} :count section|[2,*] :count sections": "{0} No sections|{1} :count section|[2,*] :count sections",
+    "What this role can open": "What this role can open",
+    "Each tick lets the role view and act in that section, for every event. Staff and Roles stay with admins.": "Each tick lets the role view and act in that section, for every event. Staff and Roles stay with admins.",
+    "Select all": "Select all",
+    "Role created.": "Role created.",
+    "Role updated.": "Role updated.",
+    "Role deleted.": "Role deleted.",
+    "Move this role's staff to another role before deleting it.": "Move this role's staff to another role before deleting it.",
+    "A role decides which sections its staff can open. Give each person a role on the Staff page.": "A role decides which sections its staff can open. Give each person a role on the Staff page."
 }
