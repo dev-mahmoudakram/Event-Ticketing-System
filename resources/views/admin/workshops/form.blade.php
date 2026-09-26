@@ -25,7 +25,7 @@
             @endforeach
         </x-admin.field>
 
-        <x-admin.speaker-picker :speakers="$speakers" :selected="old('speaker_ids', $workshop->exists ? $workshop->speakers->pluck('id')->all() : [])" />
+        <x-admin.speaker-picker :speakers="$speakers" :selected="$errors->any() ? old('speaker_ids', []) : ($workshop->exists ? $workshop->speakers->pluck('id')->all() : [])" />
 
         <x-admin.field type="number" name="capacity" label="{{ __('Capacity') }}" :value="old('capacity', $workshop->capacity ?? 0)" />
         <x-admin.field type="number" name="sort_order" label="{{ __('Sort Order') }}" :value="old('sort_order', $workshop->sort_order ?? 0)" />

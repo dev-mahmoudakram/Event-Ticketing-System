@@ -120,4 +120,26 @@ class AgendaPageTest extends TestCase
 
         $this->get(route('agenda.show', $event))->assertSee(route('landing.show', $event), false);
     }
+
+    public function test_a_workshop_pop_up_links_to_the_workshop_page(): void
+    {
+        $event = Event::factory()->create();
+        $workshop = Workshop::factory()->for($event)->create();
+
+        $this->get(route('agenda.show', $event).'?lang=en')
+            ->assertSee('href="'.route('workshops.show', [$event, $workshop]).'"', false)
+            ->assertSee('Workshop details');
+    }
+
+    public function test_cards_open_their_details_from_a_real_button_not_a_button_role(): void
+    {
+        $event = Event::factory()->create();
+        $item = AgendaItem::factory()->for($event)->create();
+        Workshop::factory()->for($event)->create();
+
+        $html = $this->get(route('agenda.show', $event))->getContent();
+
+        $this->assertStringNotContainsString('<article id="session-'.$item->id.'" data-schedule-open="session-'.$item->id.'" role="button"', $html);
+        $this->assertSame(2, substr_count($html, 'data-schedule-trigger'));
+    }
 }

@@ -12,7 +12,9 @@ export default function schedulePopup() {
         init() {
             document.addEventListener('click', (event) => {
                 const card = event.target.closest('[data-schedule-open]');
-                if (card && ! event.target.closest('a, button')) {
+                // Links and other buttons inside a card do their own thing; the title button
+                // (data-schedule-trigger) is the card's own "open details" control.
+                if (card && ! event.target.closest('a, button:not([data-schedule-trigger])')) {
                     this.show(card.dataset.scheduleOpen);
                 }
             });
@@ -37,7 +39,8 @@ export default function schedulePopup() {
                 return;
             }
 
-            this.returnFocus = document.getElementById(anchor) ?? document.activeElement;
+            const card = document.getElementById(anchor);
+            this.returnFocus = card?.querySelector('[data-schedule-trigger]') ?? card ?? document.activeElement;
             this.$refs.body.replaceChildren(template.content.cloneNode(true));
             this.$refs.body.querySelector('[data-schedule-title]')?.setAttribute('id', 'schedule-popup-title');
             this.open = true;

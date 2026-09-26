@@ -35,7 +35,7 @@
         <x-admin.bilingual-field name="title" label="{{ __('Title') }}" :value-ar="old('title_ar', $item->title_ar)" :value-en="old('title_en', $item->title_en)" />
         <x-admin.bilingual-field type="richtext" name="description" label="{{ __('Description') }}" :value-ar="old('description_ar', $item->description_ar)" :value-en="old('description_en', $item->description_en)" />
 
-        <x-admin.speaker-picker :speakers="$speakers" :selected="old('speaker_ids', $item->exists ? $item->speakers->pluck('id')->all() : [])" />
+        <x-admin.speaker-picker :speakers="$speakers" :selected="$errors->any() ? old('speaker_ids', []) : ($item->exists ? $item->speakers->pluck('id')->all() : [])" />
 
         <x-admin.field type="number" name="sort_order" label="{{ __('Sort Order') }}" :value="old('sort_order', $item->sort_order ?? 0)" />
 

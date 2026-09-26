@@ -111,6 +111,13 @@ class ScheduleRestructureTest extends TestCase
         DB::table('agenda_items')->insert($row(['type' => 'panel', 'speaker_id' => $speaker->id, 'start_time' => '09:00', 'end_time' => '10:00', 'title_en' => 'Kept panel']));
         DB::table('agenda_items')->insert($row(['type' => 'mystery', 'start_time' => '10:00', 'end_time' => '11:00', 'title_en' => 'Odd type']));
         DB::table('agenda_items')->insert($row(['type' => 'workshop', 'workshop_id' => $workshopId, 'start_time' => '14:00', 'end_time' => '15:30', 'title_en' => 'Workshop slot']));
+        // A workshop with no speaker of its own, whose agenda slot named one.
+        $slotSpeaker = Speaker::factory()->for($event)->create();
+        $bareWorkshopId = DB::table('workshops')->insertGetId([
+            'event_id' => $event->id, 'speaker_id' => null, 'slug' => 'w-2', 'name_ar' => 'و', 'name_en' => 'W2',
+            'capacity' => 10, 'sort_order' => 1, 'created_at' => now(), 'updated_at' => now(),
+        ]);
+        DB::table('agenda_items')->insert($row(['type' => 'workshop', 'workshop_id' => $bareWorkshopId, 'speaker_id' => $slotSpeaker->id, 'start_time' => '16:00', 'end_time' => '17:00', 'title_en' => 'Bare slot']));
 
         $this->artisan('migrate', ['--path' => $migration, '--realpath' => true])->assertSuccessful();
 
@@ -125,5 +132,6 @@ class ScheduleRestructureTest extends TestCase
         $this->assertSame('14:00', $workshop->start_time->format('H:i'));
         $this->assertSame('15:30', $workshop->end_time->format('H:i'));
         $this->assertSame([$speaker->id], $workshop->speakers->pluck('id')->all());
+        $this->assertSame([$slotSpeaker->id], Workshop::findOrFail($bareWorkshopId)->speakers->pluck('id')->all());
     }
 }

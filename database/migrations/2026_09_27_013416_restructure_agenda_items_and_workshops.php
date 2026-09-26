@@ -29,6 +29,14 @@ return new class extends Migration
         $workshopSpeakers = DB::table('workshops')->whereNotNull('speaker_id')->pluck('speaker_id', 'id');
         $linked = DB::table('agenda_items')->whereNotNull('workshop_id')->orderBy('day_date')->orderBy('start_time')->get();
 
+        // A workshop with no speaker of its own keeps the speaker its agenda slot named.
+        foreach ($linked->groupBy('workshop_id') as $workshopId => $items) {
+            $slotSpeaker = $items->firstWhere('speaker_id', '!=', null)?->speaker_id;
+            if (! $workshopSpeakers->has($workshopId) && $slotSpeaker !== null) {
+                $workshopSpeakers->put($workshopId, $slotSpeaker);
+            }
+        }
+
         Schema::create('agenda_item_speaker', function (Blueprint $table) {
             $table->foreignId('agenda_item_id')->constrained()->cascadeOnDelete();
             $table->foreignId('speaker_id')->constrained()->cascadeOnDelete();

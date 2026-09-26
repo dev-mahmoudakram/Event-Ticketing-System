@@ -158,4 +158,20 @@ class HubTranslationCoverageTest extends TestCase
             Event::TOGGLEABLE_SECTIONS,
         ));
     }
+
+    /**
+     * Arabic has six plural forms; a two-form translation turns "5 seats left" into "one seat
+     * left". Counts from 2 up must show the number.
+     */
+    public function test_arabic_counts_show_the_number(): void
+    {
+        app()->setLocale('ar');
+
+        $this->assertStringNotContainsString('واحد', trans_choice(':count seat left|:count seats left', 2, ['count' => 2]));
+
+        foreach ([3, 5, 12, 100] as $count) {
+            $this->assertStringContainsString((string) $count, trans_choice(':count seat left|:count seats left', $count, ['count' => $count]));
+            $this->assertStringContainsString((string) $count, trans_choice('In use by :count session — move it first.|In use by :count sessions or workshops — move them first.', $count, ['count' => $count]));
+        }
+    }
 }

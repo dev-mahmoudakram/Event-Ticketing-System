@@ -897,7 +897,7 @@
     "Show as a break (a slim line on the agenda)": "عرضها كاستراحة (سطر مختصر في الجدول)",
     "Saved.": "تم الحفظ.",
     "Deleted.": "تم الحذف.",
-    "In use by :count session — move it first.|In use by :count sessions or workshops — move them first.": "مستخدم في جلسة واحدة — انقلها أولًا.|مستخدم في :count جلسات أو ورش — انقلها أولًا.",
+    "In use by :count session — move it first.|In use by :count sessions or workshops — move them first.": "غير مستخدم|مستخدم في عنصر واحد — انقله أولًا.|مستخدم في عنصرين — انقلهما أولًا.|مستخدم في :count عناصر — انقلها أولًا.|مستخدم في :count عنصرًا — انقلها أولًا.|مستخدم في :count عنصر — انقلها أولًا.",
     "Move up": "تحريك لأعلى",
     "Move down": "تحريك لأسفل",
     "Add speaker": "إضافة متحدث",
@@ -910,6 +910,7 @@
     "Manage workshops": "إدارة ورش العمل",
     "+:count more": "+:count آخرين",
     "Book your seat": "احجز مقعدك",
-    ":count seat left|:count seats left": "بقي مقعد واحد|بقي :count مقاعد",
-    "Time to be announced": "الموعد يُعلن لاحقًا"
+    ":count seat left|:count seats left": "لا توجد مقاعد متبقية|بقي مقعد واحد|بقي مقعدان|بقي :count مقاعد|بقي :count مقعدًا|بقي :count مقعد",
+    "Time to be announced": "الموعد يُعلن لاحقًا",
+    "Workshop details": "تفاصيل الورشة"
 }

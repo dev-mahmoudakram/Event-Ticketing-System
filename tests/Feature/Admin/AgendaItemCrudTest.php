@@ -142,4 +142,20 @@ class AgendaItemCrudTest extends TestCase
             ->assertSee('name="session_type_id"', false)
             ->assertSee('name="location_id"', false);
     }
+
+    public function test_removed_speakers_stay_removed_after_a_failed_save(): void
+    {
+        $speaker = Speaker::factory()->for($this->event)->create();
+        $item = AgendaItem::factory()->for($this->event)->create(['day_date' => '2026-08-15']);
+        $item->syncSpeakersInOrder([$speaker->id]);
+
+        $this->actingAs($this->admin)
+            ->from(route('admin.events.agenda-items.edit', [$this->event, $item]))
+            ->put(route('admin.events.agenda-items.update', [$this->event, $item]), $this->payload(['title_en' => '']))
+            ->assertSessionHasErrors('title_en');
+
+        $this->actingAs($this->admin)->get(route('admin.events.agenda-items.edit', [$this->event, $item]))
+            ->assertOk()
+            ->assertSee('chosen: []', false);
+    }
 }

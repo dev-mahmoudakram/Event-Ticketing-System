@@ -20,8 +20,9 @@
         <span>{{ $entry->title() }}</span>
     </div>
 @else
-    <article id="{{ $entry->anchor() }}" data-schedule-open="{{ $entry->anchor() }}" role="button" tabindex="0"
-             aria-label="{{ $entry->title() }}" class="ccs-schedule-card">
+    {{-- Not role="button": the card holds a real link (Book your seat). The title is the button,
+         stretched over the card so a click anywhere opens the details. --}}
+    <article id="{{ $entry->anchor() }}" data-schedule-open="{{ $entry->anchor() }}" class="ccs-schedule-card">
         <div class="flex items-center gap-2 text-sm text-gray-300">
             <x-bi-clock class="w-4 h-4 text-ccs-gold" aria-hidden="true" />
             @if($entry->isScheduled())
@@ -33,7 +34,9 @@
 
         <span class="ccs-schedule-pill">{{ $entry->typeLabel() }}</span>
 
-        <h3 class="font-display text-lg md:text-xl font-bold leading-snug line-clamp-3">{{ $entry->title() }}</h3>
+        <h3 class="font-display text-lg md:text-xl font-bold leading-snug line-clamp-3">
+            <button type="button" data-schedule-trigger class="ccs-schedule-trigger">{{ $entry->title() }}</button>
+        </h3>
 
         @if($entry->locationName())
             <div class="flex items-center gap-2 text-sm text-gray-400">
@@ -61,7 +64,7 @@
                 @if($isFull)
                     <span class="ccs-schedule-book is-full" aria-disabled="true">{{ __('Full') }}</span>
                 @else
-                    <a href="{{ route('workshops.book', $event) }}" data-book-seat class="ccs-schedule-book">{{ __('Book your seat') }}</a>
+                    <a href="{{ route('workshops.book', $event) }}" data-book-seat class="ccs-schedule-book relative z-10">{{ __('Book your seat') }}</a>
                 @endif
             </div>
         @endif
@@ -119,6 +122,7 @@
                     @endif
                     <a href="{{ route('workshops.book', $event) }}" class="ccs-schedule-book">{{ __('Book your seat') }}</a>
                 @endif
+                <a href="{{ route('workshops.show', [$event, $workshop]) }}" class="text-sm font-bold text-ccs-gold hover:underline">{{ __('Workshop details') }}</a>
             </div>
         @endif
     </template>
