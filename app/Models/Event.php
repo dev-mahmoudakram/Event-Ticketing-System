@@ -225,6 +225,22 @@ class Event extends Model
         return $this->hasMany(Workshop::class)->orderBy('sort_order');
     }
 
+    public function sessionTypes(): HasMany
+    {
+        return $this->hasMany(SessionType::class)->orderBy('sort_order')->orderBy('id');
+    }
+
+    public function locations(): HasMany
+    {
+        return $this->hasMany(Location::class)->orderBy('sort_order')->orderBy('id');
+    }
+
+    protected static function booted(): void
+    {
+        // Every event starts with the agenda types the old fixed list had.
+        static::created(fn (Event $event) => SessionType::seedDefaultsFor($event));
+    }
+
     public function agendaItems(): HasMany
     {
         return $this->hasMany(AgendaItem::class)->orderBy('day_date')->orderBy('start_time');

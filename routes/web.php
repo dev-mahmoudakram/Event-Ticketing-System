@@ -17,10 +17,12 @@ use App\Http\Controllers\Admin\InfluencerCategoryController;
 use App\Http\Controllers\Admin\InvitationController as AdminInvitationController;
 use App\Http\Controllers\Admin\InvitationRequestController as AdminInvitationRequestController;
 use App\Http\Controllers\Admin\LandingPageContentController;
+use App\Http\Controllers\Admin\LocationController;
 use App\Http\Controllers\Admin\NewsletterSubscriberController as AdminNewsletterSubscriberController;
 use App\Http\Controllers\Admin\PlatformReportController;
 use App\Http\Controllers\Admin\ReelController;
 use App\Http\Controllers\Admin\RoleController;
+use App\Http\Controllers\Admin\SessionTypeController;
 use App\Http\Controllers\Admin\SiteContentController;
 use App\Http\Controllers\Admin\SiteFaqController;
 use App\Http\Controllers\Admin\SpeakerController;
@@ -163,6 +165,10 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::resource('events.discount-coupons', DiscountCouponController::class)
             ->except('show')
             ->parameters(['discount-coupons' => 'discountCoupon']);
+        Route::post('events/{event}/session-types/reorder', [SessionTypeController::class, 'reorder'])->name('events.session-types.reorder');
+        Route::resource('events.session-types', SessionTypeController::class)->except('show')->parameters(['session-types' => 'sessionType']);
+        Route::post('events/{event}/locations/reorder', [LocationController::class, 'reorder'])->name('events.locations.reorder');
+        Route::resource('events.locations', LocationController::class)->except('show');
         Route::resource('events.agenda-items', AgendaItemController::class)
             ->except('show')
             ->parameters(['agenda-items' => 'agendaItem']);

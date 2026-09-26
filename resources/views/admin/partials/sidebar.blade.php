@@ -19,6 +19,8 @@
         ['prefix' => 'check-in', 'permission' => \App\Enums\Permission::RegistrationDesk, 'route' => 'check-in.index', 'label' => __('Registration Desk')],
         ['prefix' => 'admin.events.workshops', 'permission' => \App\Enums\Permission::AgendaWorkshops, 'route' => 'admin.events.workshops.index', 'label' => __('Workshops')],
         ['prefix' => 'admin.events.agenda-items', 'permission' => \App\Enums\Permission::AgendaWorkshops, 'route' => 'admin.events.agenda-items.index', 'label' => __('Agenda')],
+        ['prefix' => 'admin.events.session-types', 'permission' => \App\Enums\Permission::AgendaWorkshops, 'route' => 'admin.events.session-types.index', 'label' => __('Session Types')],
+        ['prefix' => 'admin.events.locations', 'permission' => \App\Enums\Permission::AgendaWorkshops, 'route' => 'admin.events.locations.index', 'label' => __('Locations')],
         ['prefix' => 'admin.events.reels', 'permission' => \App\Enums\Permission::LandingPage, 'route' => 'admin.events.reels.index', 'label' => __('Reels')],
         ['prefix' => 'admin.events.gallery-photos', 'permission' => \App\Enums\Permission::LandingPage, 'route' => 'admin.events.gallery-photos.index', 'label' => __('Gallery')],
         ['prefix' => 'admin.events.testimonials', 'permission' => \App\Enums\Permission::LandingPage, 'route' => 'admin.events.testimonials.index', 'label' => __('Testimonials')],

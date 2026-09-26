@@ -886,5 +886,16 @@
     "Role updated.": "تم تحديث الدور.",
     "Role deleted.": "تم حذف الدور.",
     "Move this role's staff to another role before deleting it.": "انقل أعضاء هذا الدور إلى دور آخر قبل حذفه.",
-    "A role decides which sections its staff can open. Give each person a role on the Staff page.": "يحدد الدور الأقسام التي يمكن لأعضائه فتحها. اختر لكل شخص دوره من صفحة الفريق."
+    "A role decides which sections its staff can open. Give each person a role on the Staff page.": "يحدد الدور الأقسام التي يمكن لأعضائه فتحها. اختر لكل شخص دوره من صفحة الفريق.",
+    "Session Types": "أنواع الجلسات",
+    "New Session Type": "نوع جلسة جديد",
+    "Locations": "الأماكن",
+    "New Location": "مكان جديد",
+    "Used by": "مستخدم في",
+    "Drag to change the order they appear in.": "اسحب لتغيير ترتيب ظهورها.",
+    "Nothing here yet.": "لا يوجد شيء هنا بعد.",
+    "Show as a break (a slim line on the agenda)": "عرضها كاستراحة (سطر مختصر في الجدول)",
+    "Saved.": "تم الحفظ.",
+    "Deleted.": "تم الحذف.",
+    "In use by :count session — move it first.|In use by :count sessions or workshops — move them first.": "مستخدم في جلسة واحدة — انقلها أولًا.|مستخدم في :count جلسات أو ورش — انقلها أولًا."
 }

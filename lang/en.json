@@ -841,5 +841,16 @@
     "Role updated.": "Role updated.",
     "Role deleted.": "Role deleted.",
     "Move this role's staff to another role before deleting it.": "Move this role's staff to another role before deleting it.",
-    "A role decides which sections its staff can open. Give each person a role on the Staff page.": "A role decides which sections its staff can open. Give each person a role on the Staff page."
+    "A role decides which sections its staff can open. Give each person a role on the Staff page.": "A role decides which sections its staff can open. Give each person a role on the Staff page.",
+    "Session Types": "Session Types",
+    "New Session Type": "New Session Type",
+    "Locations": "Locations",
+    "New Location": "New Location",
+    "Used by": "Used by",
+    "Drag to change the order they appear in.": "Drag to change the order they appear in.",
+    "Nothing here yet.": "Nothing here yet.",
+    "Show as a break (a slim line on the agenda)": "Show as a break (a slim line on the agenda)",
+    "Saved.": "Saved.",
+    "Deleted.": "Deleted.",
+    "In use by :count session — move it first.|In use by :count sessions or workshops — move them first.": "In use by :count session — move it first.|In use by :count sessions or workshops — move them first."
 }

@@ -78,7 +78,7 @@ enum Permission: string
             self::Dashboard => ['admin.dashboard'],
             self::Events => ['admin.events.index', 'admin.events.create', 'admin.events.store', 'admin.events.edit', 'admin.events.update', 'admin.events.destroy'],
             self::LandingPage => ['admin.events.content.*', 'admin.events.reels.*', 'admin.events.gallery-photos.*', 'admin.events.testimonials.*', 'admin.events.faqs.*'],
-            self::AgendaWorkshops => ['admin.events.agenda-items.*', 'admin.events.workshops.*'],
+            self::AgendaWorkshops => ['admin.events.agenda-items.*', 'admin.events.workshops.*', 'admin.events.session-types.*', 'admin.events.locations.*'],
             self::Speakers => ['admin.events.speakers.*'],
             self::SpeakerRequests => ['admin.events.speaker-requests.*'],
             self::Sponsors => ['admin.events.sponsors.*', 'admin.events.sponsor-tiers.*'],
