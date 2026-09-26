@@ -794,5 +794,10 @@
     "Confirm password": "Confirm password",
     "New password (leave blank to keep the current one)": "New password (leave blank to keep the current one)",
     "Choose the event you are checking people in for.": "Choose the event you are checking people in for.",
-    "View your ticket": "View your ticket"
+    "View your ticket": "View your ticket",
+    "Pagination": "Pagination",
+    "Showing :from–:to of :total": "Showing :from–:to of :total",
+    "Previous": "Previous",
+    "Next": "Next",
+    "Page :page of :pages": "Page :page of :pages"
 }

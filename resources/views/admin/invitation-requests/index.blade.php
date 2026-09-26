@@ -51,4 +51,6 @@
             </tbody>
         </x-admin.table>
     @endif
+
+    <x-admin.pagination :paginator="$invitationRequests" />
 @endsection

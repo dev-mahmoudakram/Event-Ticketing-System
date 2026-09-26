@@ -80,4 +80,6 @@
             </tbody>
         </x-admin.table>
     @endif
+
+    <x-admin.pagination :paginator="$tickets" />
 @endsection

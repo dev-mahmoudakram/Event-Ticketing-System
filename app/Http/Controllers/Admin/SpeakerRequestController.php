@@ -23,7 +23,8 @@ class SpeakerRequestController extends Controller
 
         $speakerRequests = $event->speakerRequests()
             ->when($status !== 'all', fn ($query) => $query->where('status', $status))
-            ->get();
+            ->paginate(50)
+            ->withQueryString();
 
         return view('admin.speaker-requests.index', ['event' => $event, 'speakerRequests' => $speakerRequests, 'status' => $status]);
     }

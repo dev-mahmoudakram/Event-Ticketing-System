@@ -32,7 +32,8 @@ class InvitationRequestController extends Controller
         $invitationRequests = $event->invitationRequests()
             ->with(['invitation.ticketType', 'influencerCategory'])
             ->when($status !== 'all', fn ($query) => $query->where('status', $status))
-            ->get();
+            ->paginate(50)
+            ->withQueryString();
 
         return view('admin.invitation-requests.index', compact('event', 'invitationRequests', 'status'));
     }

@@ -20,7 +20,7 @@ class InvitationController extends Controller
     {
         return view('admin.invitations.index', [
             'event' => $event,
-            'invitations' => $event->invitations()->with('ticketType')->get(),
+            'invitations' => $event->invitations()->with('ticketType')->paginate(50),
             'ticketTypes' => $event->ticketTypes()->where('is_active', true)->get(),
         ]);
     }

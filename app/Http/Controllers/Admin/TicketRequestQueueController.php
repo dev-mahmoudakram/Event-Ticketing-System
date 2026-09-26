@@ -33,7 +33,8 @@ class TicketRequestQueueController extends Controller
             ->with(['ticketType', 'influencerCategory', 'answers.field'])
             ->when($status !== 'all', fn ($query) => $query->where('status', $status))
             ->latest()
-            ->get();
+            ->paginate(50)
+            ->withQueryString();
 
         return view('admin.ticket-requests.index', ['event' => $event, 'tickets' => $tickets, 'status' => $status]);
     }

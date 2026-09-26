@@ -28,4 +28,6 @@
             </tbody>
         </x-admin.table>
     @endif
+
+    <x-admin.pagination :paginator="$contactMessages" />
 @endsection

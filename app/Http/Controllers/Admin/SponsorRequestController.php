@@ -24,7 +24,8 @@ class SponsorRequestController extends Controller
 
         $sponsorRequests = $event->sponsorRequests()
             ->when($status !== 'all', fn ($query) => $query->where('status', $status))
-            ->get();
+            ->paginate(50)
+            ->withQueryString();
 
         return view('admin.sponsor-requests.index', [
             'event' => $event,

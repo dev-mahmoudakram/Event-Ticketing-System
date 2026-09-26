@@ -792,5 +792,10 @@
     "Confirm password": "تأكيد كلمة المرور",
     "New password (leave blank to keep the current one)": "كلمة مرور جديدة (اتركها فارغة للإبقاء على الحالية)",
     "Choose the event you are checking people in for.": "اختر الفعالية التي تسجّل الحضور لها.",
-    "View your ticket": "عرض تذكرتك"
+    "View your ticket": "عرض تذكرتك",
+    "Pagination": "التنقل بين الصفحات",
+    "Showing :from–:to of :total": "عرض :from–:to من :total",
+    "Previous": "السابق",
+    "Next": "التالي",
+    "Page :page of :pages": "صفحة :page من :pages"
 }

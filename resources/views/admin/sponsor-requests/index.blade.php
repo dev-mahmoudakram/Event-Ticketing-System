@@ -102,4 +102,6 @@
             </tbody>
         </x-admin.table>
     @endif
+
+    <x-admin.pagination :paginator="$sponsorRequests" />
 @endsection

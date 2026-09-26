@@ -12,6 +12,6 @@ class NewsletterSubscriberController extends Controller
 {
     public function index(Event $event): View
     {
-        return view('admin.newsletter-subscribers.index', ['event' => $event, 'newsletterSubscribers' => $event->newsletterSubscribers]);
+        return view('admin.newsletter-subscribers.index', ['event' => $event, 'newsletterSubscribers' => $event->newsletterSubscribers()->paginate(100)]);
     }
 }

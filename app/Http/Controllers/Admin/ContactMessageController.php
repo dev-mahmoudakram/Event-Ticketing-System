@@ -12,6 +12,6 @@ class ContactMessageController extends Controller
 {
     public function index(Event $event): View
     {
-        return view('admin.contact-messages.index', ['event' => $event, 'contactMessages' => $event->contactMessages]);
+        return view('admin.contact-messages.index', ['event' => $event, 'contactMessages' => $event->contactMessages()->paginate(50)]);
     }
 }
