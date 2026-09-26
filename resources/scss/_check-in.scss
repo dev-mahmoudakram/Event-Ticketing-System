@@ -83,10 +83,10 @@
 /* Verified: admit. The only state without a warning shape, so it reads as
    unambiguously different from every kind of refusal. */
 .scan-verdict-verified {
-  background: rgba(124, 203, 207, 0.14);
-  background: color-mix(in srgb, var(--color-ccs-teal-light) 14%, transparent);
-  border-color: var(--color-ccs-teal-light);
-  color: var(--color-ccs-teal-light);
+  background: rgba(250, 212, 139, 0.14);
+  background: color-mix(in srgb, var(--color-ccs-gold) 14%, transparent);
+  border-color: var(--color-ccs-gold);
+  color: var(--color-ccs-gold);
 }
 
 .scan-verdict-verified .scan-verdict-name {

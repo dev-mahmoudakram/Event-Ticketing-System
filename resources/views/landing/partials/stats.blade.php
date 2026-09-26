@@ -15,7 +15,7 @@
                 <div class="text-sm text-gray-400 mt-2.5">{{ __('Attendees') }}</div>
             </div>
             <div class="bg-ccs-black px-8 py-11 text-center" data-reveal data-reveal-delay="1">
-                <div class="text-4xl md:text-5xl font-extrabold text-ccs-teal-light" data-stat-value="speakers">{{ $speakerCount }}</div>
+                <div class="text-4xl md:text-5xl font-extrabold text-ccs-gold" data-stat-value="speakers">{{ $speakerCount }}</div>
                 <div class="text-sm text-gray-400 mt-2.5">{{ __('Speakers') }}</div>
             </div>
             <div class="bg-ccs-black px-8 py-11 text-center" data-reveal data-reveal-delay="2">

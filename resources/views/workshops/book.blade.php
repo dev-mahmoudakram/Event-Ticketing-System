@@ -43,7 +43,7 @@
                     <p class="text-sm text-red-300">{{ $message }}</p>
                 @enderror
 
-                <button type="submit" class="px-6 py-3 rounded-lg bg-ccs-teal hover:bg-ccs-teal-light hover:text-ccs-black text-white font-bold transition-colors w-fit">
+                <button type="submit" class="px-6 py-3 rounded-lg bg-ccs-coral hover:brightness-110 text-ccs-red font-bold transition-colors w-fit">
                     {{ __('Open my workshops') }}
                 </button>
             </form>

@@ -43,7 +43,7 @@
         </div>
 
         @if(session('workshop_booking_saved'))
-            <p class="mb-8 rounded-lg border border-ccs-teal/40 bg-ccs-teal/10 px-5 py-4 text-sm font-bold text-ccs-teal-light">
+            <p class="mb-8 rounded-lg border border-ccs-gold/40 bg-ccs-gold/10 px-5 py-4 text-sm font-bold text-ccs-gold">
                 {{ __('Your workshops are saved.') }}
             </p>
         @endif
@@ -87,7 +87,7 @@
                         <label
                             class="block h-full rounded-2xl border p-6 transition-colors cursor-pointer"
                             :class="chosen.includes({{ $workshop->id }})
-                                ? 'border-ccs-teal bg-ccs-teal/10'
+                                ? 'border-ccs-gold bg-ccs-gold/10'
                                 : (locked({{ $workshop->id }}) || {{ $soldOut ? 'true' : 'false' }} ? 'border-white/10 bg-white/5 opacity-50 cursor-not-allowed' : 'border-white/10 bg-white/5 hover:border-white/30')"
                         >
                             <div class="flex items-start gap-3">
@@ -95,7 +95,7 @@
                                     type="checkbox"
                                     name="workshops[]"
                                     value="{{ $workshop->id }}"
-                                    class="mt-1.5 w-4 h-4 rounded border-gray-500 bg-gray-900 text-ccs-teal"
+                                    class="mt-1.5 w-4 h-4 rounded border-gray-500 bg-gray-900 text-ccs-gold"
                                     @checked($wasChosen)
                                     @disabled($soldOut)
                                     :disabled="locked({{ $workshop->id }}) || {{ $soldOut ? 'true' : 'false' }}"
@@ -123,7 +123,7 @@
                     @endforeach
                 </div>
 
-                <button type="submit" class="px-7 py-4 rounded-lg bg-ccs-teal hover:bg-ccs-teal-light hover:text-ccs-black text-white font-bold transition-colors">
+                <button type="submit" class="px-7 py-4 rounded-lg bg-ccs-coral hover:brightness-110 text-ccs-red font-bold transition-colors">
                     {{ __('Save my workshops') }}
                 </button>
             </form>

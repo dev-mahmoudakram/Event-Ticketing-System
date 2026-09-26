@@ -3,7 +3,7 @@
 @if(($intro || $event->venue_address_en) && $event->isSectionVisible('location'))
     <section id="location" class="ccs-section scroll-mt-24 grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
         <div data-reveal>
-            <div class="ccs-eyebrow text-ccs-teal-light">{{ __('Venue') }}</div>
+            <div class="ccs-eyebrow text-ccs-gold">{{ __('Venue') }}</div>
             <h2 class="font-display text-3xl md:text-5xl font-extrabold mb-6">{{ app()->getLocale() === 'ar' ? $event->venue_name_ar : $event->venue_name_en }}</h2>
             @if($intro)
                 {{-- Sanitized on save against the strict 'cms' Purifier profile — see

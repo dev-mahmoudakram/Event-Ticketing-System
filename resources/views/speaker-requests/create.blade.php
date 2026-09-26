@@ -15,8 +15,8 @@
         <h1 class="font-display text-3xl md:text-5xl font-extrabold mb-6 max-w-2xl" data-reveal>{{ __('Become a Speaker') }}</h1>
 
         @if(session('speaker_request_success'))
-            <div class="max-w-xl rounded-2xl border border-ccs-teal-light/40 bg-ccs-teal-light/10 px-6 py-5" data-reveal>
-                <p class="font-display font-bold text-lg text-ccs-teal-light mb-1">{{ __('Request received!') }}</p>
+            <div class="max-w-xl rounded-2xl border border-ccs-gold/40 bg-ccs-gold/10 px-6 py-5" data-reveal>
+                <p class="font-display font-bold text-lg text-ccs-gold mb-1">{{ __('Request received!') }}</p>
                 <p class="text-gray-300">{{ __("Thanks — we'll review your request and be in touch soon.") }}</p>
             </div>
         @else

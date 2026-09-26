@@ -6,7 +6,7 @@
 @if($about && $event->isSectionVisible('about'))
     <section id="about" class="ccs-section scroll-mt-24 grid grid-cols-1 lg:grid-cols-2 gap-16 items-center pt-32">
         <div data-reveal>
-            <div class="ccs-eyebrow text-ccs-teal-light">{{ __('About the Event') }}</div>
+            <div class="ccs-eyebrow text-ccs-gold">{{ __('About the Event') }}</div>
             {{-- Sanitized on save (App\Support\RichText, via LandingPageContentController)
                  against the strict 'cms' Purifier profile — safe to render unescaped here
                  because nothing reaches this column without having passed through it first. --}}

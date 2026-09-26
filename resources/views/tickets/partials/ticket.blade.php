@@ -39,7 +39,7 @@
                         @endif
                     </td>
                     <td style="vertical-align:middle;text-align:{{ $isArabic ? 'left' : 'right' }};">
-                        <span style="font-size:11px;letter-spacing:0.16em;color:#7ccbcf;">{{ __('Admission Ticket') }}</span>
+                        <span style="font-size:11px;letter-spacing:0.16em;color:#fad48b;">{{ __('Admission Ticket') }}</span>
                     </td>
                 </tr>
             </table>

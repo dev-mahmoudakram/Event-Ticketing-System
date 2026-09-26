@@ -3,7 +3,7 @@
     <section id="partners" class="ccs-section scroll-mt-24">
         <div class="flex flex-wrap items-end justify-between gap-6 mb-12">
             <div>
-                <div class="ccs-eyebrow text-ccs-teal-light" data-reveal>{{ __('Sponsors & Partners') }}</div>
+                <div class="ccs-eyebrow text-ccs-gold" data-reveal>{{ __('Sponsors & Partners') }}</div>
                 <h2 class="font-display text-3xl md:text-5xl font-extrabold" data-reveal>{{ __('Backed by the industry.') }}</h2>
             </div>
             <a href="{{ route('sponsor-requests.create', $event) }}" class="shrink-0 px-6 py-3 rounded-lg ccs-btn-red text-sm font-bold transition-transform duration-200 hover:scale-[1.03]" data-reveal>

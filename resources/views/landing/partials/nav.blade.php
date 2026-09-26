@@ -34,16 +34,16 @@
     </div>
 
     <div x-show="open" x-cloak x-transition class="absolute top-full inset-x-0 bg-ccs-black border-b border-white/10 flex flex-col px-5 pb-6 lg:hidden">
-        <a href="{{ $sectionBase }}#about" class="py-3.5 border-b border-white/10 font-semibold transition-colors hover:text-ccs-teal-light" @click="open = false">{{ __('About') }}</a>
-        <a href="{{ route('agenda.show', $event) }}" class="py-3.5 border-b border-white/10 font-semibold transition-colors hover:text-ccs-teal-light" @click="open = false">{{ __('Agenda') }}</a>
-        <a href="{{ $sectionBase }}#speakers" class="py-3.5 border-b border-white/10 font-semibold transition-colors hover:text-ccs-teal-light" @click="open = false">{{ __('Speakers') }}</a>
-        <a href="{{ $sectionBase }}#workshops" class="py-3.5 border-b border-white/10 font-semibold transition-colors hover:text-ccs-teal-light" @click="open = false">{{ __('Workshops') }}</a>
-        <a href="{{ $sectionBase }}#tickets" class="py-3.5 border-b border-white/10 font-semibold transition-colors hover:text-ccs-teal-light" @click="open = false">{{ __('Tickets') }}</a>
-        <a href="{{ $sectionBase }}#awards" class="py-3.5 border-b border-white/10 font-semibold transition-colors hover:text-ccs-teal-light" @click="open = false">{{ __('Awards') }}</a>
-        <a href="{{ $sectionBase }}#partners" class="py-3.5 border-b border-white/10 font-semibold transition-colors hover:text-ccs-teal-light" @click="open = false">{{ __('Sponsors') }}</a>
-        <a href="{{ $sectionBase }}#faq" class="py-3.5 border-b border-white/10 font-semibold transition-colors hover:text-ccs-teal-light" @click="open = false">{{ __('FAQs') }}</a>
-        <a href="{{ route('speaker-requests.create', $event) }}" class="py-3.5 border-b border-white/10 font-semibold transition-colors hover:text-ccs-teal-light" @click="open = false">{{ __('Become a Speaker') }}</a>
-        <a href="{{ route('sponsor-requests.create', $event) }}" class="py-3.5 font-semibold transition-colors hover:text-ccs-teal-light" @click="open = false">{{ __('Become a Sponsor') }}</a>
+        <a href="{{ $sectionBase }}#about" class="py-3.5 border-b border-white/10 font-semibold transition-colors hover:text-ccs-gold" @click="open = false">{{ __('About') }}</a>
+        <a href="{{ route('agenda.show', $event) }}" class="py-3.5 border-b border-white/10 font-semibold transition-colors hover:text-ccs-gold" @click="open = false">{{ __('Agenda') }}</a>
+        <a href="{{ $sectionBase }}#speakers" class="py-3.5 border-b border-white/10 font-semibold transition-colors hover:text-ccs-gold" @click="open = false">{{ __('Speakers') }}</a>
+        <a href="{{ $sectionBase }}#workshops" class="py-3.5 border-b border-white/10 font-semibold transition-colors hover:text-ccs-gold" @click="open = false">{{ __('Workshops') }}</a>
+        <a href="{{ $sectionBase }}#tickets" class="py-3.5 border-b border-white/10 font-semibold transition-colors hover:text-ccs-gold" @click="open = false">{{ __('Tickets') }}</a>
+        <a href="{{ $sectionBase }}#awards" class="py-3.5 border-b border-white/10 font-semibold transition-colors hover:text-ccs-gold" @click="open = false">{{ __('Awards') }}</a>
+        <a href="{{ $sectionBase }}#partners" class="py-3.5 border-b border-white/10 font-semibold transition-colors hover:text-ccs-gold" @click="open = false">{{ __('Sponsors') }}</a>
+        <a href="{{ $sectionBase }}#faq" class="py-3.5 border-b border-white/10 font-semibold transition-colors hover:text-ccs-gold" @click="open = false">{{ __('FAQs') }}</a>
+        <a href="{{ route('speaker-requests.create', $event) }}" class="py-3.5 border-b border-white/10 font-semibold transition-colors hover:text-ccs-gold" @click="open = false">{{ __('Become a Speaker') }}</a>
+        <a href="{{ route('sponsor-requests.create', $event) }}" class="py-3.5 font-semibold transition-colors hover:text-ccs-gold" @click="open = false">{{ __('Become a Sponsor') }}</a>
         <div class="sm:hidden flex items-center gap-1 text-xs font-bold border border-white/20 rounded-md overflow-hidden mt-4 w-fit">
             <a href="{{ request()->fullUrlWithQuery(['lang' => 'en']) }}" class="px-3 py-2 transition-colors {{ app()->getLocale() === 'en' ? 'bg-white text-ccs-black' : 'text-gray-400 hover:text-white' }}">EN</a>
             <a href="{{ request()->fullUrlWithQuery(['lang' => 'ar']) }}" class="px-3 py-2 transition-colors {{ app()->getLocale() === 'ar' ? 'bg-white text-ccs-black' : 'text-gray-400 hover:text-white' }}">AR</a>

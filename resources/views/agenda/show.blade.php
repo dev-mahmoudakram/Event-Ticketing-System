@@ -11,7 +11,7 @@
             <span aria-hidden="true">&larr;</span> {{ __('Back to :event', ['event' => app()->getLocale() === 'ar' ? $event->name_ar : $event->name_en]) }}
         </a>
 
-        <div class="ccs-eyebrow text-ccs-teal-light" data-reveal>{{ __('Agenda') }}</div>
+        <div class="ccs-eyebrow text-ccs-gold" data-reveal>{{ __('Agenda') }}</div>
         <h1 class="font-display text-3xl md:text-5xl font-extrabold mb-10" data-reveal>
             @if($days->isNotEmpty())
                 {{ trans_choice(':count day, deliberately paced.|:count days, deliberately paced.', $days->count(), ['count' => $days->count()]) }}
@@ -37,7 +37,7 @@
                     <div class="flex flex-col gap-10">
                         @foreach($sessions as $item)
                             <div class="relative pl-10">
-                                <span class="absolute left-0 top-1.5 w-2.75 h-2.75 rounded-full bg-ccs-teal-light"></span>
+                                <span class="absolute left-0 top-1.5 w-2.75 h-2.75 rounded-full bg-ccs-gold"></span>
                                 <div class="flex flex-wrap items-center gap-3 mb-2">
                                     <span class="text-sm font-bold text-gray-400 tabular-nums">{{ $item->start_time->format('H:i') }}</span>
                                     <span class="text-xs font-bold uppercase tracking-wide text-ccs-coral border border-ccs-coral/40 rounded-md px-3 py-1.5 whitespace-nowrap">{{ $item->type->label() }}</span>

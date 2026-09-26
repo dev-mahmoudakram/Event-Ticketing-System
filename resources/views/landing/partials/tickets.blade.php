@@ -18,7 +18,7 @@
                 ['label' => __('QR Code Issued'), 'state' => 'done'],
             ] as $index => $step)
                 <div class="relative z-10 flex flex-col items-center text-center gap-3.5">
-                    <div class="w-[46px] h-[46px] shrink-0 rounded-full flex items-center justify-center font-extrabold {{ $step['state'] === 'active' ? 'bg-[#241014] border border-white/10 text-white' : ($step['state'] === 'done' ? 'bg-ccs-teal-light text-ccs-black' : 'bg-ccs-maroon border border-white/10 text-white') }}">
+                    <div class="w-[46px] h-[46px] shrink-0 rounded-full flex items-center justify-center font-extrabold {{ $step['state'] === 'active' ? 'bg-[#241014] border border-white/10 text-white' : ($step['state'] === 'done' ? 'bg-ccs-gold text-ccs-black' : 'bg-ccs-maroon border border-white/10 text-white') }}">
                         {{ $index + 1 }}
                     </div>
                     <span class="text-[13px] font-semibold text-gray-400">{{ $step['label'] }}</span>
@@ -75,7 +75,7 @@
                         <div class="flex flex-col gap-3.5 self-start">
                             @foreach($ticketType->features as $feature)
                                 <div class="flex gap-2.5 items-start text-sm text-gray-300">
-                                    <x-bi-check-circle-fill class="shrink-0 mt-0.5 text-[15px] text-ccs-teal-light" />
+                                    <x-bi-check-circle-fill class="shrink-0 mt-0.5 text-[15px] text-ccs-gold" />
                                     <span>{{ app()->getLocale() === 'ar' ? $feature->text_ar : $feature->text_en }}</span>
                                 </div>
                             @endforeach

@@ -17,7 +17,7 @@
         @if($workshop->agendaItems->isNotEmpty())
             <div class="flex flex-wrap gap-3 mb-8" data-reveal>
                 @foreach($workshop->agendaItems as $session)
-                    <span class="text-sm font-bold text-ccs-teal-light border border-ccs-teal-light/40 rounded-lg px-4 py-2">
+                    <span class="text-sm font-bold text-ccs-gold border border-ccs-gold/40 rounded-lg px-4 py-2">
                         {{ $session->day_date->format('M j') }} &middot; {{ $session->start_time->format('H:i') }}–{{ $session->end_time->format('H:i') }}
                     </span>
                 @endforeach

@@ -35,7 +35,7 @@
                     <button type="button" @click="$store.ticketRequest.open = false" class="text-gray-400 hover:text-white text-2xl leading-none transition-colors" aria-label="{{ __('Close') }}">&times;</button>
                 </div>
 
-                <p id="ticket-request-feedback" class="text-sm font-bold mb-4 {{ session('ticket_request_success') ? 'text-ccs-teal-light' : 'hidden' }}">
+                <p id="ticket-request-feedback" class="text-sm font-bold mb-4 {{ session('ticket_request_success') ? 'text-ccs-gold' : 'hidden' }}">
                     @if(session('ticket_request_success'))
                         {{ __('Request received! Your reference number is :number.', ['number' => session('ticket_request_success')]) }}
                     @endif

@@ -62,7 +62,7 @@
 
         {{-- Centre lockup --}}
         <div class="text-center flex flex-col items-center">
-            <p class="ccs-eyebrow text-ccs-teal-light mb-4" data-hero-bit>
+            <p class="ccs-eyebrow text-ccs-gold mb-4" data-hero-bit>
                 @if($event->isSingleDay())
                     {{ $event->start_date->translatedFormat('M j, Y') }}
                 @else
@@ -93,7 +93,7 @@
             </div>
 
             <div class="flex items-stretch rounded-xl overflow-hidden border border-white/15 mb-9 text-start" data-hero-bit>
-                <div class="bg-ccs-teal/70 px-4 py-3 flex items-center">
+                <div class="bg-ccs-maroon px-4 py-3 flex items-center">
                     <span class="text-[0.65rem] font-bold uppercase tracking-widest">{{ $venueName ?: __('Venue TBA') }}</span>
                 </div>
                 <div class="bg-ccs-red px-5 py-3">

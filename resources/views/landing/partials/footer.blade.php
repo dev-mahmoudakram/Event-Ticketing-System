@@ -6,7 +6,7 @@
         <h2 class="font-display text-2xl md:text-4xl font-extrabold mb-4" data-reveal>{{ __('Stay in the loop.') }}</h2>
         <p class="text-gray-300 mb-8" data-reveal>{{ __('Speaker announcements, agenda updates, and workshop drops — no spam.') }}</p>
         @if(session('newsletter_success'))
-            <p class="text-sm font-bold text-ccs-teal-light mb-4">{{ __("You're subscribed — thanks!") }}</p>
+            <p class="text-sm font-bold text-ccs-gold mb-4">{{ __("You're subscribed — thanks!") }}</p>
         @endif
         <form method="POST" action="{{ route('newsletter.store', $event) }}" class="flex flex-wrap gap-3 justify-center max-w-md mx-auto" data-reveal data-reveal-delay="1">
             @csrf

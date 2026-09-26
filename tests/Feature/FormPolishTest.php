@@ -10,6 +10,7 @@ use App\Models\TicketRequestField;
 use App\Models\TicketType;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\File;
 use Tests\TestCase;
 
 class FormPolishTest extends TestCase
@@ -49,6 +50,21 @@ class FormPolishTest extends TestCase
             ->assertSee('name="field_'.$instagram->id.'_followers"', false)
             ->assertSee('id="error-field_'.$instagram->id.'_followers"', false)
             ->assertSee('ccs-form-required', false);
+    }
+
+    /**
+     * Teal was taken out of the event palette; this keeps it from drifting back in through a
+     * copied class name or a hard-coded value.
+     */
+    public function test_teal_is_no_longer_part_of_the_palette(): void
+    {
+        $offenders = collect(File::allFiles(resource_path()))
+            ->filter(fn ($file) => preg_match('/ccs-teal|#7ccbcf|#2a7675/i', $file->getContents()) === 1)
+            ->map(fn ($file) => $file->getRelativePathname())
+            ->values()
+            ->all();
+
+        $this->assertSame([], $offenders);
     }
 
     public function test_ticket_cards_share_rows_so_they_match_in_height(): void

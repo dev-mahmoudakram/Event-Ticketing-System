@@ -24,7 +24,7 @@
                                  to render unescaped. --}}
                             <div class="ccs-richtext text-sm text-gray-400 leading-relaxed flex-1">{!! app()->getLocale() === 'ar' ? $workshop->description_ar : $workshop->description_en !!}</div>
                             <p class="text-xs uppercase tracking-wide text-gray-500">{{ trans_choice(':count seat|:count seats', $workshop->capacity, ['count' => $workshop->capacity]) }}</p>
-                            <a href="{{ route('workshops.show', [$event, $workshop]) }}" class="text-sm font-bold text-ccs-teal-light border-b border-transparent hover:border-ccs-teal-light transition-colors w-fit">{{ __('View Workshop') }}</a>
+                            <a href="{{ route('workshops.show', [$event, $workshop]) }}" class="text-sm font-bold text-ccs-gold border-b border-transparent hover:border-ccs-gold transition-colors w-fit">{{ __('View Workshop') }}</a>
                         </div>
                     </div>
                 @endforeach

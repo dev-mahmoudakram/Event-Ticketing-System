@@ -11,7 +11,7 @@
   width: 100%;
   transform: scaleX(0);
   transform-origin: left center;
-  background: linear-gradient(90deg, var(--color-ccs-coral), var(--color-ccs-gold), var(--color-ccs-teal-light));
+  background: linear-gradient(90deg, var(--color-ccs-coral), var(--color-ccs-gold));
   z-index: 60;
 }
 
@@ -24,7 +24,7 @@
 .ccs-hero-bloom {
   background:
     radial-gradient(60% 55% at 50% 12%, rgba(255, 126, 113, 0.34), transparent 70%),
-    radial-gradient(45% 45% at 85% 70%, rgba(42, 118, 117, 0.30), transparent 70%),
+    radial-gradient(45% 45% at 85% 70%, rgba(67, 13, 20, 0.30), transparent 70%),
     radial-gradient(45% 45% at 12% 62%, rgba(67, 13, 20, 0.75), transparent 70%);
 }
 

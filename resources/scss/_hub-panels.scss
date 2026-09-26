@@ -198,17 +198,17 @@ footer .hub-panel-dark {
 }
 
 .swal2-popup.ticket-success .swal2-icon.swal2-success {
-  border-color: rgba(124, 203, 207, 0.45);
-  border-color: color-mix(in srgb, var(--color-ccs-teal-light) 45%, transparent);
+  border-color: rgba(250, 212, 139, 0.45);
+  border-color: color-mix(in srgb, var(--color-ccs-gold) 45%, transparent);
 }
 
 .swal2-popup.ticket-success .swal2-icon.swal2-success [class^='swal2-success-line'] {
-  background-color: var(--color-ccs-teal-light);
+  background-color: var(--color-ccs-gold);
 }
 
 .swal2-popup.ticket-success .swal2-icon.swal2-success .swal2-success-ring {
-  border-color: rgba(124, 203, 207, 0.3);
-  border-color: color-mix(in srgb, var(--color-ccs-teal-light) 30%, transparent);
+  border-color: rgba(250, 212, 139, 0.3);
+  border-color: color-mix(in srgb, var(--color-ccs-gold) 30%, transparent);
 }
 
 .ticket-success-label {
@@ -222,7 +222,7 @@ footer .hub-panel-dark {
   font-size: 1.5rem;
   letter-spacing: 0.04em;
   white-space: nowrap;
-  color: var(--color-ccs-teal-light);
+  color: var(--color-ccs-gold);
   margin-bottom: 1rem;
 }
 
@@ -237,14 +237,14 @@ footer .hub-panel-dark {
   padding: 0.85rem 2.25rem;
   border-radius: 9999px;
   font-weight: 700;
-  color: #fff;
-  background: var(--color-ccs-teal);
+  color: var(--color-ccs-red);
+  background: var(--color-ccs-coral);
   transition: background-color 0.25s ease;
 }
 
 .ticket-success-confirm:hover {
-  background: #4b8887;
-  background: color-mix(in srgb, var(--color-ccs-teal) 85%, #fff);
+  background: #ff978d;
+  background: color-mix(in srgb, var(--color-ccs-coral) 85%, #fff);
 }
 
 :lang(ar) .swal2-popup.ticket-success .swal2-title {
