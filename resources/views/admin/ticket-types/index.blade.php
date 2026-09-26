@@ -6,6 +6,12 @@
         <x-admin.button href="{{ route('admin.events.ticket-types.create', $event) }}">{{ __('New Ticket Type') }}</x-admin.button>
     </x-admin.page-header>
 
+    @if(session('error'))
+        <div class="mb-4 rounded border border-red-400/40 bg-red-400/10 px-4 py-3 text-sm text-red-300" role="alert">
+            {{ session('error') }}
+        </div>
+    @endif
+
     @if($ticketTypes->isEmpty())
         <x-admin.empty-state :message="__('No ticket types yet.')" />
     @else

@@ -58,6 +58,16 @@ class TicketType extends Model
         return $this->hasMany(TicketTypeFeature::class)->orderBy('sort_order');
     }
 
+    public function tickets(): HasMany
+    {
+        return $this->hasMany(Ticket::class);
+    }
+
+    public function invitations(): HasMany
+    {
+        return $this->hasMany(Invitation::class);
+    }
+
     protected static function newFactory(): TicketTypeFactory
     {
         return TicketTypeFactory::new();

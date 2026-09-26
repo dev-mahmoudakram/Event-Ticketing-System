@@ -4,9 +4,13 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Admin;
 
+use App\Enums\TicketStatus;
 use App\Models\Event;
+use App\Models\Invitation;
+use App\Models\Ticket;
 use App\Models\TicketType;
 use App\Models\User;
+use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -210,5 +214,45 @@ class TicketTypeCrudTest extends TestCase
         $response = $this->actingAs($admin)->get(route('admin.events.ticket-types.edit', [$event, $ticketType]));
 
         $response->assertOk();
+    }
+
+    public function test_a_ticket_type_with_tickets_cannot_be_deleted(): void
+    {
+        $admin = User::factory()->create();
+        $event = Event::factory()->create();
+        $ticketType = TicketType::factory()->for($event)->create();
+        $ticket = Ticket::factory()->for($event)->for($ticketType)->create(['status' => TicketStatus::TicketIssued, 'is_paid' => true]);
+
+        $response = $this->actingAs($admin)->delete(route('admin.events.ticket-types.destroy', [$event, $ticketType]));
+
+        $response->assertRedirect(route('admin.events.ticket-types.index', $event));
+        $response->assertSessionHas('error');
+        $this->assertDatabaseHas('ticket_types', ['id' => $ticketType->id]);
+        $this->assertDatabaseHas('tickets', ['id' => $ticket->id]);
+    }
+
+    public function test_a_ticket_type_with_invitations_cannot_be_deleted(): void
+    {
+        $admin = User::factory()->create();
+        $event = Event::factory()->create();
+        $ticketType = TicketType::factory()->for($event)->create();
+        $invitation = Invitation::factory()->for($event)->for($ticketType)->create();
+
+        $this->actingAs($admin)->delete(route('admin.events.ticket-types.destroy', [$event, $ticketType]))
+            ->assertSessionHas('error');
+
+        $this->assertDatabaseHas('ticket_types', ['id' => $ticketType->id]);
+        $this->assertDatabaseHas('invitations', ['id' => $invitation->id]);
+    }
+
+    public function test_the_database_refuses_to_delete_a_ticket_type_that_has_tickets(): void
+    {
+        $event = Event::factory()->create();
+        $ticketType = TicketType::factory()->for($event)->create();
+        Ticket::factory()->for($event)->for($ticketType)->create();
+
+        $this->expectException(QueryException::class);
+
+        $ticketType->delete();
     }
 }

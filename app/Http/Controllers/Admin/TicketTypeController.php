@@ -58,6 +58,14 @@ class TicketTypeController extends Controller
     public function destroy(Event $event, TicketType $ticketType): RedirectResponse
     {
         $this->assertBelongsToEvent($event, $ticketType);
+
+        // Deleting a type that has been sold or invited would take its attendees' tickets with
+        // it; the Active switch hides it from sale instead.
+        if ($ticketType->tickets()->exists() || $ticketType->invitations()->exists()) {
+            return redirect()->route('admin.events.ticket-types.index', $event)
+                ->with('error', __('This ticket type already has tickets or invitations, so it can\'t be deleted. Turn off "Active" to stop selling it.'));
+        }
+
         $ticketType->delete();
 
         return redirect()->route('admin.events.ticket-types.index', $event);

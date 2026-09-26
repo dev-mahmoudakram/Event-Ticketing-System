@@ -5,6 +5,9 @@ declare(strict_types=1);
 namespace Tests\Feature\Admin;
 
 use App\Models\Event;
+use App\Models\Invitation;
+use App\Models\Ticket;
+use App\Models\TicketType;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -122,6 +125,23 @@ class EventCrudTest extends TestCase
 
         $response->assertRedirect(route('admin.events.index'));
         $this->assertDatabaseMissing('events', ['id' => $event->id]);
+    }
+
+    public function test_an_event_with_tickets_and_invitations_can_still_be_deleted(): void
+    {
+        $admin = User::factory()->create();
+        $event = Event::factory()->create();
+        $ticketType = TicketType::factory()->for($event)->create();
+        $ticket = Ticket::factory()->for($event)->for($ticketType)->create();
+        $invitation = Invitation::factory()->for($event)->for($ticketType)->create();
+
+        $this->actingAs($admin)->delete(route('admin.events.destroy', $event))
+            ->assertRedirect(route('admin.events.index'));
+
+        $this->assertDatabaseMissing('events', ['id' => $event->id]);
+        $this->assertDatabaseMissing('ticket_types', ['id' => $ticketType->id]);
+        $this->assertDatabaseMissing('tickets', ['id' => $ticket->id]);
+        $this->assertDatabaseMissing('invitations', ['id' => $invitation->id]);
     }
 
     public function test_admin_can_view_the_index_page_with_records(): void

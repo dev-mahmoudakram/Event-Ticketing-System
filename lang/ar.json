@@ -770,5 +770,6 @@
     "Request approved and ticket issued.": "تمت الموافقة على الطلب وإصدار التذكرة.",
     "Request rejected successfully.": "تم رفض الطلب بنجاح.",
     "This request has already been reviewed.": "تمت مراجعة هذا الطلب بالفعل.",
-    "The request was not changed because it could not be completed.": "لم يتم تغيير الطلب لتعذر إتمام العملية."
+    "The request was not changed because it could not be completed.": "لم يتم تغيير الطلب لتعذر إتمام العملية.",
+    "This ticket type already has tickets or invitations, so it can't be deleted. Turn off \"Active\" to stop selling it.": "نوع التذكرة هذا لديه تذاكر أو دعوات بالفعل، لذا لا يمكن حذفه. أوقف خيار \"نشط\" لإيقاف بيعه."
 }

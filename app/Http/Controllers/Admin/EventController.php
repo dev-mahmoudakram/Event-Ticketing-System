@@ -11,6 +11,7 @@ use App\Models\Event;
 use App\Support\SocialPlatforms;
 use App\Support\UploadLimit;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 
 class EventController extends Controller
@@ -62,11 +63,19 @@ class EventController extends Controller
 
     public function destroy(Event $event): RedirectResponse
     {
+        // Ticket types refuse deletion while tickets or invitations point at them, so those go
+        // first; the database won't guarantee that order when cascading from the event alone.
+        DB::transaction(function () use ($event): void {
+            $event->tickets()->delete();
+            $event->invitations()->delete();
+            $event->delete();
+        });
+
+        // Files only after the rows are gone, so a failed delete doesn't leave an event with
+        // missing images.
         foreach (self::UPLOADS as $input => $column) {
             $this->deleteStoredMedia($event->{$column});
         }
-
-        $event->delete();
 
         return redirect()->route('admin.events.index');
     }
