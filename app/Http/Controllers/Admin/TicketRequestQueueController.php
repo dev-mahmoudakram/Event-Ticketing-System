@@ -13,6 +13,7 @@ use App\Models\Ticket;
 use App\Models\TicketRequestAnswer;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
@@ -55,12 +56,25 @@ class TicketRequestQueueController extends Controller
             : __('Ticket rejected successfully.');
 
         try {
-            Mail::to($ticket->email)->send($mail);
-            $ticket->update(['status' => $ticketStatus]);
+            // Locked and re-checked so a double click, a stale tab or a second admin can't
+            // re-review a ticket — re-approving an issued one would demote it to
+            // payment_pending, and the attendee would then be refused at check-in.
+            $changed = DB::transaction(function () use ($ticket, $mail, $ticketStatus): bool {
+                $locked = Ticket::query()->lockForUpdate()->findOrFail($ticket->id);
+
+                if ($locked->status !== TicketStatus::Pending) {
+                    return false;
+                }
+
+                Mail::to($locked->email)->send($mail);
+                $locked->update(['status' => $ticketStatus]);
+
+                return true;
+            });
 
             return redirect()
                 ->route('admin.events.ticket-requests.index', $event)
-                ->with('success', $successMessage);
+                ->with($changed ? 'success' : 'error', $changed ? $successMessage : __('This request has already been reviewed.'));
         } catch (\Exception $e) {
             Log::error('Failed to send ticket approval email.', [
                 'ticket_id' => $ticket->id,

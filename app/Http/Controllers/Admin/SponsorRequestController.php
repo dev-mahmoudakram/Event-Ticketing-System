@@ -50,30 +50,40 @@ class SponsorRequestController extends Controller
             ],
         )->validate();
 
-        if ($validated['status'] === 'approved') {
-            DB::transaction(function () use ($event, $sponsorRequest, $validated): void {
+        // Locked and re-checked so approving twice can't list the same sponsor twice, and an
+        // already-decided request can't be flipped.
+        $changed = DB::transaction(function () use ($event, $sponsorRequest, $validated): bool {
+            $locked = SponsorRequest::query()->lockForUpdate()->findOrFail($sponsorRequest->id);
+
+            if ($locked->status !== SponsorRequestStatus::Pending) {
+                return false;
+            }
+
+            if ($validated['status'] === 'approved') {
                 $event->sponsors()->create([
-                    'name_ar' => $sponsorRequest->name_ar,
-                    'name_en' => $sponsorRequest->name_en,
-                    'logo_path' => $sponsorRequest->logo_path,
+                    'name_ar' => $locked->name_ar,
+                    'name_en' => $locked->name_en,
+                    'logo_path' => $locked->logo_path,
                     'sponsor_tier_id' => $validated['sponsor_tier_id'],
-                    'website_url' => $sponsorRequest->website_url,
+                    'website_url' => $locked->website_url,
                     'sort_order' => $event->sponsors()->max('sort_order') + 1,
                 ]);
+            }
 
-                $sponsorRequest->update(['status' => SponsorRequestStatus::Approved]);
-            });
+            $locked->update([
+                'status' => $validated['status'] === 'approved' ? SponsorRequestStatus::Approved : SponsorRequestStatus::Rejected,
+            ]);
 
-            return redirect()
-                ->route('admin.events.sponsor-requests.index', $event)
-                ->with('success', __('Sponsor request approved and added to sponsors.'));
-        }
+            return true;
+        });
 
-        $sponsorRequest->update(['status' => SponsorRequestStatus::Rejected]);
+        $message = $validated['status'] === 'approved'
+            ? __('Sponsor request approved and added to sponsors.')
+            : __('Sponsor request rejected successfully.');
 
         return redirect()
             ->route('admin.events.sponsor-requests.index', $event)
-            ->with('success', __('Sponsor request rejected successfully.'));
+            ->with($changed ? 'success' : 'error', $changed ? $message : __('This request has already been reviewed.'));
     }
 
     private function assertBelongsToEvent(Event $event, SponsorRequest $sponsorRequest): void

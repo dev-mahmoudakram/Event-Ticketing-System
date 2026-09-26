@@ -10,6 +10,12 @@
         </div>
     @endif
 
+    @if(session('error'))
+        <div class="mb-4 rounded border border-red-400/40 bg-red-400/10 px-4 py-3 text-sm text-red-300" role="alert">
+            {{ session('error') }}
+        </div>
+    @endif
+
     <div class="mb-4 flex gap-2 text-sm">
         @foreach(['pending', 'approved', 'rejected', 'all'] as $option)
             <a href="{{ route('admin.events.sponsor-requests.index', $event) }}?status={{ $option }}"

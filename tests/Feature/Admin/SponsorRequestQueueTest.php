@@ -134,4 +134,30 @@ class SponsorRequestQueueTest extends TestCase
 
         $response->assertStatus(404);
     }
+
+    public function test_approving_the_same_request_twice_creates_one_sponsor(): void
+    {
+        $admin = User::factory()->create();
+        $event = Event::factory()->create();
+        $tier = SponsorTier::factory()->for($event)->create();
+        $sponsorRequest = SponsorRequest::factory()->for($event)->create(['status' => SponsorRequestStatus::Pending]);
+        $url = route('admin.events.sponsor-requests.update-status', [$event, $sponsorRequest, 'approved']);
+
+        $this->actingAs($admin)->patch($url, ['sponsor_tier_id' => $tier->id])->assertSessionHas('success');
+        $this->actingAs($admin)->patch($url, ['sponsor_tier_id' => $tier->id])->assertSessionHas('error');
+
+        $this->assertSame(1, $event->sponsors()->count());
+    }
+
+    public function test_an_approved_request_cannot_be_rejected(): void
+    {
+        $admin = User::factory()->create();
+        $event = Event::factory()->create();
+        $sponsorRequest = SponsorRequest::factory()->for($event)->create(['status' => SponsorRequestStatus::Approved]);
+
+        $this->actingAs($admin)->patch(route('admin.events.sponsor-requests.update-status', [$event, $sponsorRequest, 'rejected']))
+            ->assertSessionHas('error');
+
+        $this->assertSame(SponsorRequestStatus::Approved, $sponsorRequest->fresh()->status);
+    }
 }

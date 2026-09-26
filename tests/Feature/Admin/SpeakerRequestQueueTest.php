@@ -114,4 +114,29 @@ class SpeakerRequestQueueTest extends TestCase
 
         $response->assertStatus(404);
     }
+
+    public function test_approving_the_same_request_twice_creates_one_speaker(): void
+    {
+        $admin = User::factory()->create();
+        $event = Event::factory()->create();
+        $speakerRequest = SpeakerRequest::factory()->for($event)->create(['status' => SpeakerRequestStatus::Pending]);
+        $url = route('admin.events.speaker-requests.update-status', [$event, $speakerRequest, 'approved']);
+
+        $this->actingAs($admin)->patch($url)->assertSessionHas('success');
+        $this->actingAs($admin)->patch($url)->assertSessionHas('error');
+
+        $this->assertSame(1, $event->speakers()->count());
+    }
+
+    public function test_an_approved_request_cannot_be_rejected(): void
+    {
+        $admin = User::factory()->create();
+        $event = Event::factory()->create();
+        $speakerRequest = SpeakerRequest::factory()->for($event)->create(['status' => SpeakerRequestStatus::Approved]);
+
+        $this->actingAs($admin)->patch(route('admin.events.speaker-requests.update-status', [$event, $speakerRequest, 'rejected']))
+            ->assertSessionHas('error');
+
+        $this->assertSame(SpeakerRequestStatus::Approved, $speakerRequest->fresh()->status);
+    }
 }

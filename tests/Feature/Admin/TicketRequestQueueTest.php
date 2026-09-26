@@ -122,4 +122,38 @@ class TicketRequestQueueTest extends TestCase
 
         $response->assertStatus(404);
     }
+
+    public function test_an_issued_ticket_cannot_be_approved_again(): void
+    {
+        Mail::fake();
+        $admin = User::factory()->create();
+        $event = Event::factory()->create();
+        $ticket = Ticket::factory()->for($event)->create([
+            'status' => TicketStatus::TicketIssued,
+            'is_paid' => true,
+            'ticket_id' => str_repeat('a', 40),
+        ]);
+
+        $response = $this->actingAs($admin)->patch(route('admin.events.ticket-requests.update-status', [$event, $ticket, 'approved']));
+
+        $response->assertRedirect(route('admin.events.ticket-requests.index', $event));
+        $response->assertSessionHas('error');
+        $this->assertSame(TicketStatus::TicketIssued, $ticket->fresh()->status);
+        $this->assertSame(str_repeat('a', 40), $ticket->fresh()->ticket_id);
+        Mail::assertNothingSent();
+    }
+
+    public function test_a_rejected_ticket_cannot_be_approved(): void
+    {
+        Mail::fake();
+        $admin = User::factory()->create();
+        $event = Event::factory()->create();
+        $ticket = Ticket::factory()->for($event)->create(['status' => TicketStatus::Rejected]);
+
+        $this->actingAs($admin)->patch(route('admin.events.ticket-requests.update-status', [$event, $ticket, 'approved']))
+            ->assertSessionHas('error');
+
+        $this->assertSame(TicketStatus::Rejected, $ticket->fresh()->status);
+        Mail::assertNothingSent();
+    }
 }
