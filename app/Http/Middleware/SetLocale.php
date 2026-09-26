@@ -16,7 +16,9 @@ class SetLocale
         $locale = $request->query('lang', $request->session()->get('locale', 'ar'));
         $locale = in_array($locale, ['ar', 'en'], true) ? $locale : 'ar';
 
-        $request->session()->put('locale', $locale);
+        if ($request->session()->get('locale') !== $locale) {
+            $request->session()->put('locale', $locale);
+        }
         app()->setLocale($locale);
         Carbon::setLocale($locale);
 
