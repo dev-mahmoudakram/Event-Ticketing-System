@@ -21,7 +21,7 @@
         </h1>
 
         @if($days->isNotEmpty())
-            <div x-data="{ day: 0, type: 'all' }">
+            <div x-data="{ day: 0, type: 'all' }" @schedule-day.window="day = $event.detail; type = 'all'">
                 @if($days->count() > 1)
                     <div class="flex gap-3 mb-6 flex-wrap" role="tablist">
                         @foreach($days as $index => $entries)
@@ -36,7 +36,7 @@
                 @endif
 
                 @foreach($days as $index => $entries)
-                    <div x-show="day === {{ $index }}" x-cloak>
+                    <div x-show="day === {{ $index }}" x-cloak data-day-index="{{ $index }}">
                         <div class="flex gap-2 mb-8 flex-wrap">
                             <button type="button" data-type-filter="all" @click="type = 'all'" :class="type === 'all' ? 'bg-ccs-coral text-ccs-red border-ccs-coral' : 'border-white/15 text-gray-300'" class="px-4 py-2 rounded-full border text-sm font-bold">{{ __('All') }}</button>
                             @foreach($entries->unique(fn ($entry) => $entry->typeKey()) as $entry)

@@ -12,7 +12,8 @@ class LandingPageController extends Controller
     public function show(Event $event): View
     {
         $event->load([
-            'speakers', 'sponsors', 'ticketTypes.features', 'ticketRequestFields', 'workshops.speakers', 'workshops.location',
+            'speakers', 'sponsors', 'ticketTypes.features', 'ticketRequestFields',
+            'workshops' => fn ($query) => $query->withCount('bookings'), 'workshops.speakers', 'workshops.location',
             'faqs', 'landingPageContent', 'galleryPhotos', 'testimonials', 'reels',
         ]);
 

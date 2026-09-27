@@ -171,7 +171,7 @@ class HubTranslationCoverageTest extends TestCase
 
         foreach ([3, 5, 12, 100] as $count) {
             $this->assertStringContainsString((string) $count, trans_choice(':count seat left|:count seats left', $count, ['count' => $count]));
-            $this->assertStringContainsString((string) $count, trans_choice('In use by :count session — move it first.|In use by :count sessions or workshops — move them first.', $count, ['count' => $count]));
+            $this->assertStringContainsString((string) $count, trans_choice('In use by :count session or workshop — move it first.|In use by :count sessions or workshops — move them first.', $count, ['count' => $count]));
         }
     }
 }

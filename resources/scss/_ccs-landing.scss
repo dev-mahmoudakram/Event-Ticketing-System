@@ -306,7 +306,14 @@
     transition: none;
   }
 
-  .ccs-schedule-card:hover {
+  .ccs-schedule-card:hover,
+  .ccs-schedule-card:focus-within {
     transform: none;
+  }
+
+  /* Alpine's x-transition animates with inline transition styles; this switches them off. */
+  .ccs-schedule-dialog,
+  .ccs-schedule-dialog * {
+    transition-duration: 0s !important;
   }
 }

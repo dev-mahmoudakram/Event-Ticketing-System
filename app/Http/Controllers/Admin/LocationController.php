@@ -61,7 +61,7 @@ class LocationController extends Controller
 
         if ($inUse > 0) {
             return redirect()->route('admin.events.locations.index', $event)
-                ->with('error', trans_choice('In use by :count session — move it first.|In use by :count sessions or workshops — move them first.', $inUse, ['count' => $inUse]));
+                ->with('error', trans_choice('In use by :count session or workshop — move it first.|In use by :count sessions or workshops — move them first.', $inUse, ['count' => $inUse]));
         }
 
         $location->delete();

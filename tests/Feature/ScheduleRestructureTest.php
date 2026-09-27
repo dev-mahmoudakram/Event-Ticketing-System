@@ -71,8 +71,8 @@ class ScheduleRestructureTest extends TestCase
         $location = Location::factory()->for($event)->create();
         Workshop::factory()->for($event)->create(['location_id' => $location->id]);
 
-        $this->actingAs($admin)->delete(route('admin.events.locations.destroy', [$event, $location]))
-            ->assertSessionHas('error');
+        $this->actingAs($admin)->delete(route('admin.events.locations.destroy', [$event, $location]).'?lang=en')
+            ->assertSessionHas('error', 'In use by 1 session or workshop — move it first.');
 
         $this->assertModelExists($location);
     }

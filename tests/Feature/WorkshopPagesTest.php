@@ -10,6 +10,7 @@ use App\Models\Location;
 use App\Models\Speaker;
 use App\Models\Workshop;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
 
 class WorkshopPagesTest extends TestCase
@@ -74,5 +75,22 @@ class WorkshopPagesTest extends TestCase
         $event = Event::factory()->create();
 
         $this->get(route('workshops.show', [$event, Workshop::factory()->create()]))->assertNotFound();
+    }
+
+    public function test_the_landing_teaser_does_not_query_once_per_workshop(): void
+    {
+        $queriesFor = function (int $workshops): int {
+            $event = Event::factory()->create(['status' => EventStatus::Published]);
+            Workshop::factory()->for($event)->count($workshops)->create(['capacity' => 10]);
+
+            DB::flushQueryLog();
+            DB::enableQueryLog();
+            $this->get(route('landing.show', $event))->assertOk();
+            DB::disableQueryLog();
+
+            return count(DB::getQueryLog());
+        };
+
+        $this->assertSame($queriesFor(1), $queriesFor(3));
     }
 }

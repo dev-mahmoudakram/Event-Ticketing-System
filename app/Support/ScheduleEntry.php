@@ -51,9 +51,13 @@ final class ScheduleEntry
         return $this->model instanceof AgendaItem ? $this->model->sessionType->name() : __('Workshop');
     }
 
+    /**
+     * The filter chip this entry belongs to. Keyed by the label shown, so a session typed
+     * "Workshop" and a real workshop share one chip rather than showing two identical ones.
+     */
     public function typeKey(): string
     {
-        return $this->model instanceof AgendaItem ? 't'.$this->model->session_type_id : 'workshop';
+        return 'k'.substr(md5(mb_strtolower($this->typeLabel())), 0, 10);
     }
 
     /**

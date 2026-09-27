@@ -142,4 +142,16 @@ class AgendaPageTest extends TestCase
         $this->assertStringNotContainsString('<article id="session-'.$item->id.'" data-schedule-open="session-'.$item->id.'" role="button"', $html);
         $this->assertSame(2, substr_count($html, 'data-schedule-trigger'));
     }
+
+    public function test_a_session_typed_workshop_and_a_real_workshop_share_one_filter_chip(): void
+    {
+        $event = Event::factory()->create();
+        AgendaItem::factory()->for($event)->ofType('Workshop')->create(['day_date' => '2026-08-15']);
+        Workshop::factory()->for($event)->create(['day_date' => '2026-08-15']);
+
+        $html = $this->get(route('agenda.show', $event).'?lang=en')->getContent();
+
+        preg_match_all('/data-type-filter="([^"]+)"/', $html, $chips);
+        $this->assertCount(2, $chips[1], 'Expected "All" and one "Workshop" chip.');
+    }
 }
