@@ -30,7 +30,7 @@
                             <a href="{{ route('admin.events.request-form-fields.edit', [$event, $requestField]) }}" class="text-hub-purple hover:underline">{{ __('Edit') }}</a>
                             <form method="POST" action="{{ route('admin.events.request-form-fields.destroy', [$event, $requestField]) }}" class="inline" data-confirm="{{ __('Are you sure? This cannot be undone.') }}">
                                 @csrf @method('DELETE')
-                                <x-admin.button type="submit" variant="danger" class="ml-2">{{ __('Delete') }}</x-admin.button>
+                                <x-admin.button type="submit" variant="danger" class="ms-2">{{ __('Delete') }}</x-admin.button>
                             </form>
                         </td>
                     </tr>

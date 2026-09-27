@@ -80,4 +80,11 @@ class RoleMigrationTest extends TestCase
         $this->assertFalse($sales->hasPermission(Permission::Speakers));
         $this->assertFalse($sales->isAdmin());
     }
+
+    public function test_the_admin_flag_cannot_be_mass_assigned(): void
+    {
+        $role = Role::create(['name' => 'Sneaky', 'permissions' => [], 'is_system' => true]);
+
+        $this->assertFalse($role->fresh()->is_system);
+    }
 }

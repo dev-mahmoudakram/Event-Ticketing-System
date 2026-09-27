@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Tests\Feature\Admin;
 
 use App\Enums\EventStatus;
+use App\Enums\Permission;
 use App\Models\Event;
 use App\Models\Role;
 use App\Models\User;
@@ -131,5 +132,29 @@ class PermissionNavigationTest extends TestCase
             ->assertSee(route('admin.events.speakers.index', $event), false)
             ->assertSee(route('admin.site-content.index'), false)
             ->assertSee(route('admin.staff.index'), false);
+    }
+
+    public function test_with_no_events_yet_the_page_says_so_instead_of_blaming_the_role(): void
+    {
+        $this->staffWithRole('Sales', 'sales@example.com');
+
+        $this->logIn('sales@example.com')->assertRedirect(route('admin.no-access'));
+
+        $this->get(route('admin.no-access', ['lang' => 'en']))
+            ->assertOk()
+            ->assertSee('There are no events yet')
+            ->assertDontSee('Your role has no access yet');
+    }
+
+    public function test_events_plus_one_section_shows_event_details_and_that_section_only(): void
+    {
+        $event = Event::factory()->create();
+        $user = User::factory()->withPermissions(Permission::Events, Permission::Speakers)->create();
+
+        $this->actingAs($user)->get(route('admin.events.index'))
+            ->assertOk()
+            ->assertSee(route('admin.events.edit', $event), false)
+            ->assertSee(route('admin.events.speakers.index', $event), false)
+            ->assertDontSee(route('admin.events.ticket-requests.index', $event), false);
     }
 }

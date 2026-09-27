@@ -27,6 +27,7 @@ class StaffRequest extends FormRequest
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'email:rfc', 'max:255', Rule::unique('users', 'email')->ignore($staff?->id)],
             'role_id' => [
+                'bail',
                 'required',
                 'integer',
                 Rule::exists('roles', 'id'),

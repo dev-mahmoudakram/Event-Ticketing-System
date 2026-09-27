@@ -36,7 +36,7 @@
                             <a href="{{ route('admin.hero-slides.edit', $slide) }}" class="text-hub-purple hover:underline">{{ __('Edit') }}</a>
                             <form method="POST" action="{{ route('admin.hero-slides.destroy', $slide) }}" class="inline" data-confirm="{{ __('Are you sure? This cannot be undone.') }}">
                                 @csrf @method('DELETE')
-                                <x-admin.button type="submit" variant="danger" class="ml-2">{{ __('Delete') }}</x-admin.button>
+                                <x-admin.button type="submit" variant="danger" class="ms-2">{{ __('Delete') }}</x-admin.button>
                             </form>
                         </td>
                     </tr>

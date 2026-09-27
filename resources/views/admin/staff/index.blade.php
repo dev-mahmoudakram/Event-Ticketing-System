@@ -34,7 +34,7 @@
                         @unless($member->is(auth()->user()))
                             <form method="POST" action="{{ route('admin.staff.destroy', $member) }}" class="inline" data-confirm="{{ __('Are you sure? This cannot be undone.') }}">
                                 @csrf @method('DELETE')
-                                <x-admin.button type="submit" variant="danger" class="ml-2">{{ __('Remove') }}</x-admin.button>
+                                <x-admin.button type="submit" variant="danger" class="ms-2">{{ __('Remove') }}</x-admin.button>
                             </form>
                         @endunless
                     </td>

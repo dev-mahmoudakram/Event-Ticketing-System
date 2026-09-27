@@ -29,7 +29,7 @@
                             <a href="{{ route('admin.events.workshops.edit', [$event, $workshop]) }}" class="text-hub-purple hover:underline ms-3">{{ __('Edit') }}</a>
                             <form method="POST" action="{{ route('admin.events.workshops.destroy', [$event, $workshop]) }}" class="inline" data-confirm="{{ __('Are you sure? This cannot be undone.') }}">
                                 @csrf @method('DELETE')
-                                <x-admin.button type="submit" variant="danger" class="ml-2">{{ __('Delete') }}</x-admin.button>
+                                <x-admin.button type="submit" variant="danger" class="ms-2">{{ __('Delete') }}</x-admin.button>
                             </form>
                         </td>
                     </tr>

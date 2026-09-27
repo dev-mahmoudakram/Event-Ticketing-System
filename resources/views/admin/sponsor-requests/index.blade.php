@@ -72,7 +72,7 @@
                                 <x-admin.button type="button" @click="approveOpen = true">{{ __('Approve') }}</x-admin.button>
                                 <form method="POST" action="{{ route('admin.events.sponsor-requests.update-status', [$event, $sponsorRequest, 'rejected']) }}" class="inline" data-confirm="{{ __('Are you sure? This cannot be undone.') }}">
                                     @csrf @method('PATCH')
-                                    <x-admin.button type="submit" variant="danger" class="ml-2">{{ __('Reject') }}</x-admin.button>
+                                    <x-admin.button type="submit" variant="danger" class="ms-2">{{ __('Reject') }}</x-admin.button>
                                 </form>
 
                                 <div x-show="approveOpen" x-cloak class="fixed inset-0 z-50 flex items-center justify-center p-4" @keydown.escape.window="approveOpen = false">

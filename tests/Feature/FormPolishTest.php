@@ -77,4 +77,19 @@ class FormPolishTest extends TestCase
             ->assertSee('md:grid-rows-subgrid md:row-span-6', false)
             ->assertDontSee('md:grid-cols-4 gap-6 items-start', false);
     }
+
+    /**
+     * The admin is used in Arabic (right to left) as much as English, so spacing uses the
+     * logical ms-/me-/ps-/pe- classes, never left/right ones that end up on the wrong side.
+     */
+    public function test_admin_views_use_direction_aware_spacing(): void
+    {
+        $offenders = collect([...File::allFiles(resource_path('views/admin')), ...File::allFiles(resource_path('views/components/admin'))])
+            ->filter(fn ($file) => preg_match('/(^|[\s"])(ml|mr|pl|pr)-\d/', $file->getContents()) === 1)
+            ->map(fn ($file) => $file->getRelativePathname())
+            ->values()
+            ->all();
+
+        $this->assertSame([], $offenders);
+    }
 }

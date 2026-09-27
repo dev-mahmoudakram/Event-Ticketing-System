@@ -65,7 +65,7 @@
                                 </form>
                                 <form method="POST" action="{{ route('admin.events.speaker-requests.update-status', [$event, $speakerRequest, 'rejected']) }}" class="inline" data-confirm="{{ __('Are you sure? This cannot be undone.') }}">
                                     @csrf @method('PATCH')
-                                    <x-admin.button type="submit" variant="danger" class="ml-2">{{ __('Reject') }}</x-admin.button>
+                                    <x-admin.button type="submit" variant="danger" class="ms-2">{{ __('Reject') }}</x-admin.button>
                                 </form>
                             @endif
                         </td>

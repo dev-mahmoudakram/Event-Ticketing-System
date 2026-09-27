@@ -168,4 +168,15 @@ class RoleCrudTest extends TestCase
         $this->actingAs($this->admin)->get(route('admin.dashboard'))
             ->assertSee(route('admin.roles.index'), false);
     }
+
+    public function test_a_non_admin_cannot_change_or_delete_a_role(): void
+    {
+        $everything = User::factory()->withPermissions(...Permission::cases())->create();
+        $sales = Role::where('name', 'Sales')->sole();
+
+        $this->actingAs($everything)->put(route('admin.roles.update', $sales), ['name' => 'Mine', 'permissions' => ['dashboard']])->assertForbidden();
+        $this->actingAs($everything)->delete(route('admin.roles.destroy', $sales))->assertForbidden();
+
+        $this->assertSame('Sales', $sales->fresh()->name);
+    }
 }

@@ -19,7 +19,8 @@ class Role extends Model
     /** @use HasFactory<RoleFactory> */
     use HasFactory;
 
-    protected $fillable = ['name', 'permissions', 'is_system'];
+    // is_system is deliberately not fillable: only the migration creates the Admin role.
+    protected $fillable = ['name', 'permissions'];
 
     protected function casts(): array
     {

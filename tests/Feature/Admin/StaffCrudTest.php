@@ -152,4 +152,18 @@ class StaffCrudTest extends TestCase
 
         $this->assertFalse($otherAdmin->fresh()->isAdmin());
     }
+
+    public function test_a_tampered_role_value_is_refused_not_a_crash(): void
+    {
+        $admin = User::factory()->create();
+
+        $this->actingAs($admin)->post(route('admin.staff.store'), [
+            'name' => 'Door Staff', 'email' => 'door@example.com', 'role_id' => [1],
+            'password' => 'a-long-password', 'password_confirmation' => 'a-long-password',
+        ])->assertSessionHasErrors('role_id');
+
+        $this->actingAs($admin)->put(route('admin.staff.update', $admin), [
+            'name' => $admin->name, 'email' => $admin->email, 'role_id' => [1],
+        ])->assertSessionHasErrors('role_id');
+    }
 }

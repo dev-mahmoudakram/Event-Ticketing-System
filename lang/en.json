@@ -852,7 +852,6 @@
     "Show as a break (a slim line on the agenda)": "Show as a break (a slim line on the agenda)",
     "Saved.": "Saved.",
     "Deleted.": "Deleted.",
-    "In use by :count session — move it first.|In use by :count sessions or workshops — move them first.": "In use by :count session — move it first.|In use by :count sessions or workshops — move them first.",
     "Move up": "Move up",
     "Move down": "Move down",
     "Add speaker": "Add speaker",
@@ -867,5 +866,7 @@
     "Book your seat": "Book your seat",
     ":count seat left|:count seats left": ":count seat left|:count seats left",
     "Time to be announced": "Time to be announced",
-    "Workshop details": "Workshop details"
+    "Workshop details": "Workshop details",
+    "In use by :count session or workshop — move it first.|In use by :count sessions or workshops — move them first.": "In use by :count session or workshop — move it first.|In use by :count sessions or workshops — move them first.",
+    "There are no events yet. Your sections will appear here once an admin creates one.": "There are no events yet. Your sections will appear here once an admin creates one."
 }
