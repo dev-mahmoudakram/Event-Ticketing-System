@@ -230,6 +230,11 @@ class Event extends Model
         return $this->hasMany(SessionType::class)->orderBy('sort_order')->orderBy('id');
     }
 
+    public function pages(): HasMany
+    {
+        return $this->hasMany(EventPage::class)->orderBy('sort_order')->orderBy('id');
+    }
+
     public function locations(): HasMany
     {
         return $this->hasMany(Location::class)->orderBy('sort_order')->orderBy('id');
@@ -238,7 +243,10 @@ class Event extends Model
     protected static function booted(): void
     {
         // Every event starts with the agenda types the old fixed list had.
-        static::created(fn (Event $event) => SessionType::seedDefaultsFor($event));
+        static::created(function (Event $event) {
+            SessionType::seedDefaultsFor($event);
+            EventPage::seedRequiredFor($event);
+        });
     }
 
     public function agendaItems(): HasMany

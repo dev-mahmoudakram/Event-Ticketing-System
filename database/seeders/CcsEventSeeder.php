@@ -8,6 +8,7 @@ use App\Enums\EventStatus;
 use App\Enums\LandingPageSection;
 use App\Models\AgendaItem;
 use App\Models\Event;
+use App\Models\EventPage;
 use App\Models\Faq;
 use App\Models\GalleryPhoto;
 use App\Models\LandingPageContent;
@@ -202,6 +203,9 @@ class CcsEventSeeder extends Seeder
                 ]);
             }
         }
+
+        // After the ticket types, so the drafts pick up the event's currency. Skips any that exist.
+        EventPage::seedRequiredFor($event);
 
         $stage = $event->locations()->create(['name_ar' => 'المسرح الرئيسي', 'name_en' => 'Main Stage', 'sort_order' => 0]);
         $roomA = $event->locations()->create(['name_ar' => 'القاعة A', 'name_en' => 'Room A', 'sort_order' => 1]);
