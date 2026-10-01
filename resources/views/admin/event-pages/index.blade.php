@@ -32,7 +32,7 @@
                     <td>{{ $page->show_in_footer ? __('Yes') : __('No') }}</td>
                     <td class="text-end whitespace-nowrap">
                         <a href="{{ route('admin.events.pages.edit', [$event, $page]) }}" class="text-hub-purple hover:underline">{{ __('Edit') }}</a>
-                        @if($page->is_published && Route::has('event-pages.show'))
+                        @if($page->is_published)
                             <a href="{{ route('event-pages.show', [$event, $page->slug]) }}" target="_blank" rel="noopener" class="ms-3 text-hub-purple hover:underline">{{ __('View page') }}</a>
                         @endif
                         @unless($page->isRequired())

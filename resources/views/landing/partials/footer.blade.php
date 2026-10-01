@@ -1,7 +1,7 @@
 {{-- resources/views/landing/partials/footer.blade.php --}}
 @php $sectionBase = ($onLandingPage ?? false) ? '' : route('landing.show', $event); @endphp
-@if($event->isSectionVisible('newsletter'))
-<footer id="newsletter" class="scroll-mt-24 w-full px-[clamp(20px,6vw,80px)] pb-12 md:pb-16 pt-24 border-t border-white/10" style="background: linear-gradient(160deg, var(--color-ccs-maroon), var(--color-ccs-black));">
+<footer @if($event->isSectionVisible('newsletter')) id="newsletter" @endif class="scroll-mt-24 w-full px-[clamp(20px,6vw,80px)] pb-12 md:pb-16 pt-24 border-t border-white/10" style="background: linear-gradient(160deg, var(--color-ccs-maroon), var(--color-ccs-black));">
+    @if($event->isSectionVisible('newsletter'))
     <div class="text-center pb-16 mb-16 border-b border-white/10">
         <h2 class="font-display text-2xl md:text-4xl font-extrabold mb-4" data-reveal>{{ __('Stay in the loop.') }}</h2>
         <p class="text-gray-300 mb-8" data-reveal>{{ __('Speaker announcements, agenda updates, and workshop drops — no spam.') }}</p>
@@ -16,8 +16,9 @@
             @error('email') <p class="text-red-300 text-sm mt-3 w-full">{{ $message }}</p> @enderror
         </form>
     </div>
+    @endif
 
-    <div class="grid grid-cols-2 md:grid-cols-4 gap-10 mb-16">
+    <div class="grid grid-cols-2 md:grid-cols-5 gap-10 mb-16">
         <div>
             @if($event->footerLogoUrl())
                 <img src="{{ $event->footerLogoUrl() }}" alt="{{ app()->getLocale() === 'ar' ? $event->name_ar : $event->name_en }}" class="h-10 w-auto max-w-[200px] object-contain mb-4">
@@ -40,6 +41,15 @@
             <a href="{{ $sectionBase }}#tickets" class="text-sm text-gray-300 hover:text-white transition-colors">{{ __('Tickets') }}</a>
             <a href="{{ $sectionBase }}#faq" class="text-sm text-gray-300 hover:text-white transition-colors">{{ __('FAQs') }}</a>
         </div>
+        @php $footerPages = $event->pages()->where('is_published', true)->where('show_in_footer', true)->get(); @endphp
+        @if($footerPages->isNotEmpty())
+            <div class="flex flex-col gap-3">
+                <span class="text-xs font-bold uppercase tracking-wide text-gray-400 mb-1">{{ __('Policies') }}</span>
+                @foreach($footerPages as $footerPage)
+                    <a href="{{ route('event-pages.show', [$event, $footerPage->slug]) }}" class="text-sm text-gray-300 hover:text-white transition-colors">{{ $footerPage->title() }}</a>
+                @endforeach
+            </div>
+        @endif
         {{-- This event's own details, kept apart from the platform's. Each line shows only once
              it has been filled in under the event. --}}
         <div class="flex flex-col gap-3">
@@ -63,6 +73,8 @@
     </div>
     <div class="flex flex-wrap justify-between items-center gap-4 pt-8 border-t border-white/10 text-xs text-gray-400">
         <span>&copy; {{ $event->start_date->format('Y') }} {{ app()->getLocale() === 'ar' ? $event->name_ar : $event->name_en }}. {{ __('All rights reserved.') }}</span>
+        @if($event->ticketTypes()->where('is_active', true)->where('price', '>', 0)->exists())
+            <x-payment-logos />
+        @endif
     </div>
 </footer>
-@endif

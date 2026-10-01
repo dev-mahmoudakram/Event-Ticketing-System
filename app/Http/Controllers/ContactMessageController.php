@@ -15,6 +15,11 @@ class ContactMessageController extends Controller
     {
         $event->contactMessages()->create($request->validated());
 
+        // The Contact page sends people back to itself; the landing page's section to its anchor.
+        if ($request->input('return_to') === 'contact-page') {
+            return redirect()->route('event-pages.show', [$event, 'contact'])->with('contact_success', true);
+        }
+
         return redirect(route('landing.show', $event).'#contact')->with('contact_success', true);
     }
 

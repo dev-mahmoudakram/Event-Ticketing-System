@@ -876,5 +876,8 @@
     "Show in the event footer": "Show in the event footer",
     "required pages keep their address and stay published.": "required pages keep their address and stay published.",
     "This is a starter draft. Replace every [placeholder] and have it reviewed before going live.": "This is a starter draft. Replace every [placeholder] and have it reviewed before going live.",
-    "Payment gateways check these pages before approving the site. Replace every [placeholder] in the drafts and have them reviewed before going live.": "Payment gateways check these pages before approving the site. Replace every [placeholder] in the drafts and have them reviewed before going live."
+    "Payment gateways check these pages before approving the site. Replace every [placeholder] in the drafts and have them reviewed before going live.": "Payment gateways check these pages before approving the site. Replace every [placeholder] in the drafts and have them reviewed before going live.",
+    "Last updated: :date": "Last updated: :date",
+    "Policies": "Policies",
+    "We accept Visa, Mastercard and Meeza": "We accept Visa, Mastercard and Meeza"
 }

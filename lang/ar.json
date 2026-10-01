@@ -921,5 +921,8 @@
     "Show in the event footer": "إظهارها في تذييل الفعالية",
     "required pages keep their address and stay published.": "تحتفظ الصفحات الإلزامية بعنوانها وتبقى منشورة.",
     "This is a starter draft. Replace every [placeholder] and have it reviewed before going live.": "هذه مسودة مبدئية. استبدل كل [عنصر بين قوسين] وراجعها قبل النشر.",
-    "Payment gateways check these pages before approving the site. Replace every [placeholder] in the drafts and have them reviewed before going live.": "تراجع بوابات الدفع هذه الصفحات قبل اعتماد الموقع. استبدل كل [عنصر بين قوسين] في المسودات وراجعها قبل النشر."
+    "Payment gateways check these pages before approving the site. Replace every [placeholder] in the drafts and have them reviewed before going live.": "تراجع بوابات الدفع هذه الصفحات قبل اعتماد الموقع. استبدل كل [عنصر بين قوسين] في المسودات وراجعها قبل النشر.",
+    "Last updated: :date": "آخر تحديث: :date",
+    "Policies": "السياسات",
+    "We accept Visa, Mastercard and Meeza": "نقبل فيزا وماستركارد وميزة"
 }

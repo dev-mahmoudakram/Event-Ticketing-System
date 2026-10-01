@@ -41,6 +41,7 @@ use App\Http\Controllers\Admin\WorkshopController as AdminWorkshopController;
 use App\Http\Controllers\AgendaController;
 use App\Http\Controllers\AwardsController;
 use App\Http\Controllers\ContactMessageController;
+use App\Http\Controllers\EventPageController;
 use App\Http\Controllers\EventsController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\InvitationController;
@@ -65,6 +66,7 @@ Route::post('/contact', [ContactMessageController::class, 'storeGeneral'])->midd
 Route::prefix('events/{event}')->middleware(EnsureEventIsPublished::class)->group(function () {
     Route::get('/', [LandingPageController::class, 'show'])->name('landing.show');
     Route::get('/agenda', [AgendaController::class, 'show'])->name('agenda.show');
+    Route::get('/pages/{slug}', [EventPageController::class, 'show'])->where('slug', '[a-z0-9-]+')->name('event-pages.show');
     Route::get('/awards', [AwardsController::class, 'show'])->name('awards.show');
     Route::get('/speakers', [PublicSpeakerController::class, 'index'])->name('speakers.index');
     Route::get('/workshops', [WorkshopController::class, 'index'])->name('workshops.index');
