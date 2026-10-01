@@ -73,4 +73,16 @@ class EventPagesModelTest extends TestCase
         $this->assertSame('Refund & Cancellation Policy', RequiredPage::Refund->titleEn());
         $this->assertSame(6, count(RequiredPage::cases()));
     }
+
+    public function test_the_arabic_drafts_keep_the_phone_number_left_to_right(): void
+    {
+        $event = Event::factory()->create(['contact_phone' => '+20 100 000 0000']);
+        $isolated = "\u{2066}+20 100 000 0000\u{2069}";
+
+        foreach (['terms', 'refund'] as $key) {
+            $page = $event->pages()->where('key', $key)->sole();
+            $this->assertStringContainsString($isolated, $page->body_ar, $key);
+            $this->assertStringNotContainsString("\u{2066}", $page->body_en, $key);
+        }
+    }
 }
