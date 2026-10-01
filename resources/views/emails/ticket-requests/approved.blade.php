@@ -33,4 +33,11 @@
             </td>
         </tr>
     </table>
+
+    <p style="margin:24px 0 0;font-size:13px;line-height:1.7;color:#6b6b6b;">
+        {!! __('By paying you agree to the :terms and the :refund.', [
+            'terms' => '<a href="'.e(route('event-pages.show', [$ticket->event, 'terms'])).'" style="color:#3c3489;">'.e(__('Terms & Conditions')).'</a>',
+            'refund' => '<a href="'.e(route('event-pages.show', [$ticket->event, 'refund-policy'])).'" style="color:#3c3489;">'.e(__('Refund & Cancellation Policy')).'</a>',
+        ]) !!}
+    </p>
 @endsection

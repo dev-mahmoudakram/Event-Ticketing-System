@@ -167,6 +167,18 @@
                         </div>
                     @endif
 
+                    <div>
+                        <label class="flex items-start gap-3 text-sm text-white/80 leading-relaxed">
+                            <input type="checkbox" name="accept_terms" value="1" class="mt-1 w-4 h-4 shrink-0 accent-ccs-coral" @checked(old('accept_terms')) aria-required="true">
+                            {{-- Safe unescaped: the sentence comes from our translation files and the links are built with e(). --}}
+                            <span>{!! __('I have read and agree to the :terms and the :refund.', [
+                                'terms' => '<a href="'.e(route('event-pages.show', [$event, 'terms'])).'" target="_blank" rel="noopener" class="text-ccs-coral underline">'.e(__('Terms & Conditions')).'</a>',
+                                'refund' => '<a href="'.e(route('event-pages.show', [$event, 'refund-policy'])).'" target="_blank" rel="noopener" class="text-ccs-coral underline">'.e(__('Refund & Cancellation Policy')).'</a>',
+                            ]) !!}</span>
+                        </label>
+                        <p id="error-accept_terms" class="ccs-form-error {{ $errors->has('accept_terms') ? '' : 'hidden' }}">{{ $errors->first('accept_terms') }}</p>
+                    </div>
+
                     <button type="submit" class="ccs-form-submit">{{ __('Submit Request') }}</button>
                 </form>
             </div>

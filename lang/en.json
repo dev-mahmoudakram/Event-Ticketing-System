@@ -879,5 +879,11 @@
     "Payment gateways check these pages before approving the site. Replace every [placeholder] in the drafts and have them reviewed before going live.": "Payment gateways check these pages before approving the site. Replace every [placeholder] in the drafts and have them reviewed before going live.",
     "Last updated: :date": "Last updated: :date",
     "Policies": "Policies",
-    "We accept Visa, Mastercard and Meeza": "We accept Visa, Mastercard and Meeza"
+    "We accept Visa, Mastercard and Meeza": "We accept Visa, Mastercard and Meeza",
+    "I have read and agree to the :terms and the :refund.": "I have read and agree to the :terms and the :refund.",
+    "By paying you agree to the :terms and the :refund.": "By paying you agree to the :terms and the :refund.",
+    "Terms & Conditions": "Terms & Conditions",
+    "Refund & Cancellation Policy": "Refund & Cancellation Policy",
+    "agreement": "agreement",
+    "Please agree to the Terms & Conditions and the Refund & Cancellation Policy.": "Please agree to the Terms & Conditions and the Refund & Cancellation Policy."
 }

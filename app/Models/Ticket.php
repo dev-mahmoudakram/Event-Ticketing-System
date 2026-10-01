@@ -19,7 +19,7 @@ class Ticket extends Model
     protected $fillable = [
         'event_id', 'ticket_type_id', 'influencer_category_id', 'influencer_category_other', 'discount_coupon_id', 'price', 'discount_amount',
         'name', 'email', 'phone', 'ticket_number',
-        'status', 'ticket_id', 'workshop_booking_key', 'is_paid', 'payment_method', 'checked_in_at',
+        'status', 'ticket_id', 'workshop_booking_key', 'is_paid', 'payment_method', 'checked_in_at', 'terms_accepted_at',
     ];
 
     protected function casts(): array
@@ -28,6 +28,7 @@ class Ticket extends Model
             'status' => TicketStatus::class,
             'is_paid' => 'boolean',
             'checked_in_at' => 'datetime',
+            'terms_accepted_at' => 'datetime',
         ];
     }
 

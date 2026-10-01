@@ -50,6 +50,7 @@ class TicketRequestStoreRequest extends FormRequest
                 )),
             ],
             'influencer_category_other' => ['nullable', 'required_if:influencer_category_id,other', 'string', 'max:255'],
+            'accept_terms' => ['accepted'],
         ];
 
         foreach ($event->ticketRequestFields as $field) {
@@ -103,13 +104,17 @@ class TicketRequestStoreRequest extends FormRequest
             $attributes[$inputKey.'_followers'] = __('Follower count');
         }
 
+        $attributes['accept_terms'] = __('agreement');
+
         return $attributes;
     }
 
     /** @return array<string, string> */
     public function messages(): array
     {
-        return $this->followerCountMessages($this->followerKeys());
+        return $this->followerCountMessages($this->followerKeys()) + [
+            'accept_terms.accepted' => __('Please agree to the Terms & Conditions and the Refund & Cancellation Policy.'),
+        ];
     }
 
     /**

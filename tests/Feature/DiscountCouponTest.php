@@ -37,6 +37,7 @@ class DiscountCouponTest extends TestCase
     {
         return $this->post(route('ticket-requests.store', $this->event), array_merge([
             'ticket_type_id' => $this->ticketType->id,
+            'accept_terms' => '1',
             'name' => 'Kareem Al-Sayed',
             'email' => 'kareem@example.com',
             'phone' => '+201001234567',

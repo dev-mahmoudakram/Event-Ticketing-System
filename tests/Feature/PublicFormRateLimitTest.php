@@ -30,7 +30,7 @@ class PublicFormRateLimitTest extends TestCase
         $event ??= $this->event;
         $ticketType = TicketType::factory()->for($event)->create();
 
-        return ['ticket_type_id' => $ticketType->id, 'name' => 'Sara Ali', 'email' => $email, 'phone' => '+201001234567'];
+        return ['ticket_type_id' => $ticketType->id, 'accept_terms' => '1', 'name' => 'Sara Ali', 'email' => $email, 'phone' => '+201001234567'];
     }
 
     public function test_the_ticket_form_is_limited_to_five_attempts_a_minute(): void

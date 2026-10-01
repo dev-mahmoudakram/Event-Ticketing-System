@@ -30,6 +30,7 @@ class TicketRequestSubmissionTest extends TestCase
 
         $response = $this->post(route('ticket-requests.store', $event), [
             'ticket_type_id' => $ticketType->id,
+            'accept_terms' => '1',
             'name' => 'Kareem Al-Sayed',
             'email' => 'kareem@example.com',
             'phone' => '+201001234567',
@@ -52,6 +53,7 @@ class TicketRequestSubmissionTest extends TestCase
 
         $this->post(route('ticket-requests.store', $event), [
             'ticket_type_id' => $ticketType->id,
+            'accept_terms' => '1',
             'name' => 'Kareem Al-Sayed',
             'email' => 'kareem@example.com',
             'phone' => '+201001234567',
@@ -68,6 +70,7 @@ class TicketRequestSubmissionTest extends TestCase
 
         $response = $this->postJson(route('ticket-requests.store', $event).'?lang=en', [
             'ticket_type_id' => $ticketType->id,
+            'accept_terms' => '1',
             'name' => 'Kareem Al-Sayed',
             'email' => 'kareem@example.com',
             'phone' => '+201001234567',
@@ -85,6 +88,7 @@ class TicketRequestSubmissionTest extends TestCase
 
         $response = $this->postJson(route('ticket-requests.store', $event).'?lang=en', [
             'ticket_type_id' => $ticketType->id,
+            'accept_terms' => '1',
             'name' => 'Kareem Al-Sayed',
             'email' => 'kareem@example.com',
             'phone' => '+201001234567',
@@ -103,6 +107,7 @@ class TicketRequestSubmissionTest extends TestCase
 
         $response = $this->postJson(route('ticket-requests.store', $event), [
             'ticket_type_id' => $ticketType->id,
+            'accept_terms' => '1',
             'name' => '',
             'email' => 'not-an-email',
             'phone' => 'not-a-phone',
@@ -118,7 +123,7 @@ class TicketRequestSubmissionTest extends TestCase
         $ticketType = TicketType::factory()->for($event)->create();
 
         $this->post(route('ticket-requests.store', $event), [
-            'ticket_type_id' => $ticketType->id, 'name' => 'Nour Ibrahim', 'email' => 'nour@example.com', 'phone' => '+201009876543',
+            'ticket_type_id' => $ticketType->id, 'accept_terms' => '1', 'name' => 'Nour Ibrahim', 'email' => 'nour@example.com', 'phone' => '+201009876543',
         ]);
 
         $ticket = Ticket::where('email', 'nour@example.com')->firstOrFail();
@@ -136,7 +141,7 @@ class TicketRequestSubmissionTest extends TestCase
         $foreignTicketType = TicketType::factory()->for($otherEvent)->create();
 
         $response = $this->post(route('ticket-requests.store', $event), [
-            'ticket_type_id' => $foreignTicketType->id, 'name' => 'Test', 'email' => 'test@example.com', 'phone' => '+201001234567',
+            'ticket_type_id' => $foreignTicketType->id, 'accept_terms' => '1', 'name' => 'Test', 'email' => 'test@example.com', 'phone' => '+201001234567',
         ]);
 
         $response->assertSessionHasErrors('ticket_type_id');
@@ -149,7 +154,7 @@ class TicketRequestSubmissionTest extends TestCase
         $ticketType = TicketType::factory()->for($event)->create(['is_active' => false]);
 
         $response = $this->post(route('ticket-requests.store', $event), [
-            'ticket_type_id' => $ticketType->id, 'name' => 'Test', 'email' => 'test@example.com', 'phone' => '+201001234567',
+            'ticket_type_id' => $ticketType->id, 'accept_terms' => '1', 'name' => 'Test', 'email' => 'test@example.com', 'phone' => '+201001234567',
         ]);
 
         $response->assertSessionHasErrors('ticket_type_id');
@@ -161,7 +166,7 @@ class TicketRequestSubmissionTest extends TestCase
         $ticketType = TicketType::factory()->for($event)->create();
 
         $response = $this->post(route('ticket-requests.store', $event), [
-            'ticket_type_id' => $ticketType->id, 'name' => 'Test', 'email' => 'not-an-email', 'phone' => '+201001234567',
+            'ticket_type_id' => $ticketType->id, 'accept_terms' => '1', 'name' => 'Test', 'email' => 'not-an-email', 'phone' => '+201001234567',
         ]);
 
         $response->assertSessionHasErrors('email');
@@ -173,7 +178,7 @@ class TicketRequestSubmissionTest extends TestCase
         $ticketType = TicketType::factory()->for($event)->create();
 
         $response = $this->post(route('ticket-requests.store', $event), [
-            'ticket_type_id' => $ticketType->id, 'name' => 'Test', 'email' => 'test@example.com', 'phone' => 'not-a-phone',
+            'ticket_type_id' => $ticketType->id, 'accept_terms' => '1', 'name' => 'Test', 'email' => 'test@example.com', 'phone' => 'not-a-phone',
         ]);
 
         $response->assertSessionHasErrors('phone');
@@ -185,7 +190,7 @@ class TicketRequestSubmissionTest extends TestCase
         $ticketType = TicketType::factory()->for($event)->create();
 
         $response = $this->postJson(route('ticket-requests.store', $event).'?lang=en', [
-            'ticket_type_id' => $ticketType->id, 'name' => 'Test', 'email' => 'test@example.com', 'phone' => 'not-a-phone',
+            'ticket_type_id' => $ticketType->id, 'accept_terms' => '1', 'name' => 'Test', 'email' => 'test@example.com', 'phone' => 'not-a-phone',
         ]);
 
         $response->assertStatus(422);
@@ -198,7 +203,7 @@ class TicketRequestSubmissionTest extends TestCase
         $ticketType = TicketType::factory()->for($event)->create();
 
         $response = $this->post(route('ticket-requests.store', $event), [
-            'ticket_type_id' => $ticketType->id, 'name' => '<script>alert(1)</script>', 'email' => 'test@example.com', 'phone' => '+201001234567',
+            'ticket_type_id' => $ticketType->id, 'accept_terms' => '1', 'name' => '<script>alert(1)</script>', 'email' => 'test@example.com', 'phone' => '+201001234567',
         ]);
 
         $response->assertSessionHasErrors('name');
@@ -210,7 +215,7 @@ class TicketRequestSubmissionTest extends TestCase
         $ticketType = TicketType::factory()->for($event)->create();
 
         $response = $this->post(route('ticket-requests.store', $event), [
-            'ticket_type_id' => $ticketType->id, 'name' => 'Kareem123', 'email' => 'test@example.com', 'phone' => '+201001234567',
+            'ticket_type_id' => $ticketType->id, 'accept_terms' => '1', 'name' => 'Kareem123', 'email' => 'test@example.com', 'phone' => '+201001234567',
         ]);
 
         $response->assertSessionHasErrors('name');
@@ -223,7 +228,7 @@ class TicketRequestSubmissionTest extends TestCase
         $field = TicketRequestField::factory()->for($event)->create(['type' => 'instagram', 'is_required' => true]);
 
         $response = $this->post(route('ticket-requests.store', $event), [
-            'ticket_type_id' => $ticketType->id, 'name' => 'Test', 'email' => 'test@example.com', 'phone' => '+201001234567',
+            'ticket_type_id' => $ticketType->id, 'accept_terms' => '1', 'name' => 'Test', 'email' => 'test@example.com', 'phone' => '+201001234567',
         ]);
 
         $response->assertSessionHasErrors('field_'.$field->id);
@@ -236,7 +241,7 @@ class TicketRequestSubmissionTest extends TestCase
         $field = TicketRequestField::factory()->for($event)->create(['type' => 'instagram', 'is_required' => true, 'label_en' => 'Instagram', 'label_ar' => 'إنستغرام']);
 
         $response = $this->postJson(route('ticket-requests.store', $event).'?lang=en', [
-            'ticket_type_id' => $ticketType->id, 'name' => 'Test', 'email' => 'test@example.com', 'phone' => '+201001234567',
+            'ticket_type_id' => $ticketType->id, 'accept_terms' => '1', 'name' => 'Test', 'email' => 'test@example.com', 'phone' => '+201001234567',
             'field_'.$field->id.'_followers' => 'many',
         ]);
 
@@ -264,7 +269,7 @@ class TicketRequestSubmissionTest extends TestCase
         $field = TicketRequestField::factory()->for($event)->create(['type' => 'instagram']);
 
         $this->post(route('ticket-requests.store', $event), [
-            'ticket_type_id' => $ticketType->id, 'name' => 'Test', 'email' => 'test@example.com', 'phone' => '+201001234567',
+            'ticket_type_id' => $ticketType->id, 'accept_terms' => '1', 'name' => 'Test', 'email' => 'test@example.com', 'phone' => '+201001234567',
             'field_'.$field->id => 'https://instagram.com/myhandle',
         ]);
 
@@ -281,7 +286,7 @@ class TicketRequestSubmissionTest extends TestCase
         $field = TicketRequestField::factory()->for($event)->create(['type' => 'instagram']);
 
         $this->post(route('ticket-requests.store', $event), [
-            'ticket_type_id' => $ticketType->id, 'name' => 'Test', 'email' => 'test@example.com', 'phone' => '+201001234567',
+            'ticket_type_id' => $ticketType->id, 'accept_terms' => '1', 'name' => 'Test', 'email' => 'test@example.com', 'phone' => '+201001234567',
             'field_'.$field->id => 'https://instagram.com/myhandle',
             'field_'.$field->id.'_followers' => '1500',
         ]);
@@ -303,7 +308,7 @@ class TicketRequestSubmissionTest extends TestCase
             $email = 'fan'.$stored.md5($typed).'@example.com';
 
             $this->post(route('ticket-requests.store', $event), [
-                'ticket_type_id' => $ticketType->id, 'name' => 'Test', 'email' => $email, 'phone' => '+201001234567',
+                'ticket_type_id' => $ticketType->id, 'accept_terms' => '1', 'name' => 'Test', 'email' => $email, 'phone' => '+201001234567',
                 'field_'.$field->id => 'https://instagram.com/myhandle',
                 'field_'.$field->id.'_followers' => $typed,
             ])->assertSessionHasNoErrors();
@@ -320,7 +325,7 @@ class TicketRequestSubmissionTest extends TestCase
         $field = TicketRequestField::factory()->for($event)->create(['type' => 'instagram']);
 
         $this->post(route('ticket-requests.store', $event), [
-            'ticket_type_id' => $ticketType->id, 'name' => 'Test', 'email' => 'test@example.com', 'phone' => '+201001234567',
+            'ticket_type_id' => $ticketType->id, 'accept_terms' => '1', 'name' => 'Test', 'email' => 'test@example.com', 'phone' => '+201001234567',
             'field_'.$field->id => 'https://instagram.com/myhandle',
             'field_'.$field->id.'_followers' => '5b',
         ])->assertSessionHasErrors('field_'.$field->id.'_followers');
@@ -335,7 +340,7 @@ class TicketRequestSubmissionTest extends TestCase
         $category = InfluencerCategory::factory()->for($event)->create();
 
         $this->post(route('ticket-requests.store', $event), [
-            'ticket_type_id' => $ticketType->id, 'name' => 'Test', 'email' => 'test@example.com', 'phone' => '+201001234567',
+            'ticket_type_id' => $ticketType->id, 'accept_terms' => '1', 'name' => 'Test', 'email' => 'test@example.com', 'phone' => '+201001234567',
             'influencer_category_id' => $category->id,
         ]);
 
@@ -351,7 +356,7 @@ class TicketRequestSubmissionTest extends TestCase
         InfluencerCategory::factory()->for($event)->create();
 
         $response = $this->post(route('ticket-requests.store', $event), [
-            'ticket_type_id' => $ticketType->id, 'name' => 'Test', 'email' => 'test@example.com', 'phone' => '+201001234567',
+            'ticket_type_id' => $ticketType->id, 'accept_terms' => '1', 'name' => 'Test', 'email' => 'test@example.com', 'phone' => '+201001234567',
         ]);
 
         $response->assertSessionDoesntHaveErrors('influencer_category_id');
@@ -366,7 +371,7 @@ class TicketRequestSubmissionTest extends TestCase
         $foreignCategory = InfluencerCategory::factory()->for($otherEvent)->create();
 
         $response = $this->post(route('ticket-requests.store', $event), [
-            'ticket_type_id' => $ticketType->id, 'name' => 'Test', 'email' => 'test@example.com', 'phone' => '+201001234567',
+            'ticket_type_id' => $ticketType->id, 'accept_terms' => '1', 'name' => 'Test', 'email' => 'test@example.com', 'phone' => '+201001234567',
             'influencer_category_id' => $foreignCategory->id,
         ]);
 
@@ -380,7 +385,7 @@ class TicketRequestSubmissionTest extends TestCase
         InfluencerCategory::factory()->for($event)->create();
 
         $response = $this->post(route('ticket-requests.store', $event), [
-            'ticket_type_id' => $ticketType->id, 'name' => 'Test', 'email' => 'test@example.com', 'phone' => '+201001234567',
+            'ticket_type_id' => $ticketType->id, 'accept_terms' => '1', 'name' => 'Test', 'email' => 'test@example.com', 'phone' => '+201001234567',
         ]);
 
         $response->assertSessionHasErrors('influencer_category_id');
@@ -393,7 +398,7 @@ class TicketRequestSubmissionTest extends TestCase
         InfluencerCategory::factory()->for($event)->create();
 
         $this->post(route('ticket-requests.store', $event), [
-            'ticket_type_id' => $ticketType->id, 'name' => 'Test', 'email' => 'test@example.com', 'phone' => '+201001234567',
+            'ticket_type_id' => $ticketType->id, 'accept_terms' => '1', 'name' => 'Test', 'email' => 'test@example.com', 'phone' => '+201001234567',
             'influencer_category_id' => 'other', 'influencer_category_other' => 'Podcast Host',
         ]);
 
@@ -409,7 +414,7 @@ class TicketRequestSubmissionTest extends TestCase
         InfluencerCategory::factory()->for($event)->create();
 
         $response = $this->post(route('ticket-requests.store', $event), [
-            'ticket_type_id' => $ticketType->id, 'name' => 'Test', 'email' => 'test@example.com', 'phone' => '+201001234567',
+            'ticket_type_id' => $ticketType->id, 'accept_terms' => '1', 'name' => 'Test', 'email' => 'test@example.com', 'phone' => '+201001234567',
             'influencer_category_id' => 'other',
         ]);
 
@@ -425,7 +430,7 @@ class TicketRequestSubmissionTest extends TestCase
         ]);
 
         $this->post(route('ticket-requests.store', $event), [
-            'ticket_type_id' => $ticketType->id, 'name' => 'Test', 'email' => 'test@example.com', 'phone' => '+201001234567',
+            'ticket_type_id' => $ticketType->id, 'accept_terms' => '1', 'name' => 'Test', 'email' => 'test@example.com', 'phone' => '+201001234567',
             'field_'.$field->id => 'https://tiktok.com/@myhandle',
             'field_'.$field->id.'_followers' => 15000,
         ]);
@@ -446,7 +451,7 @@ class TicketRequestSubmissionTest extends TestCase
         $field = TicketRequestField::factory()->for($event)->create(['type' => 'social_link', 'platform' => 'instagram']);
 
         $response = $this->post(route('ticket-requests.store', $event), [
-            'ticket_type_id' => $ticketType->id, 'name' => 'Test', 'email' => 'test@example.com', 'phone' => '+201001234567',
+            'ticket_type_id' => $ticketType->id, 'accept_terms' => '1', 'name' => 'Test', 'email' => 'test@example.com', 'phone' => '+201001234567',
             'field_'.$field->id => 'not-a-url',
         ]);
 
@@ -461,7 +466,7 @@ class TicketRequestSubmissionTest extends TestCase
         $field = TicketRequestField::factory()->for($event)->create(['type' => 'cv']);
 
         $this->post(route('ticket-requests.store', $event), [
-            'ticket_type_id' => $ticketType->id, 'name' => 'Test', 'email' => 'test@example.com', 'phone' => '+201001234567',
+            'ticket_type_id' => $ticketType->id, 'accept_terms' => '1', 'name' => 'Test', 'email' => 'test@example.com', 'phone' => '+201001234567',
             'field_'.$field->id => UploadedFile::fake()->create('resume.pdf', 100, 'application/pdf'),
         ]);
 
@@ -476,7 +481,7 @@ class TicketRequestSubmissionTest extends TestCase
         $ticketType = TicketType::factory()->for($event)->create();
 
         $response = $this->post(route('ticket-requests.store', $event), [
-            'ticket_type_id' => $ticketType->id, 'name' => 'Test', 'email' => 'test@example.com', 'phone' => '+201001234567',
+            'ticket_type_id' => $ticketType->id, 'accept_terms' => '1', 'name' => 'Test', 'email' => 'test@example.com', 'phone' => '+201001234567',
         ]);
 
         $response->assertStatus(404);

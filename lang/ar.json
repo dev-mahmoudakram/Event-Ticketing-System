@@ -924,5 +924,11 @@
     "Payment gateways check these pages before approving the site. Replace every [placeholder] in the drafts and have them reviewed before going live.": "تراجع بوابات الدفع هذه الصفحات قبل اعتماد الموقع. استبدل كل [عنصر بين قوسين] في المسودات وراجعها قبل النشر.",
     "Last updated: :date": "آخر تحديث: :date",
     "Policies": "السياسات",
-    "We accept Visa, Mastercard and Meeza": "نقبل فيزا وماستركارد وميزة"
+    "We accept Visa, Mastercard and Meeza": "نقبل فيزا وماستركارد وميزة",
+    "I have read and agree to the :terms and the :refund.": "قرأت وأوافق على :terms و:refund.",
+    "By paying you agree to the :terms and the :refund.": "بالدفع فأنت توافق على :terms و:refund.",
+    "Terms & Conditions": "الشروط والأحكام",
+    "Refund & Cancellation Policy": "سياسة الاسترداد والإلغاء",
+    "agreement": "الموافقة",
+    "Please agree to the Terms & Conditions and the Refund & Cancellation Policy.": "يرجى الموافقة على الشروط والأحكام وسياسة الاسترداد والإلغاء."
 }

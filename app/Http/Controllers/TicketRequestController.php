@@ -74,6 +74,7 @@ class TicketRequestController extends Controller
                 'email' => $validated['email'],
                 'phone' => $validated['phone'],
                 'status' => TicketStatus::Pending,
+                'terms_accepted_at' => now(),
             ]);
 
             $ticket->update(['ticket_number' => $this->issuer->referenceFor($ticket)]);
