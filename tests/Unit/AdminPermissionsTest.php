@@ -24,6 +24,7 @@ class AdminPermissionsTest extends TestCase
             'workshop bookings' => ['admin.events.workshops.bookings', Permission::AgendaWorkshops],
             'session types' => ['admin.events.session-types.reorder', Permission::AgendaWorkshops],
             'locations' => ['admin.events.locations.edit', Permission::AgendaWorkshops],
+            'pages' => ['admin.events.pages.edit', Permission::Pages],
             'speakers' => ['admin.events.speakers.index', Permission::Speakers],
             'speaker requests' => ['admin.events.speaker-requests.update-status', Permission::SpeakerRequests],
             'sponsors' => ['admin.events.sponsors.index', Permission::Sponsors],

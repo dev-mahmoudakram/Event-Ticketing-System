@@ -913,5 +913,13 @@
     "Time to be announced": "الموعد يُعلن لاحقًا",
     "Workshop details": "تفاصيل الورشة",
     "In use by :count session or workshop — move it first.|In use by :count sessions or workshops — move them first.": "غير مستخدم|مستخدم في عنصر واحد — انقله أولًا.|مستخدم في عنصرين — انقلهما أولًا.|مستخدم في :count عناصر — انقلها أولًا.|مستخدم في :count عنصرًا — انقلها أولًا.|مستخدم في :count عنصر — انقلها أولًا.",
-    "There are no events yet. Your sections will appear here once an admin creates one.": "لا توجد فعاليات بعد. ستظهر أقسامك هنا عندما يُنشئ أحد المسؤولين فعالية."
+    "There are no events yet. Your sections will appear here once an admin creates one.": "لا توجد فعاليات بعد. ستظهر أقسامك هنا عندما يُنشئ أحد المسؤولين فعالية.",
+    "Pages": "الصفحات",
+    "New Page": "صفحة جديدة",
+    "Edit Page": "تعديل الصفحة",
+    "Needs your details": "تحتاج بياناتك",
+    "Show in the event footer": "إظهارها في تذييل الفعالية",
+    "required pages keep their address and stay published.": "تحتفظ الصفحات الإلزامية بعنوانها وتبقى منشورة.",
+    "This is a starter draft. Replace every [placeholder] and have it reviewed before going live.": "هذه مسودة مبدئية. استبدل كل [عنصر بين قوسين] وراجعها قبل النشر.",
+    "Payment gateways check these pages before approving the site. Replace every [placeholder] in the drafts and have them reviewed before going live.": "تراجع بوابات الدفع هذه الصفحات قبل اعتماد الموقع. استبدل كل [عنصر بين قوسين] في المسودات وراجعها قبل النشر."
 }

@@ -8,6 +8,7 @@ use App\Http\Controllers\Admin\ContactMessageController as AdminContactMessageCo
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\DiscountCouponController;
 use App\Http\Controllers\Admin\EventController;
+use App\Http\Controllers\Admin\EventPageController as AdminEventPageController;
 use App\Http\Controllers\Admin\EventReportController;
 use App\Http\Controllers\Admin\FaqController;
 use App\Http\Controllers\Admin\GalleryPhotoController;
@@ -165,6 +166,8 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::resource('events.discount-coupons', DiscountCouponController::class)
             ->except('show')
             ->parameters(['discount-coupons' => 'discountCoupon']);
+        Route::post('events/{event}/pages/reorder', [AdminEventPageController::class, 'reorder'])->name('events.pages.reorder');
+        Route::resource('events.pages', AdminEventPageController::class)->except('show');
         Route::post('events/{event}/session-types/reorder', [SessionTypeController::class, 'reorder'])->name('events.session-types.reorder');
         Route::resource('events.session-types', SessionTypeController::class)->except('show')->parameters(['session-types' => 'sessionType']);
         Route::post('events/{event}/locations/reorder', [LocationController::class, 'reorder'])->name('events.locations.reorder');

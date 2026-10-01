@@ -868,5 +868,13 @@
     "Time to be announced": "Time to be announced",
     "Workshop details": "Workshop details",
     "In use by :count session or workshop — move it first.|In use by :count sessions or workshops — move them first.": "In use by :count session or workshop — move it first.|In use by :count sessions or workshops — move them first.",
-    "There are no events yet. Your sections will appear here once an admin creates one.": "There are no events yet. Your sections will appear here once an admin creates one."
+    "There are no events yet. Your sections will appear here once an admin creates one.": "There are no events yet. Your sections will appear here once an admin creates one.",
+    "Pages": "Pages",
+    "New Page": "New Page",
+    "Edit Page": "Edit Page",
+    "Needs your details": "Needs your details",
+    "Show in the event footer": "Show in the event footer",
+    "required pages keep their address and stay published.": "required pages keep their address and stay published.",
+    "This is a starter draft. Replace every [placeholder] and have it reviewed before going live.": "This is a starter draft. Replace every [placeholder] and have it reviewed before going live.",
+    "Payment gateways check these pages before approving the site. Replace every [placeholder] in the drafts and have them reviewed before going live.": "Payment gateways check these pages before approving the site. Replace every [placeholder] in the drafts and have them reviewed before going live."
 }

@@ -3,6 +3,7 @@
     // Every section an event owns. One list, used for each event in the tree below.
     $eventSections = [
         ['prefix' => 'admin.events.content', 'permission' => \App\Enums\Permission::LandingPage, 'route' => 'admin.events.content.edit', 'label' => __('Landing Page Content')],
+        ['prefix' => 'admin.events.pages', 'permission' => \App\Enums\Permission::Pages, 'route' => 'admin.events.pages.index', 'label' => __('Pages')],
         ['prefix' => 'admin.events.speakers', 'permission' => \App\Enums\Permission::Speakers, 'route' => 'admin.events.speakers.index', 'label' => __('Speakers')],
         ['prefix' => 'admin.events.speaker-requests', 'permission' => \App\Enums\Permission::SpeakerRequests, 'route' => 'admin.events.speaker-requests.index', 'label' => __('Speaker Requests')],
         ['prefix' => 'admin.events.sponsors', 'permission' => \App\Enums\Permission::Sponsors, 'route' => 'admin.events.sponsors.index', 'label' => __('Partners')],
