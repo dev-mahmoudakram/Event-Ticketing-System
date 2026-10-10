@@ -21,7 +21,7 @@ class TicketTypeFactory extends Factory
             'description_ar' => $this->faker->sentence(),
             'description_en' => $this->faker->sentence(),
             'price' => $this->faker->numberBetween(200, 2000),
-            'currency' => 'SAR',
+            'currency' => 'EGP',
             'workshop_slot_count' => $this->faker->randomElement([0, 1, 2]),
             'sort_order' => 0,
             'is_active' => true,

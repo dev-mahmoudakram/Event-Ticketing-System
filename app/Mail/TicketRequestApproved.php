@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Mail;
 
 use App\Models\Ticket;
+use Carbon\CarbonInterface;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
@@ -15,7 +16,7 @@ class TicketRequestApproved extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public function __construct(public Ticket $ticket, public string $paymentUrl) {}
+    public function __construct(public Ticket $ticket, public string $paymentUrl, public CarbonInterface $expiresAt) {}
 
     public function envelope(): Envelope
     {

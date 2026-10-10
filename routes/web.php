@@ -20,6 +20,7 @@ use App\Http\Controllers\Admin\InvitationRequestController as AdminInvitationReq
 use App\Http\Controllers\Admin\LandingPageContentController;
 use App\Http\Controllers\Admin\LocationController;
 use App\Http\Controllers\Admin\NewsletterSubscriberController as AdminNewsletterSubscriberController;
+use App\Http\Controllers\Admin\PaymentSettingController;
 use App\Http\Controllers\Admin\PlatformReportController;
 use App\Http\Controllers\Admin\ReelController;
 use App\Http\Controllers\Admin\RoleController;
@@ -92,11 +93,13 @@ Route::prefix('events/{event}')->middleware(EnsureEventIsPublished::class)->grou
     Route::post('/invite/{token}/request', [InvitationRequestController::class, 'store'])->name('invitations.store');
 });
 
-// Payment link route for ticket payment completion
-// will be updated once we integrate with payment gateway
-Route::get('tickets/{ticket}/payment', [TicketPaymentController::class, 'complete'])
-    ->middleware('signed')
-    ->name('tickets.payment');
+// Kashier sends the customer back here after checkout, and its server posts the outcome to the
+// webhook (exempt from CSRF in bootstrap/app.php). Both are checked against Kashier's signature.
+Route::get('payments/kashier/return', [TicketPaymentController::class, 'return'])
+    ->middleware('throttle:30,1')
+    ->name('payments.kashier.return');
+Route::post('payments/kashier/webhook', [TicketPaymentController::class, 'webhook'])
+    ->name('payments.kashier.webhook');
 
 // An issued ticket, openable and printable by whoever holds its link
 Route::get('tickets/{ticket}/{ticketId}', [TicketController::class, 'show'])->name('tickets.show');
@@ -122,6 +125,8 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
         Route::resource('staff', StaffController::class)->except('show')->parameters(['staff' => 'user']);
         Route::resource('roles', RoleController::class)->except('show');
+        Route::get('payment-settings', [PaymentSettingController::class, 'edit'])->name('payment-settings.edit');
+        Route::put('payment-settings', [PaymentSettingController::class, 'update'])->name('payment-settings.update');
 
         // Creators Hub (the site root) is not an event, so its copy lives outside the
         // per-event content screens.
@@ -193,6 +198,8 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('events/{event}/ticket-requests', [TicketRequestQueueController::class, 'index'])->name('events.ticket-requests.index');
         Route::patch('events/{event}/ticket-requests/{ticket}/{status}', [TicketRequestQueueController::class, 'updateStatus'])
             ->name('events.ticket-requests.update-status');
+        Route::post('events/{event}/ticket-requests/{ticket}/payment-link', [TicketRequestQueueController::class, 'resendPaymentLink'])
+            ->name('events.ticket-requests.resend-payment-link');
         Route::get('events/{event}/ticket-requests/{ticket}/answers/{answer}/download', [TicketRequestQueueController::class, 'downloadAnswer'])->name('events.ticket-requests.answers.download');
         Route::get('events/{event}/content', [LandingPageContentController::class, 'edit'])->name('events.content.edit');
         Route::put('events/{event}/content', [LandingPageContentController::class, 'update'])->name('events.content.update');

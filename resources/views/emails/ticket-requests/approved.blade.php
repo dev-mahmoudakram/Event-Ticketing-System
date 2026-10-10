@@ -25,6 +25,10 @@
         </tr>
     </table>
 
+    <p style="margin:-12px 0 28px;font-size:13px;line-height:1.7;color:#6b6b6b;">
+        {{ __('This payment link works until :date. If it runs out, contact us and we will send you a new one.', ['date' => $expiresAt->copy()->timezone(config('app.timezone'))->locale(app()->getLocale())->translatedFormat('j F Y, g:i A')]) }}
+    </p>
+
     <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="width:100%;background:#faf9ff;border:1px solid #e6e4f2;border-radius:12px;">
         <tr>
             <td style="padding:16px 20px;">

@@ -20,7 +20,7 @@ use Illuminate\Support\Str;
 final class AdminPermissions
 {
     /** @var list<string> */
-    public const ADMIN_ONLY = ['admin.staff.*', 'admin.roles.*'];
+    public const ADMIN_ONLY = ['admin.staff.*', 'admin.roles.*', 'admin.payment-settings.*'];
 
     public static function for(string $routeName): ?Permission
     {
