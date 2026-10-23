@@ -121,7 +121,7 @@ class TicketDesignTest extends TestCase
     public function test_the_approval_email_leads_to_the_payment_link(): void
     {
         $ticket = $this->issuedTicket();
-        $html = (new TicketRequestApproved($ticket, 'https://example.test/pay'))->render();
+        $html = (new TicketRequestApproved($ticket, 'https://example.test/pay', now()->addDay()))->render();
 
         $this->assertStringContainsString('https://example.test/pay', $html);
         $this->assertStringContainsString('CCS2026-000042', $html);
@@ -142,7 +142,7 @@ class TicketDesignTest extends TestCase
         $ticket = $this->issuedTicket();
         $this->app->setLocale('ar');
 
-        $html = (new TicketRequestApproved($ticket, 'https://example.test/pay'))->render();
+        $html = (new TicketRequestApproved($ticket, 'https://example.test/pay', now()->addDay()))->render();
 
         $this->assertStringContainsString('dir="rtl"', $html);
         $this->assertStringContainsString('تمت الموافقة على طلبك.', $html);

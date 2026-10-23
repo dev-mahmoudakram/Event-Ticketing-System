@@ -16,7 +16,7 @@ Last verified: 2026-09-05 (routes, models, controllers, migrations inspected dir
 | 03 | Admin Panel | ✅ Done — content CRUD, approvals, coupons and reports |
 | 04 | Landing Page | ✅ Done — both brands (CCS event pages and the Creators Hub platform page) |
 | 05 | Ticket Request | ✅ Done — request, review, approve/reject, approval email with a payment link |
-| 06 | Payment | 🟡 Partial — the full flow works on a stub link; no real gateway |
+| 06 | Payment | 🟡 Built on Kashier — waiting on live keys and a first live payment |
 | 07 | Workshops | ✅ Done — browsing, keyed booking, capacity and slot enforcement |
 | 08 | Awards | 🟡 Partial — teaser and page shell built, voting missing |
 | 09 | QR System | ✅ Done — QR on issuance, signed scan URL, staff check-in portal |
@@ -84,16 +84,16 @@ of the Workshops booking flow (Phase 07).
       file storage
 - [x] Submission endpoint creating a Pending ticket, with an animated confirmation popup
 - [x] Admin review screen with Approve / Reject
-- [x] Approve emails a signed payment link (7 days); Reject emails a decline
+- [x] Approve emails a Kashier payment link (24 hours); Reject emails a decline
 
 ## 06 — Payment
 
-- [x] Payment link flow (Payment Pending → Paid → Ticket Issued) behind a signed URL
+- [x] Kashier payment link (24h) emailed on approval; admin can resend; webhook, return page and a 15-minute sync confirm payments
 - [x] QR code and issued-ticket email on payment success
 - [x] The price and any discount are recorded on the ticket at request time
-- [ ] Real gateway (Kashier — waiting on their approval); `TicketPaymentController` marks a
-      ticket paid without taking money
-- [ ] Payment records: gateway reference, refunds
+- [x] Real gateway: Kashier hosted payment sessions, keys in Admin → Payment Settings
+- [x] Payment records (`ticket_payments`): session, order reference, amount, status, transaction
+- [ ] Go live (live keys, scheduler cron, first real payment); refunds later
 - [x] Workshop Booking Key generated on payment success
 
 ## 07 — Workshops

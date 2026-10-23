@@ -61,7 +61,7 @@ class TicketTermsAgreementTest extends TestCase
     {
         $ticket = Ticket::factory()->create();
 
-        $html = (new TicketRequestApproved($ticket, 'https://pay.example/1'))->render();
+        $html = (new TicketRequestApproved($ticket, 'https://pay.example/1', now()->addDay()))->render();
 
         $this->assertStringContainsString(route('event-pages.show', [$ticket->event, 'terms']), $html);
         $this->assertStringContainsString(route('event-pages.show', [$ticket->event, 'refund-policy']), $html);

@@ -183,6 +183,9 @@
     <a href="{{ route('admin.roles.index') }}" class="adm-nav-link {{ request()->routeIs('admin.roles.*') ? 'is-active' : '' }}">
         {{ __('Roles') }}
     </a>
+    <a href="{{ route('admin.payment-settings.edit') }}" class="adm-nav-link {{ request()->routeIs('admin.payment-settings.*') ? 'is-active' : '' }}">
+        {{ __('Payment Settings') }}
+    </a>
     @endif
 </nav>
 
