@@ -14,19 +14,20 @@ use Symfony\Component\HttpFoundation\Response;
  * The content security policy ships in report-only mode first: the browser logs anything it
  * would have blocked but blocks nothing, so a missed source can be found on the live site
  * before the policy is switched to enforcing. 'unsafe-eval' is there because Alpine's
- * standard build evaluates x-data expressions.
+ * standard build evaluates x-data expressions. challenges.cloudflare.com serves the Turnstile
+ * security check on the Awards page (its script, its iframe, and the calls the script makes).
  */
 class SecurityHeaders
 {
     private const CONTENT_SECURITY_POLICY = [
         "default-src 'self'",
-        "script-src 'self' 'unsafe-eval'",
+        "script-src 'self' 'unsafe-eval' https://challenges.cloudflare.com",
         "style-src 'self' 'unsafe-inline'",
         "img-src 'self' data: blob: https:",
         "media-src 'self' blob: https:",
         "font-src 'self' data:",
-        "connect-src 'self'",
-        "frame-src 'self' https:",
+        "connect-src 'self' https://challenges.cloudflare.com",
+        "frame-src 'self' https: https://challenges.cloudflare.com",
         "frame-ancestors 'self'",
         "form-action 'self'",
         "base-uri 'self'",
