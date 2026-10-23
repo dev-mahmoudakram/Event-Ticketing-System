@@ -1021,5 +1021,20 @@
     "Six-digit code": "الرمز المكوّن من ستة أرقام",
     "Confirm vote": "تأكيد التصويت",
     "Resend code": "إعادة إرسال الرمز",
-    ":count vote|:count votes": "لا أصوات|صوت واحد|صوتان|:count أصوات|:count صوتًا|:count صوت"
+    ":count vote|:count votes": "لا أصوات|صوت واحد|صوتان|:count أصوات|:count صوتًا|:count صوت",
+    "All awards": "كل الجوائز",
+    "All nominees": "كل المرشحين",
+    "An IP is flagged when it casts :count or more counted votes in one award within :minutes minutes. Flags are for review only; a shared network can be genuine.": "يُعلَّم عنوان IP عندما يُدلي بـ :count أصوات محتسبة أو أكثر في جائزة واحدة خلال :minutes دقيقة. العلامة للمراجعة فقط؛ فقد تكون الشبكة المشتركة سليمة.",
+    "Counted": "محتسب",
+    "Download votes (CSV)": "تنزيل الأصوات (CSV)",
+    "Filter": "تصفية",
+    "IP": "عنوان IP",
+    "No votes yet.": "لا توجد أصوات بعد.",
+    "Remove all from this IP": "إزالة كل أصوات هذا العنوان",
+    "Remove every counted vote from :ip in this award?": "هل تريد إزالة كل الأصوات المحتسبة من :ip في هذه الجائزة؟",
+    "Remove this vote? It stops counting and the email still cannot vote again in this award.": "هل تريد إزالة هذا الصوت؟ لن يُحتسب بعد الآن، ولن يتمكن هذا البريد من التصويت مجددًا في هذه الجائزة.",
+    "Removed": "تمت الإزالة",
+    "Suspicious": "مشبوه",
+    "Vote removed. The email still cannot vote again in this award.": "تمت إزالة الصوت. لا يزال هذا البريد ممنوعًا من التصويت مجددًا في هذه الجائزة.",
+    "Votes removed from this IP: :count": "الأصوات التي أُزيلت من هذا العنوان: :count"
 }

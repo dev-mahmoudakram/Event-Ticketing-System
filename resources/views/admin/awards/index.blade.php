@@ -3,9 +3,7 @@
 
 @section('content')
     <x-admin.page-header :title="__('Awards').' — '.(app()->getLocale() === 'ar' ? $event->name_ar : $event->name_en)">
-        @if(Route::has('admin.events.award-votes.index'))
-            <x-admin.button href="{{ route('admin.events.award-votes.index', $event) }}" variant="secondary">{{ __('Votes') }}</x-admin.button>
-        @endif
+        <x-admin.button href="{{ route('admin.events.award-votes.index', $event) }}" variant="secondary">{{ __('Votes') }}</x-admin.button>
         <x-admin.button href="{{ route('admin.events.awards.create', $event) }}">{{ __('New Award') }}</x-admin.button>
     </x-admin.page-header>
 

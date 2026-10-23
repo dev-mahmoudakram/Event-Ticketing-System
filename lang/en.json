@@ -976,5 +976,20 @@
     "Six-digit code": "Six-digit code",
     "Confirm vote": "Confirm vote",
     "Resend code": "Resend code",
-    ":count vote|:count votes": ":count vote|:count votes"
+    ":count vote|:count votes": ":count vote|:count votes",
+    "All awards": "All awards",
+    "All nominees": "All nominees",
+    "An IP is flagged when it casts :count or more counted votes in one award within :minutes minutes. Flags are for review only; a shared network can be genuine.": "An IP is flagged when it casts :count or more counted votes in one award within :minutes minutes. Flags are for review only; a shared network can be genuine.",
+    "Counted": "Counted",
+    "Download votes (CSV)": "Download votes (CSV)",
+    "Filter": "Filter",
+    "IP": "IP",
+    "No votes yet.": "No votes yet.",
+    "Remove all from this IP": "Remove all from this IP",
+    "Remove every counted vote from :ip in this award?": "Remove every counted vote from :ip in this award?",
+    "Remove this vote? It stops counting and the email still cannot vote again in this award.": "Remove this vote? It stops counting and the email still cannot vote again in this award.",
+    "Removed": "Removed",
+    "Suspicious": "Suspicious",
+    "Vote removed. The email still cannot vote again in this award.": "Vote removed. The email still cannot vote again in this award.",
+    "Votes removed from this IP: :count": "Votes removed from this IP: :count"
 }

@@ -4,7 +4,7 @@
     $eventSections = [
         ['prefix' => 'admin.events.content', 'permission' => \App\Enums\Permission::LandingPage, 'route' => 'admin.events.content.edit', 'label' => __('Landing Page Content')],
         ['prefix' => 'admin.events.pages', 'permission' => \App\Enums\Permission::Pages, 'route' => 'admin.events.pages.index', 'label' => __('Pages')],
-        ['prefix' => 'admin.events.awards', 'permission' => \App\Enums\Permission::Awards, 'route' => 'admin.events.awards.index', 'label' => __('Awards')],
+        ['prefix' => ['admin.events.awards', 'admin.events.award-votes'], 'permission' => \App\Enums\Permission::Awards, 'route' => 'admin.events.awards.index', 'label' => __('Awards')],
         ['prefix' => 'admin.events.speakers', 'permission' => \App\Enums\Permission::Speakers, 'route' => 'admin.events.speakers.index', 'label' => __('Speakers')],
         ['prefix' => 'admin.events.speaker-requests', 'permission' => \App\Enums\Permission::SpeakerRequests, 'route' => 'admin.events.speaker-requests.index', 'label' => __('Speaker Requests')],
         ['prefix' => 'admin.events.sponsors', 'permission' => \App\Enums\Permission::Sponsors, 'route' => 'admin.events.sponsors.index', 'label' => __('Partners')],
@@ -127,7 +127,7 @@
                         </a>
                         @endif
                         @foreach($visibleEventSections as $section)
-                            <a href="{{ route($section['route'], $sidebarEvent) }}" class="adm-nav-link adm-nav-sub {{ request()->routeIs($section['prefix'].'.*') && $currentEventId === $sidebarEvent->id ? 'is-active' : '' }}">
+                            <a href="{{ route($section['route'], $sidebarEvent) }}" class="adm-nav-link adm-nav-sub {{ request()->routeIs(array_map(fn (string $prefix): string => $prefix.'.*', (array) $section['prefix'])) && $currentEventId === $sidebarEvent->id ? 'is-active' : '' }}">
                                 {{ $section['label'] }}
                             </a>
                         @endforeach
