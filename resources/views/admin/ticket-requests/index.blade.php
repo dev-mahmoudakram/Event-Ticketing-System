@@ -47,7 +47,18 @@
                         <td>{{ $ticket->email }}</td>
                         <td>{{ $ticket->ticketType->name_en }}</td>
                         <td>{{ $ticket->influencerCategory?->name_en ?? '—' }}</td>
-                        <td>{{ $ticket->status->label() }}</td>
+                        <td>
+                            {{ $ticket->status->label() }}
+                            @if($ticket->status === \App\Enums\TicketStatus::PaymentPending && $ticket->latestPayment)
+                                <div class="mt-1 text-xs text-hub-dark/60">
+                                    {{ $ticket->latestPayment->status->label() }}
+                                    · {{ $ticket->latestPayment->amount }} {{ $ticket->latestPayment->currency }}
+                                    @if($ticket->latestPayment->expires_at)
+                                        <br>{{ $ticket->latestPayment->expires_at->isPast() ? __('Link expired on :date', ['date' => $ticket->latestPayment->expires_at->format('Y-m-d H:i')]) : __('Link valid until :date', ['date' => $ticket->latestPayment->expires_at->format('Y-m-d H:i')]) }}
+                                    @endif
+                                </div>
+                            @endif
+                        </td>
                         <td>
                             @foreach($ticket->answers as $answer)
                                 <div class="text-xs text-hub-dark/60">
@@ -72,6 +83,11 @@
                                 <form method="POST" action="{{ route('admin.events.ticket-requests.update-status', [$event, $ticket, 'rejected']) }}" class="inline" data-confirm="{{ __('Are you sure? This cannot be undone.') }}">
                                     @csrf @method('PATCH')
                                     <x-admin.button type="submit" variant="danger" class="ms-2">{{ __('Reject') }}</x-admin.button>
+                                </form>
+                            @elseif($ticket->status === \App\Enums\TicketStatus::PaymentPending)
+                                <form method="POST" action="{{ route('admin.events.ticket-requests.resend-payment-link', [$event, $ticket]) }}" class="inline" data-confirm="{{ __('Send a new payment link? The old link will stop working.') }}">
+                                    @csrf
+                                    <x-admin.button type="submit">{{ __('Resend payment link') }}</x-admin.button>
                                 </form>
                             @endif
                         </td>

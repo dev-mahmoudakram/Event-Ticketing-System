@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Ticket extends Model
 {
@@ -88,6 +89,29 @@ class Ticket extends Model
     public function canBookWorkshops(): bool
     {
         return $this->workshopSlotAllowance() !== 0;
+    }
+
+    public function payments(): HasMany
+    {
+        return $this->hasMany(TicketPayment::class);
+    }
+
+    /**
+     * The most recent payment link sent for this ticket.
+     */
+    public function latestPayment(): HasOne
+    {
+        return $this->hasOne(TicketPayment::class)->latestOfMany();
+    }
+
+    /**
+     * What is still to pay: the price agreed at request time, less its discount.
+     */
+    public function amountDue(): int
+    {
+        $price = $this->price ?? (int) $this->ticketType?->price;
+
+        return max(0, (int) $price - (int) $this->discount_amount);
     }
 
     public function answers(): HasMany
