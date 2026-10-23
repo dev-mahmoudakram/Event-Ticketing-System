@@ -62,7 +62,7 @@ class AwardVotingServiceTest extends TestCase
     {
         $this->voting->sendCode($this->award, $this->nominee, 'voter@example.com', '10.0.0.1');
 
-        $vote = $this->voting->confirm($this->award, 'voter@example.com', $this->lastMailedCode(), '10.0.0.2');
+        $vote = $this->voting->confirm($this->award, $this->nominee, 'voter@example.com', $this->lastMailedCode(), '10.0.0.2');
 
         $this->assertSame(1, AwardVote::count());
         $this->assertSame('10.0.0.2', $vote->ip_address);
@@ -74,7 +74,7 @@ class AwardVotingServiceTest extends TestCase
     public function test_email_case_and_spaces_are_the_same_voter(): void
     {
         $this->voting->sendCode($this->award, $this->nominee, 'Sara@X.com ', '10.0.0.1');
-        $vote = $this->voting->confirm($this->award, 'Sara@X.com ', $this->lastMailedCode(), '10.0.0.1');
+        $vote = $this->voting->confirm($this->award, $this->nominee, 'Sara@X.com ', $this->lastMailedCode(), '10.0.0.1');
 
         $this->assertSame('sara@x.com', $vote->email);
 
@@ -96,7 +96,7 @@ class AwardVotingServiceTest extends TestCase
         AwardVote::factory()->for($this->award)->for($this->nominee, 'nominee')->create(['email' => 'voter@example.com']);
 
         try {
-            $this->voting->confirm($this->award, 'voter@example.com', '123456', '10.0.0.1');
+            $this->voting->confirm($this->award, $this->nominee, 'voter@example.com', '123456', '10.0.0.1');
             $this->fail('A second vote for the same email was accepted.');
         } catch (VotingRefused $refused) {
             $this->assertSame(__('This email has already voted in this award.'), $refused->getMessage());
@@ -128,7 +128,7 @@ class AwardVotingServiceTest extends TestCase
 
         for ($try = 1; $try <= 5; $try++) {
             try {
-                $this->voting->confirm($this->award, 'voter@example.com', $wrong, '10.0.0.1');
+                $this->voting->confirm($this->award, $this->nominee, 'voter@example.com', $wrong, '10.0.0.1');
                 $this->fail('A wrong code was accepted.');
             } catch (VotingRefused $refused) {
                 $this->assertSame(__('That code is not right.'), $refused->getMessage());
@@ -138,7 +138,112 @@ class AwardVotingServiceTest extends TestCase
         $this->assertSame(5, AwardVoteCode::sole()->attempts);
 
         $this->expectExceptionObject(new VotingRefused(__('That code has expired. Request a new one.')));
-        $this->voting->confirm($this->award, 'voter@example.com', $code, '10.0.0.1');
+        $this->voting->confirm($this->award, $this->nominee, 'voter@example.com', $code, '10.0.0.1');
+    }
+
+    public function test_attempts_are_reserved_before_the_code_is_checked(): void
+    {
+        $this->voting->sendCode($this->award, $this->nominee, 'voter@example.com', '10.0.0.1');
+        $code = $this->lastMailedCode();
+        $wrong = $code === '000000' ? '111111' : '000000';
+        AwardVoteCode::query()->update(['attempts' => 4]);
+
+        try {
+            $this->voting->confirm($this->award, $this->nominee, 'voter@example.com', $wrong, '10.0.0.1');
+            $this->fail('A wrong code was accepted.');
+        } catch (VotingRefused $refused) {
+            $this->assertSame(__('That code is not right.'), $refused->getMessage());
+        }
+
+        $this->assertSame(5, AwardVoteCode::sole()->attempts);
+
+        try {
+            $this->voting->confirm($this->award, $this->nominee, 'voter@example.com', $code, '10.0.0.1');
+            $this->fail('A code was checked after its last attempt was used.');
+        } catch (VotingRefused $refused) {
+            $this->assertSame(__('That code has expired. Request a new one.'), $refused->getMessage());
+        }
+
+        $this->assertSame(0, AwardVote::count());
+    }
+
+    public function test_the_last_reserved_attempt_still_accepts_the_right_code(): void
+    {
+        $this->voting->sendCode($this->award, $this->nominee, 'voter@example.com', '10.0.0.1');
+        AwardVoteCode::query()->update(['attempts' => 4]);
+
+        $this->voting->confirm($this->award, $this->nominee, 'voter@example.com', $this->lastMailedCode(), '10.0.0.1');
+
+        $this->assertSame(1, AwardVote::count());
+        $this->assertSame(0, AwardVoteCode::count());
+    }
+
+    public function test_ten_wrong_codes_lock_the_email_for_an_hour(): void
+    {
+        $locked = __('Too many wrong codes. Try again later.');
+
+        foreach ([5, 4, 1] as $wrongGuesses) {
+            $this->voting->sendCode($this->award, $this->nominee, 'voter@example.com', '10.0.0.1');
+            $wrong = $this->lastMailedCode() === '000000' ? '111111' : '000000';
+
+            for ($guess = 1; $guess <= $wrongGuesses; $guess++) {
+                try {
+                    $this->voting->confirm($this->award, $this->nominee, 'voter@example.com', $wrong, '10.0.0.1');
+                    $this->fail('A wrong code was accepted.');
+                } catch (VotingRefused $refused) {
+                    $this->assertSame(__('That code is not right.'), $refused->getMessage());
+                }
+            }
+        }
+
+        try {
+            $this->voting->confirm($this->award, $this->nominee, 'Voter@Example.com', $this->lastMailedCode(), '10.0.0.1');
+            $this->fail('A locked email confirmed a vote.');
+        } catch (VotingRefused $refused) {
+            $this->assertSame($locked, $refused->getMessage());
+        }
+
+        try {
+            $this->voting->sendCode($this->award, $this->nominee, 'voter@example.com', '10.0.0.1');
+            $this->fail('A locked email was sent a new code.');
+        } catch (VotingRefused $refused) {
+            $this->assertSame($locked, $refused->getMessage());
+        }
+
+        $this->assertSame(0, AwardVote::count());
+
+        $this->travel(61)->minutes();
+
+        $this->voting->sendCode($this->award, $this->nominee, 'voter@example.com', '10.0.0.1');
+        $this->voting->confirm($this->award, $this->nominee, 'voter@example.com', $this->lastMailedCode(), '10.0.0.1');
+
+        $this->assertSame(1, AwardVote::count());
+    }
+
+    public function test_a_code_only_confirms_the_nominee_it_was_sent_for(): void
+    {
+        $victimChoice = $this->nominee;
+        $attackerChoice = AwardNominee::factory()->for($this->award)->create();
+
+        $this->voting->sendCode($this->award, $victimChoice, 'victim@example.com', '10.0.0.1');
+        $this->voting->sendCode($this->award, $attackerChoice, 'victim@example.com', '10.0.0.66');
+        $newestCode = $this->lastMailedCode();
+
+        try {
+            $this->voting->confirm($this->award, $victimChoice, 'victim@example.com', $newestCode, '10.0.0.1');
+            $this->fail('A code confirmed a nominee it was not sent for.');
+        } catch (VotingRefused $refused) {
+            $this->assertSame(__('That code was sent for a different choice. Request a new one.'), $refused->getMessage());
+        }
+
+        $this->assertSame(0, AwardVote::count());
+        $this->assertSame(1, AwardVoteCode::sole()->attempts);
+    }
+
+    public function test_confirming_a_nominee_from_another_award_is_rejected(): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $this->voting->confirm($this->award, AwardNominee::factory()->create(), 'voter@example.com', '123456', '10.0.0.1');
     }
 
     public function test_a_code_expires_after_ten_minutes(): void
@@ -149,7 +254,7 @@ class AwardVotingServiceTest extends TestCase
         $this->travel(11)->minutes();
 
         $this->expectExceptionObject(new VotingRefused(__('That code has expired. Request a new one.')));
-        $this->voting->confirm($this->award, 'voter@example.com', $code, '10.0.0.1');
+        $this->voting->confirm($this->award, $this->nominee, 'voter@example.com', $code, '10.0.0.1');
     }
 
     public function test_a_new_code_cancels_the_old_one(): void
@@ -163,14 +268,14 @@ class AwardVotingServiceTest extends TestCase
 
         if ($oldCode !== $newCode) {
             try {
-                $this->voting->confirm($this->award, 'voter@example.com', $oldCode, '10.0.0.1');
+                $this->voting->confirm($this->award, $this->nominee, 'voter@example.com', $oldCode, '10.0.0.1');
                 $this->fail('An old code still worked after a new one was sent.');
             } catch (VotingRefused $refused) {
                 $this->assertSame(__('That code is not right.'), $refused->getMessage());
             }
         }
 
-        $this->voting->confirm($this->award, 'voter@example.com', $newCode, '10.0.0.1');
+        $this->voting->confirm($this->award, $this->nominee, 'voter@example.com', $newCode, '10.0.0.1');
         $this->assertSame(1, AwardVote::count());
     }
 
@@ -182,7 +287,7 @@ class AwardVotingServiceTest extends TestCase
         $this->event->update(['voting_mode' => VotingMode::Closed]);
 
         try {
-            $this->voting->confirm($this->award->fresh(), 'voter@example.com', $code, '10.0.0.1');
+            $this->voting->confirm($this->award->fresh(), $this->nominee, 'voter@example.com', $code, '10.0.0.1');
             $this->fail('A code was accepted after voting closed.');
         } catch (VotingRefused $refused) {
             $this->assertSame(__('Voting is not open.'), $refused->getMessage());

@@ -995,5 +995,7 @@
     "Award": "الجائزة",
     "Nominee": "المرشح",
     "This code expires in 10 minutes and works once.": "تنتهي صلاحية هذا الرمز خلال 10 دقائق ويُستخدم مرة واحدة فقط.",
-    "If you did not ask to vote, you can ignore this email.": "إذا لم تطلب التصويت، يمكنك تجاهل هذه الرسالة."
+    "If you did not ask to vote, you can ignore this email.": "إذا لم تطلب التصويت، يمكنك تجاهل هذه الرسالة.",
+    "Too many wrong codes. Try again later.": "يوجد عدد كبير من الرموز الخاطئة. حاول مرة أخرى لاحقًا.",
+    "That code was sent for a different choice. Request a new one.": "تم إرسال هذا الرمز لاختيار مختلف. اطلب رمزًا جديدًا."
 }

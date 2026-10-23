@@ -31,6 +31,10 @@ class AwardVoting
 
     public const CODE_WINDOW_MINUTES = 10;
 
+    public const WRONG_CODES_BEFORE_LOCKOUT = 10;
+
+    public const LOCKOUT_MINUTES = 60;
+
     public static function normalizeEmail(string $email): string
     {
         return mb_strtolower(trim($email));
@@ -39,7 +43,7 @@ class AwardVoting
     /**
      * Email a fresh six-digit code for a vote, cancelling any earlier code for this email + award.
      *
-     * @throws VotingRefused when voting is closed, the email already voted or asked too often
+     * @throws VotingRefused when voting is closed, the email already voted, is locked out or asked too often
      * @throws InvalidArgumentException when the nominee is not part of the award
      */
     public function sendCode(Award $award, AwardNominee $nominee, string $email, string $ip): void
@@ -55,6 +59,8 @@ class AwardVoting
         if ($this->hasVoted($award, $email)) {
             throw new VotingRefused(__('This email has already voted in this award.'));
         }
+
+        $this->ensureNotLockedOut($award, $email);
 
         $limiterKey = $this->codeLimiterKey($award, $email);
 
@@ -84,13 +90,26 @@ class AwardVoting
     /**
      * Turn a correct code into a counted vote for the nominee it was sent for.
      *
-     * @throws VotingRefused when voting is closed, the code is wrong, dead or the email already voted
+     * Each check first reserves one of the code's attempts in a single conditional UPDATE, so
+     * requests racing each other cannot guess more than MAX_WRONG_ATTEMPTS times between them.
+     * Wrong codes also count toward an hour-long lockout per email + award that a new code
+     * does not reset.
+     *
+     * @throws VotingRefused when voting is closed, the email is locked out, the code is wrong,
+     *                       dead or for another nominee, or the email already voted
+     * @throws InvalidArgumentException when the nominee is not part of the award
      */
-    public function confirm(Award $award, string $email, string $code, string $ip): AwardVote
+    public function confirm(Award $award, AwardNominee $nominee, string $email, string $code, string $ip): AwardVote
     {
+        if ($nominee->award_id !== $award->id) {
+            throw new InvalidArgumentException('The nominee does not belong to this award.');
+        }
+
         $this->ensureVotingIsOpen($award);
 
         $email = self::normalizeEmail($email);
+
+        $this->ensureNotLockedOut($award, $email);
 
         $pending = AwardVoteCode::query()
             ->where('award_id', $award->id)
@@ -98,12 +117,16 @@ class AwardVoting
             ->latest('id')
             ->first();
 
-        if ($pending === null || $pending->expires_at->isPast() || $pending->attempts >= self::MAX_WRONG_ATTEMPTS) {
+        if ($pending === null || $pending->expires_at->isPast() || ! $this->reserveAttempt($pending)) {
             throw new VotingRefused(__('That code has expired. Request a new one.'));
         }
 
+        if ($pending->award_nominee_id !== $nominee->id) {
+            throw new VotingRefused(__('That code was sent for a different choice. Request a new one.'));
+        }
+
         if (! Hash::check(trim($code), $pending->code_hash)) {
-            $pending->increment('attempts');
+            RateLimiter::hit($this->wrongCodeLimiterKey($award, $email), self::LOCKOUT_MINUTES * 60);
 
             throw new VotingRefused(__('That code is not right.'));
         }
@@ -164,6 +187,28 @@ class AwardVoting
         }
     }
 
+    /**
+     * Use up one attempt on the code, unless none are left. Atomic, so parallel checks
+     * cannot share the last attempt.
+     */
+    private function reserveAttempt(AwardVoteCode $pending): bool
+    {
+        return AwardVoteCode::query()
+            ->whereKey($pending->id)
+            ->where('attempts', '<', self::MAX_WRONG_ATTEMPTS)
+            ->increment('attempts') === 1;
+    }
+
+    /**
+     * @throws VotingRefused when the email entered too many wrong codes in the last hour
+     */
+    private function ensureNotLockedOut(Award $award, string $email): void
+    {
+        if (RateLimiter::tooManyAttempts($this->wrongCodeLimiterKey($award, $email), self::WRONG_CODES_BEFORE_LOCKOUT)) {
+            throw new VotingRefused(__('Too many wrong codes. Try again later.'));
+        }
+    }
+
     private function hasVoted(Award $award, string $email): bool
     {
         return AwardVote::query()->where('award_id', $award->id)->where('email', $email)->exists();
@@ -172,5 +217,10 @@ class AwardVoting
     private function codeLimiterKey(Award $award, string $email): string
     {
         return 'award-vote-code:'.$award->id.':'.hash('sha256', $email);
+    }
+
+    private function wrongCodeLimiterKey(Award $award, string $email): string
+    {
+        return 'award-vote-fail|'.$award->id.'|'.hash('sha256', $email);
     }
 }
