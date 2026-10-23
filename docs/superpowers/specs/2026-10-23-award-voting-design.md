@@ -114,7 +114,14 @@ The window works with the keyboard, in RTL and LTR, and on phones.
 
 ### Real visitor IP behind Cloudflare
 
-The live site is behind Cloudflare's proxy (orange cloud **on**, confirmed by the owner). Without
+**Update (2026-10-23):** the owner keeps DNS on GoDaddy and uses Cloudflare **only for the
+Turnstile captcha** — the Cloudflare zone is pending and nothing is proxied. So trusting
+Cloudflare's ranges is **off by default** and switched on only with `TRUST_CLOUDFLARE=true` in
+`.env` (for a future move behind Cloudflare). The local reverse proxy (`127.0.0.1` / `::1`, Plesk's
+nginx in front of Apache) stays trusted, plus the optional `TRUSTED_PROXIES` list. The rest of
+this section describes the behaviour when `TRUST_CLOUDFLARE=true`.
+
+Originally assumed: the live site is behind Cloudflare's proxy (orange cloud **on**). Without
 setup, every request appears to come from a handful of Cloudflare addresses, which would make the
 per-IP limits block whole crowds and flag every vote as suspicious. So:
 
