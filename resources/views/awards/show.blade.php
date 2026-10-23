@@ -21,6 +21,17 @@
         data-vote-url-template="{{ route('awards.vote', [$event, '__AWARD__']) }}"
         data-site-key="{{ $turnstileSiteKey }}"
     >
+        @php
+            $awardVotingStrings = [
+                'confirm' => __('You are voting for :nominee in :award.'),
+                'genericError' => __('Something went wrong. Please try again.'),
+                'tooManyAttempts' => __('Too many attempts. Please wait a minute and try again.'),
+                'codeSentTo' => __('We sent a six-digit code to :email.'),
+                'voteCountForms' => explode('|', __(':count vote|:count votes')),
+            ];
+        @endphp
+        <script type="application/json" data-award-voting-strings>@json($awardVotingStrings)</script>
+
         <a href="{{ route('landing.show', $event) }}" class="inline-flex items-center gap-2 text-sm font-semibold text-gray-400 hover:text-white transition-colors mb-10">
             <span aria-hidden="true" class="rtl:rotate-180">&larr;</span> {{ __('Back to :event', ['event' => app()->getLocale() === 'ar' ? $event->name_ar : $event->name_en]) }}
         </a>
@@ -120,8 +131,8 @@
                                     <div class="mt-5 h-2 overflow-hidden rounded-full bg-white/10" aria-hidden="true">
                                         <span class="block h-full rounded-full bg-ccs-gold transition-[width] duration-700 ease-out" data-bar-for="{{ $nominee->id }}" style="width: {{ $share }}%"></span>
                                     </div>
-                                    <p class="mt-2 text-sm text-gray-400" aria-live="polite">
-                                        <span class="font-bold text-white" data-count-for="{{ $nominee->id }}">{{ $count }}</span> {{ __('votes') }}
+                                    <p class="mt-2 text-sm" aria-live="polite">
+                                        <span class="font-bold text-white" data-count-for="{{ $nominee->id }}" data-count="{{ $count }}">{{ trans_choice(':count vote|:count votes', $count, ['count' => $count]) }}</span>
                                     </p>
 
                                     <div class="mt-auto pt-4">

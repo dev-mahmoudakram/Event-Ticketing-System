@@ -42,8 +42,34 @@ class AwardsPageTest extends TestCase
             ->assertSeeInOrder(['Creator of the Year', 'Best Newcomer'])
             ->assertSee('Sara Ali')
             ->assertSee('Omar Hany')
-            ->assertSee('data-count-for="'.$sara->id.'">7<', false)
+            ->assertSee('data-count-for="'.$sara->id.'" data-count="7"', false)
             ->assertSee('id="award-'.$first->id.'"', false);
+    }
+
+    public function test_vote_counts_use_plural_forms(): void
+    {
+        $event = Event::factory()->create(['voting_mode' => VotingMode::Open]);
+        $award = Award::factory()->for($event)->create();
+        $counts = [1, 2, 3, 11];
+        $nominees = [];
+
+        foreach ($counts as $count) {
+            $nominee = AwardNominee::factory()->for($award)->create();
+            AwardVote::factory()->count($count)->create(['award_id' => $award->id, 'award_nominee_id' => $nominee->id]);
+            $nominees[$count] = $nominee;
+        }
+
+        $countLabel = fn (int $count): string => 'data-count-for="'.$nominees[$count]->id.'" data-count="'.$count.'">';
+
+        $this->withSession(['locale' => 'en'])->get(route('awards.show', $event))
+            ->assertOk()
+            ->assertSee($countLabel(1).'1 vote<', false)
+            ->assertSee($countLabel(2).'2 votes<', false);
+
+        $this->withSession(['locale' => 'ar'])->get(route('awards.show', $event))
+            ->assertOk()
+            ->assertSee($countLabel(3).'3 أصوات<', false)
+            ->assertSee($countLabel(11).'11 صوتًا<', false);
     }
 
     public function test_vote_buttons_show_only_while_voting_is_open(): void

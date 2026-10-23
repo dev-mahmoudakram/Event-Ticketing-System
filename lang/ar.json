@@ -1011,7 +1011,6 @@
     "You voted": "تم تسجيل صوتك",
     "Your vote": "صوتك",
     "About the nominee": "عن المرشح",
-    "votes": "صوت",
     "Vote": "صوّت",
     "Vote for :nominee": "صوّت لـ :nominee",
     "You are voting for :nominee in :award.": "أنت تصوّت لـ :nominee في جائزة :award.",
@@ -1021,5 +1020,6 @@
     "Send code": "أرسل الرمز",
     "Six-digit code": "الرمز المكوّن من ستة أرقام",
     "Confirm vote": "تأكيد التصويت",
-    "Resend code": "إعادة إرسال الرمز"
+    "Resend code": "إعادة إرسال الرمز",
+    ":count vote|:count votes": "لا أصوات|صوت واحد|صوتان|:count أصوات|:count صوتًا|:count صوت"
 }

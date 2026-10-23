@@ -1,16 +1,6 @@
 {{-- resources/views/awards/partials/vote-window.blade.php --}}
 {{-- The four-step vote window, driven by resources/js/award-voting.js: confirm the choice,
      email + security check, the emailed code, done. --}}
-@php
-    $voteWindowStrings = [
-        'confirm' => __('You are voting for :nominee in :award.'),
-        'genericError' => __('Something went wrong. Please try again.'),
-        'tooManyAttempts' => __('Too many attempts. Please wait a minute and try again.'),
-        'codeSentTo' => __('We sent a six-digit code to :email.'),
-    ];
-@endphp
-<script type="application/json" data-award-voting-strings>@json($voteWindowStrings)</script>
-
 <div class="fixed inset-0 z-100" data-vote-window hidden>
     <div class="fixed inset-0 bg-black/70" data-vote-close></div>
 

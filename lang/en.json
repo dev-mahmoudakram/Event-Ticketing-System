@@ -966,7 +966,6 @@
     "You voted": "You voted",
     "Your vote": "Your vote",
     "About the nominee": "About the nominee",
-    "votes": "votes",
     "Vote": "Vote",
     "Vote for :nominee": "Vote for :nominee",
     "You are voting for :nominee in :award.": "You are voting for :nominee in :award.",
@@ -976,5 +975,6 @@
     "Send code": "Send code",
     "Six-digit code": "Six-digit code",
     "Confirm vote": "Confirm vote",
-    "Resend code": "Resend code"
+    "Resend code": "Resend code",
+    ":count vote|:count votes": ":count vote|:count votes"
 }

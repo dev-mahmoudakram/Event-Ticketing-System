@@ -95,27 +95,81 @@ function initBios(root) {
 }
 
 /**
+ * The translated strings Blade renders into the page as a JSON blob.
+ *
+ * @param {Element} root
+ * @returns {Record<string, any>}
+ */
+function readStrings(root) {
+    try {
+        return JSON.parse(root.querySelector('[data-award-voting-strings]')?.textContent ?? '{}');
+    } catch (error) {
+        return {};
+    }
+}
+
+/**
+ * Plural categories in the order Laravel's trans_choice reads the forms: Arabic's six
+ * (zero|one|two|few|many|other) and the two of English and most other languages.
+ */
+const PLURAL_ORDER = {
+    6: ['zero', 'one', 'two', 'few', 'many', 'other'],
+    2: ['one', 'other'],
+};
+
+/**
+ * "1 vote" / "7 أصوات" — the same form the server picked for the first render.
+ *
+ * @param {number} count
+ * @param {string[]} forms the ':count vote|:count votes' translation split on '|'
+ */
+function voteCountLabel(count, forms) {
+    if (! Array.isArray(forms) || forms.length === 0) {
+        return String(count);
+    }
+
+    const order = PLURAL_ORDER[forms.length];
+    let index = forms.length - 1;
+
+    if (order) {
+        try {
+            const category = new Intl.PluralRules(document.documentElement.lang || undefined).select(count);
+            const found = order.indexOf(category);
+            index = found === -1 ? forms.length - 1 : found;
+        } catch (error) {
+            index = count === 1 ? 0 : forms.length - 1;
+        }
+    }
+
+    return forms[index].replace(':count', String(count));
+}
+
+/**
  * Write counts into the cards and size each award's bars as a share of that award's votes.
  *
  * @param {Element} root
  * @param {Record<string, number>} counts nominee id => counted votes
+ * @param {string[]} forms the vote-count plural forms
  */
-function applyCounts(root, counts) {
+function applyCounts(root, counts, forms) {
     Object.entries(counts).forEach(([nomineeId, count]) => {
         const countEl = root.querySelector(`[data-count-for="${CSS.escape(String(nomineeId))}"]`);
         if (countEl) {
-            countEl.textContent = String(count);
+            const number = Number(count) || 0;
+            countEl.dataset.count = String(number);
+            countEl.textContent = voteCountLabel(number, forms);
         }
     });
 
     root.querySelectorAll('[data-award-panel]').forEach((panel) => {
         const countEls = Array.from(panel.querySelectorAll('[data-count-for]'));
-        const total = countEls.reduce((sum, el) => sum + (parseInt(el.textContent, 10) || 0), 0);
+        const countOf = (el) => parseInt(el.dataset.count, 10) || 0;
+        const total = countEls.reduce((sum, el) => sum + countOf(el), 0);
 
         countEls.forEach((el) => {
             const bar = panel.querySelector(`[data-bar-for="${CSS.escape(el.dataset.countFor)}"]`);
             if (bar) {
-                const share = total > 0 ? ((parseInt(el.textContent, 10) || 0) / total) * 100 : 0;
+                const share = total > 0 ? (countOf(el) / total) * 100 : 0;
                 bar.style.width = share.toFixed(1) + '%';
             }
         });
@@ -134,6 +188,7 @@ function initPolling(root) {
         return;
     }
 
+    const voteCountForms = readStrings(root).voteCountForms;
     let inFlight = false;
 
     const refresh = async () => {
@@ -148,7 +203,7 @@ function initPolling(root) {
                 return;
             }
             const data = await response.json();
-            applyCounts(root, data.counts ?? {});
+            applyCounts(root, data.counts ?? {}, voteCountForms);
             if (data.open === false) {
                 hideVoteButtons(root);
             }
@@ -200,12 +255,7 @@ function initVoteWindow(root) {
     const turnstileSlot = windowEl.querySelector('[data-turnstile-slot]');
     const siteKey = root.dataset.siteKey ?? '';
 
-    let strings = {};
-    try {
-        strings = JSON.parse(root.querySelector('[data-award-voting-strings]')?.textContent ?? '{}');
-    } catch (error) {
-        strings = {};
-    }
+    const strings = readStrings(root);
 
     const state = { awardId: null, nomineeId: null, trigger: null, widgetId: null, busy: false };
 
@@ -466,7 +516,7 @@ function initVoteWindow(root) {
 
             const nomineeId = data.nominee_id ?? state.nomineeId;
             if (typeof data.count === 'number') {
-                applyCounts(root, { [nomineeId]: data.count });
+                applyCounts(root, { [nomineeId]: data.count }, strings.voteCountForms);
             }
             markVoted(state.awardId, nomineeId);
 
