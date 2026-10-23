@@ -937,5 +937,18 @@
     "Edit Nominee": "Edit Nominee",
     "New Nominee": "New Nominee",
     "No nominees yet.": "No nominees yet.",
-    "Voting must close after it opens.": "Voting must close after it opens."
+    "Voting must close after it opens.": "Voting must close after it opens.",
+    "Voting is not open.": "Voting is not open.",
+    "This email has already voted in this award.": "This email has already voted in this award.",
+    "Too many codes were requested for this email. Try again in a few minutes.": "Too many codes were requested for this email. Try again in a few minutes.",
+    "That code has expired. Request a new one.": "That code has expired. Request a new one.",
+    "That code is not right.": "That code is not right.",
+    "Your voting code: :code": "Your voting code: :code",
+    "Confirm your vote": "Confirm your vote",
+    "Enter this code on the voting page to confirm your vote for :nominee in :award.": "Enter this code on the voting page to confirm your vote for :nominee in :award.",
+    "Voting code": "Voting code",
+    "Award": "Award",
+    "Nominee": "Nominee",
+    "This code expires in 10 minutes and works once.": "This code expires in 10 minutes and works once.",
+    "If you did not ask to vote, you can ignore this email.": "If you did not ask to vote, you can ignore this email."
 }

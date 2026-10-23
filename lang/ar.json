@@ -982,5 +982,18 @@
     "Edit Nominee": "تعديل المرشح",
     "New Nominee": "مرشح جديد",
     "No nominees yet.": "لا يوجد مرشحون بعد.",
-    "Voting must close after it opens.": "يجب أن يُغلق التصويت بعد موعد فتحه."
+    "Voting must close after it opens.": "يجب أن يُغلق التصويت بعد موعد فتحه.",
+    "Voting is not open.": "التصويت غير متاح الآن.",
+    "This email has already voted in this award.": "هذا البريد الإلكتروني صوّت بالفعل في هذه الجائزة.",
+    "Too many codes were requested for this email. Try again in a few minutes.": "طُلبت رموز كثيرة لهذا البريد الإلكتروني. حاول مرة أخرى بعد بضع دقائق.",
+    "That code has expired. Request a new one.": "انتهت صلاحية هذا الرمز. اطلب رمزًا جديدًا.",
+    "That code is not right.": "هذا الرمز غير صحيح.",
+    "Your voting code: :code": "رمز التصويت الخاص بك: :code",
+    "Confirm your vote": "أكّد تصويتك",
+    "Enter this code on the voting page to confirm your vote for :nominee in :award.": "أدخل هذا الرمز في صفحة التصويت لتأكيد تصويتك لـ :nominee في :award.",
+    "Voting code": "رمز التصويت",
+    "Award": "الجائزة",
+    "Nominee": "المرشح",
+    "This code expires in 10 minutes and works once.": "تنتهي صلاحية هذا الرمز خلال 10 دقائق ويُستخدم مرة واحدة فقط.",
+    "If you did not ask to vote, you can ignore this email.": "إذا لم تطلب التصويت، يمكنك تجاهل هذه الرسالة."
 }
