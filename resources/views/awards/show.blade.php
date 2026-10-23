@@ -22,21 +22,24 @@
         data-site-key="{{ $turnstileSiteKey }}"
     >
         @php
+            $eventName = app()->getLocale() === 'ar' ? $event->name_ar : $event->name_en;
             $awardVotingStrings = [
                 'confirm' => __('You are voting for :nominee in :award.'),
                 'genericError' => __('Something went wrong. Please try again.'),
                 'tooManyAttempts' => __('Too many attempts. Please wait a minute and try again.'),
+                'pageExpired' => __('This page has expired. Please reload the page and try again.'),
                 'codeSentTo' => __('We sent a six-digit code to :email.'),
                 'voteCountForms' => explode('|', __(':count vote|:count votes')),
             ];
         @endphp
         <script type="application/json" data-award-voting-strings>@json($awardVotingStrings)</script>
+        <p class="sr-only" role="status" aria-live="polite" data-vote-announcer></p>
 
         <a href="{{ route('landing.show', $event) }}" class="inline-flex items-center gap-2 text-sm font-semibold text-gray-400 hover:text-white transition-colors mb-10">
-            <span aria-hidden="true" class="rtl:rotate-180">&larr;</span> {{ __('Back to :event', ['event' => app()->getLocale() === 'ar' ? $event->name_ar : $event->name_en]) }}
+            <span aria-hidden="true" class="rtl:rotate-180">&larr;</span> {{ __('Back to :event', ['event' => $eventName]) }}
         </a>
 
-        <div class="ccs-eyebrow text-ccs-coral">{{ __('CCS Awards') }}</div>
+        <div class="ccs-eyebrow text-ccs-coral">{{ __(':event Awards', ['event' => $eventName]) }}</div>
         <h1 class="font-display text-3xl md:text-5xl font-extrabold mb-4">{{ __('Awards') }}</h1>
 
         @if($blurb)
@@ -131,7 +134,7 @@
                                     <div class="mt-5 h-2 overflow-hidden rounded-full bg-white/10" aria-hidden="true">
                                         <span class="block h-full rounded-full bg-ccs-gold transition-[width] duration-700 ease-out" data-bar-for="{{ $nominee->id }}" style="width: {{ $share }}%"></span>
                                     </div>
-                                    <p class="mt-2 text-sm" aria-live="polite">
+                                    <p class="mt-2 text-sm">
                                         <span class="font-bold text-white" data-count-for="{{ $nominee->id }}" data-count="{{ $count }}">{{ trans_choice(':count vote|:count votes', $count, ['count' => $count]) }}</span>
                                     </p>
 

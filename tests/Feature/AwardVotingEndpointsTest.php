@@ -13,6 +13,7 @@ use App\Models\AwardVote;
 use App\Models\Event;
 use App\Services\TurnstileVerifier;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Testing\TestResponse;
 use Mockery\MockInterface;
@@ -280,6 +281,57 @@ class AwardVotingEndpointsTest extends TestCase
         $this->requestCode('voter@example.com')->assertNotFound();
         $this->castVote('voter@example.com', '123456')->assertNotFound();
 
+        Mail::assertNothingSent();
+    }
+
+    public function test_missing_turnstile_keys_refuse_the_code_without_crashing(): void
+    {
+        config(['services.turnstile.site_key' => '', 'services.turnstile.secret_key' => '']);
+        Http::fake();
+
+        $this->get(route('awards.show', $this->event))->assertOk();
+
+        $this->requestCode('voter@example.com')
+            ->assertStatus(422)
+            ->assertJsonPath('errors.captcha.0', __('Please complete the security check.'));
+
+        Http::assertNothingSent();
+        Mail::assertNothingSent();
+    }
+
+    public function test_array_inputs_are_rejected_without_a_server_error(): void
+    {
+        config(['services.turnstile.site_key' => 'test-site-key', 'services.turnstile.secret_key' => 'test-secret']);
+        Http::fake(['*' => Http::response(['success' => true])]);
+
+        $valid = [
+            'nominee_id' => $this->nominee->id,
+            'email' => 'voter@example.com',
+            'cf-turnstile-response' => 'token',
+        ];
+
+        $variants = [
+            'code: cf-turnstile-response[]' => ['awards.code', ['cf-turnstile-response' => ['token']] + $valid],
+            'code: email[]' => ['awards.code', ['email' => ['voter@example.com']] + $valid],
+            'code: nominee_id[]' => ['awards.code', ['nominee_id' => [$this->nominee->id]] + $valid],
+            'vote: email[]' => ['awards.vote', ['email' => ['voter@example.com'], 'code' => '123456'] + $valid],
+            'vote: code[]' => ['awards.vote', ['code' => ['123456']] + $valid],
+        ];
+
+        $serverErrors = [];
+
+        foreach ($variants as $label => [$route, $payload]) {
+            foreach (['json' => true, 'form' => false] as $format => $asJson) {
+                $url = route($route, [$this->event, $this->award]);
+                $response = $asJson ? $this->postJson($url, $payload) : $this->post($url, $payload);
+
+                if ($response->status() >= 500) {
+                    $serverErrors[] = "{$label} ({$format}) gave {$response->status()}";
+                }
+            }
+        }
+
+        $this->assertSame([], $serverErrors);
         Mail::assertNothingSent();
     }
 

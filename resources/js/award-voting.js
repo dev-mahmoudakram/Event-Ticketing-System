@@ -253,6 +253,7 @@ function initVoteWindow(root) {
     const emailInput = windowEl.querySelector('#vote-email');
     const codeInput = windowEl.querySelector('#vote-code');
     const turnstileSlot = windowEl.querySelector('[data-turnstile-slot]');
+    const announcer = root.querySelector('[data-vote-announcer]');
     const siteKey = root.dataset.siteKey ?? '';
 
     const strings = readStrings(root);
@@ -397,6 +398,8 @@ function initVoteWindow(root) {
     const handleFailure = (response, data) => {
         if (response.status === 422) {
             showErrors(data.errors, data.message);
+        } else if (response.status === 419) {
+            showFeedback(strings.pageExpired || strings.genericError);
         } else if (response.status === 429) {
             showFeedback(data.message || strings.tooManyAttempts);
         } else if (response.status === 503) {
@@ -430,6 +433,20 @@ function initVoteWindow(root) {
                 submit.disabled = false;
             }
         }
+    };
+
+    /**
+     * The page's one polite live region: it speaks only the visitor's own successful vote,
+     * never the counts that refresh every 30 seconds.
+     */
+    const announce = (message) => {
+        if (! announcer || ! message) {
+            return;
+        }
+        announcer.textContent = '';
+        window.setTimeout(() => {
+            announcer.textContent = message;
+        }, 100);
     };
 
     const markVoted = (awardId, nomineeId) => {
@@ -522,6 +539,7 @@ function initVoteWindow(root) {
 
             steps.done.querySelector('[data-vote-done-message]').textContent = data.message ?? '';
             showStep('done');
+            announce(data.message ?? '');
         });
     });
 

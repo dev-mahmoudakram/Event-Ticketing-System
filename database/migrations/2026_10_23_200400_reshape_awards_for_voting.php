@@ -14,14 +14,21 @@ return new class extends Migration
      *
      * The old tables stored one nominee per row and nothing wrote to them, so they are replaced
      * rather than converted. If they hold data the migration refuses to run.
+     *
+     * Safe to re-run after a half-failed attempt: the guard still runs first, then every table
+     * this creates is dropped (children before parents) and the events columns are checked.
      */
     public function up(): void
     {
-        if (DB::table('awards')->exists() || DB::table('award_votes')->exists()) {
-            throw new RuntimeException('awards/award_votes already hold data; reshape them by hand before migrating.');
+        foreach (['awards', 'award_votes'] as $table) {
+            if (Schema::hasTable($table) && DB::table($table)->exists()) {
+                throw new RuntimeException('awards/award_votes already hold data; reshape them by hand before migrating.');
+            }
         }
 
+        Schema::dropIfExists('award_vote_codes');
         Schema::dropIfExists('award_votes');
+        Schema::dropIfExists('award_nominees');
         Schema::dropIfExists('awards');
 
         Schema::create('awards', function (Blueprint $table) {
@@ -79,13 +86,17 @@ return new class extends Migration
             $table->index(['award_id', 'email']);
         });
 
-        Schema::table('events', function (Blueprint $table) {
-            $table->string('voting_mode')->default('schedule')->after('voting_closes_at');
-        });
+        if (! Schema::hasColumn('events', 'voting_mode')) {
+            Schema::table('events', function (Blueprint $table) {
+                $table->string('voting_mode')->default('schedule')->after('voting_closes_at');
+            });
+        }
 
-        Schema::table('events', function (Blueprint $table) {
-            $table->dropColumn('show_award_results');
-        });
+        if (Schema::hasColumn('events', 'show_award_results')) {
+            Schema::table('events', function (Blueprint $table) {
+                $table->dropColumn('show_award_results');
+            });
+        }
     }
 
     public function down(): void

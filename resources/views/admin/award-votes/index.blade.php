@@ -39,7 +39,7 @@
         <x-admin.button type="submit" variant="secondary">{{ __('Filter') }}</x-admin.button>
     </form>
 
-    <p class="mb-4 text-sm text-hub-dark/60">{{ __('An IP is flagged when it casts :count or more counted votes in one award within :minutes minutes. Flags are for review only; a shared network can be genuine.', ['count' => \App\Services\SuspiciousVotes::THRESHOLD, 'minutes' => \App\Services\SuspiciousVotes::WINDOW_MINUTES]) }}</p>
+    <p class="mb-4 text-sm text-hub-dark/60">{{ __('An IP is flagged when it casts :count or more counted votes in one award within :minutes minutes. Flags are for review only; a shared network can be genuine.', ['count' => \App\Services\SuspiciousVotes::THRESHOLD, 'minutes' => \App\Services\SuspiciousVotes::WINDOW_MINUTES]) }} {{ __('Removed votes can be restored; they count again.') }}</p>
 
     @if($votes->isEmpty())
         <x-admin.empty-state :message="__('No votes yet.')" />
@@ -77,6 +77,11 @@
                                     @csrf @method('DELETE')
                                     <x-admin.button type="submit" variant="danger">{{ __('Remove') }}</x-admin.button>
                                 </form>
+                            @else
+                                <form method="POST" action="{{ route('admin.events.award-votes.restore', [$event, $vote]) }}" class="inline" data-confirm="{{ __('Restore this vote? It will count again.') }}">
+                                    @csrf @method('PATCH')
+                                    <x-admin.button type="submit" variant="secondary">{{ __('Restore') }}</x-admin.button>
+                                </form>
                             @endunless
                             @if($isSuspicious)
                                 <form method="POST" action="{{ route('admin.events.award-votes.destroy-ip', $event) }}" class="inline" data-confirm="{{ __('Remove every counted vote from :ip in this award?', ['ip' => $vote->ip_address]) }}">
@@ -84,6 +89,14 @@
                                     <input type="hidden" name="award" value="{{ $vote->award_id }}">
                                     <input type="hidden" name="ip" value="{{ $vote->ip_address }}">
                                     <x-admin.button type="submit" variant="danger" class="ms-2">{{ __('Remove all from this IP') }}</x-admin.button>
+                                </form>
+                            @endif
+                            @if($vote->ip_address !== null && isset($restorableIps[$vote->award_id.'|'.$vote->ip_address]))
+                                <form method="POST" action="{{ route('admin.events.award-votes.restore-ip', $event) }}" class="inline" data-confirm="{{ __('Restore every removed vote from :ip in this award?', ['ip' => $vote->ip_address]) }}">
+                                    @csrf
+                                    <input type="hidden" name="award" value="{{ $vote->award_id }}">
+                                    <input type="hidden" name="ip" value="{{ $vote->ip_address }}">
+                                    <x-admin.button type="submit" variant="secondary" class="ms-2">{{ __('Restore all from this IP') }}</x-admin.button>
                                 </form>
                             @endif
                         </td>

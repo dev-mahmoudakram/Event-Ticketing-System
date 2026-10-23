@@ -27,7 +27,6 @@
     "Backed by the industry.": "Backed by the industry.",
     "Bio": "Bio",
     "CCS Admin": "CCS Admin",
-    "CCS Awards": "CCS Awards",
     "Capacity": "Capacity",
     "Caption": "Caption",
     "Choose a file or drag it here": "Choose a file or drag it here",
@@ -991,5 +990,14 @@
     "Removed": "Removed",
     "Suspicious": "Suspicious",
     "Vote removed. The email still cannot vote again in this award.": "Vote removed. The email still cannot vote again in this award.",
-    "Votes removed from this IP: :count": "Votes removed from this IP: :count"
+    "Votes removed from this IP: :count": "Votes removed from this IP: :count",
+    "Vote restored. It counts again.": "Vote restored. It counts again.",
+    "Votes restored from this IP: :count": "Votes restored from this IP: :count",
+    "Removed votes can be restored; they count again.": "Removed votes can be restored; they count again.",
+    "Restore this vote? It will count again.": "Restore this vote? It will count again.",
+    "Restore": "Restore",
+    "Restore every removed vote from :ip in this award?": "Restore every removed vote from :ip in this award?",
+    "Restore all from this IP": "Restore all from this IP",
+    ":event Awards": ":event Awards",
+    "This page has expired. Please reload the page and try again.": "This page has expired. Please reload the page and try again."
 }

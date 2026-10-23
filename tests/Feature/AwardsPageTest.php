@@ -9,6 +9,8 @@ use App\Models\Award;
 use App\Models\AwardNominee;
 use App\Models\AwardVote;
 use App\Models\Event;
+use DOMDocument;
+use DOMXPath;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -145,6 +147,49 @@ class AwardsPageTest extends TestCase
             ->assertSee('name="csrf-token"', false);
     }
 
+    public function test_the_awards_page_names_the_event(): void
+    {
+        $event = Event::factory()->create(['name_en' => 'Test Summit', 'name_ar' => 'قمة الاختبار']);
+
+        $english = $this->awardsSection($this->withSession(['locale' => 'en'])->get(route('awards.show', $event))->assertOk()->getContent());
+        $this->assertStringContainsString('Test Summit Awards', $english);
+        $this->assertStringNotContainsString('CCS', $english);
+
+        $arabic = $this->awardsSection($this->withSession(['locale' => 'ar'])->get(route('awards.show', $event))->assertOk()->getContent());
+        $this->assertStringContainsString('جوائز قمة الاختبار', $arabic);
+        $this->assertStringNotContainsString('CCS', $arabic);
+    }
+
+    public function test_the_strings_blob_explains_an_expired_page(): void
+    {
+        $event = Event::factory()->create(['voting_mode' => VotingMode::Open]);
+        AwardNominee::factory()->for(Award::factory()->for($event))->create();
+
+        $strings = $this->stringsBlob($this->withSession(['locale' => 'en'])->get(route('awards.show', $event))->getContent());
+        $this->assertSame('This page has expired. Please reload the page and try again.', $strings['pageExpired'] ?? null);
+
+        $strings = $this->stringsBlob($this->withSession(['locale' => 'ar'])->get(route('awards.show', $event))->getContent());
+        $this->assertSame('انتهت صلاحية الصفحة. يرجى إعادة تحميل الصفحة والمحاولة مرة أخرى.', $strings['pageExpired'] ?? null);
+    }
+
+    public function test_counts_are_not_live_regions_and_one_status_region_announces_the_vote(): void
+    {
+        $event = Event::factory()->create(['voting_mode' => VotingMode::Open]);
+        $award = Award::factory()->for($event)->create();
+        AwardNominee::factory()->count(3)->for($award)->create();
+
+        $xpath = $this->xpath($this->get(route('awards.show', $event))->assertOk()->getContent());
+
+        $this->assertSame(3, $xpath->query('//*[@data-count]')->length);
+        $this->assertSame(0, $xpath->query('//*[@data-count]/ancestor-or-self::*[@aria-live]')->length);
+
+        $liveRegions = $xpath->query('//*[@aria-live]');
+        $this->assertSame(1, $liveRegions->length);
+        $this->assertSame('polite', $liveRegions->item(0)->getAttribute('aria-live'));
+        $this->assertTrue($liveRegions->item(0)->hasAttribute('data-vote-announcer'));
+        $this->assertStringContainsString('sr-only', $liveRegions->item(0)->getAttribute('class'));
+    }
+
     public function test_the_csp_allows_cloudflare_turnstile(): void
     {
         $event = Event::factory()->create();
@@ -154,5 +199,38 @@ class AwardsPageTest extends TestCase
         $this->assertStringContainsString('challenges.cloudflare.com', $policy);
         $this->assertMatchesRegularExpression('/script-src [^;]*https:\/\/challenges\.cloudflare\.com/', $policy);
         $this->assertMatchesRegularExpression('/frame-src [^;]*https:\/\/challenges\.cloudflare\.com/', $policy);
+    }
+
+    /**
+     * The awards page's own section, without the shared landing nav and footer around it.
+     */
+    private function awardsSection(string $html): string
+    {
+        $this->assertMatchesRegularExpression('/<section[^>]*data-award-voting.*?<\/section>/s', $html);
+        preg_match('/<section[^>]*data-award-voting.*?<\/section>/s', $html, $matches);
+
+        return $matches[0];
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    private function stringsBlob(string $html): array
+    {
+        $this->assertMatchesRegularExpression('/<script type="application\/json" data-award-voting-strings>(.*?)<\/script>/s', $html);
+        preg_match('/<script type="application\/json" data-award-voting-strings>(.*?)<\/script>/s', $html, $matches);
+
+        return json_decode($matches[1], true, flags: JSON_THROW_ON_ERROR);
+    }
+
+    private function xpath(string $html): DOMXPath
+    {
+        $document = new DOMDocument;
+        $previous = libxml_use_internal_errors(true);
+        $document->loadHTML('<?xml encoding="UTF-8">'.$html);
+        libxml_clear_errors();
+        libxml_use_internal_errors($previous);
+
+        return new DOMXPath($document);
     }
 }

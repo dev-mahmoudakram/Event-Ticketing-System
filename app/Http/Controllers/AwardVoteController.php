@@ -34,7 +34,9 @@ class AwardVoteController extends Controller
 
     public function sendCode(AwardCodeRequest $request, Event $event, Award $award, TurnstileVerifier $turnstile): JsonResponse
     {
-        if (! $turnstile->verify($request->input('cf-turnstile-response'), $request->ip())) {
+        $token = $request->input('cf-turnstile-response');
+
+        if (! $turnstile->verify(is_string($token) ? $token : null, $request->ip())) {
             return $this->refused('captcha', __('Please complete the security check.'));
         }
 

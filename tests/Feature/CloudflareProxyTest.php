@@ -14,11 +14,33 @@ use Tests\TestCase;
  */
 class CloudflareProxyTest extends TestCase
 {
+    /**
+     * Each changed env name's value before this test touched it (null = it was not set),
+     * per store: getenv(), $_ENV and $_SERVER.
+     *
+     * @var array<string, array{getenv: string|false, env: string|null, server: string|null}>
+     */
+    private array $originalEnv = [];
+
+    /**
+     * @var array<string, array{getenv: string|false, env: mixed}>
+     */
+    private static array $envBeforeThisClass = [];
+
+    public static function setUpBeforeClass(): void
+    {
+        parent::setUpBeforeClass();
+
+        self::$envBeforeThisClass = self::envSnapshot();
+    }
+
     protected function setUp(): void
     {
         parent::setUp();
 
         Route::get('/_ip', fn (Request $request) => $request->ip());
+
+        $this->beforeApplicationDestroyed(fn () => $this->restoreEnv());
     }
 
     public function test_a_request_through_cloudflare_uses_the_visitors_ip(): void
@@ -149,6 +171,43 @@ class CloudflareProxyTest extends TestCase
         $this->assertContains('127.0.0.1', $proxies);
     }
 
+    public function test_falsy_trust_cloudflare_words_do_not_add_cloudflare_ranges(): void
+    {
+        foreach (['off', 'no', '0', 'false', ''] as $value) {
+            $this->useEnv(['TRUST_CLOUDFLARE' => $value]);
+
+            $proxies = config('trustedproxy.proxies');
+
+            $this->assertNotContains('173.245.48.0/20', $proxies, "TRUST_CLOUDFLARE={$value} trusted Cloudflare.");
+            $this->assertContains('127.0.0.1', $proxies);
+        }
+    }
+
+    /**
+     * Runs last in this class: earlier tests changed the env, and their cleanup must have put
+     * phpunit.xml's pinned values back rather than leaving them unset for later test classes.
+     */
+    public function test_env_changes_are_undone_after_each_test(): void
+    {
+        $this->assertSame(self::$envBeforeThisClass, self::envSnapshot());
+        $this->assertNotFalse(getenv('TRUSTED_PROXIES'), 'TRUSTED_PROXIES was unset.');
+        $this->assertNotFalse(getenv('TRUST_CLOUDFLARE'), 'TRUST_CLOUDFLARE was unset.');
+    }
+
+    /**
+     * @return array<string, array{getenv: string|false, env: mixed}>
+     */
+    private static function envSnapshot(): array
+    {
+        $snapshot = [];
+
+        foreach (['TRUSTED_PROXIES', 'TRUST_CLOUDFLARE'] as $name) {
+            $snapshot[$name] = ['getenv' => getenv($name), 'env' => $_ENV[$name] ?? null];
+        }
+
+        return $snapshot;
+    }
+
     private function trustCloudflare(): void
     {
         $this->useEnv(['TRUST_CLOUDFLARE' => 'true']);
@@ -167,17 +226,41 @@ class CloudflareProxyTest extends TestCase
     private function useEnv(array $values): void
     {
         foreach ($values as $name => $value) {
+            $this->originalEnv[$name] ??= [
+                'getenv' => getenv($name),
+                'env' => $_ENV[$name] ?? null,
+                'server' => $_SERVER[$name] ?? null,
+            ];
+
             $_ENV[$name] = $_SERVER[$name] = $value;
             putenv($name.'='.$value);
         }
 
-        $this->beforeApplicationDestroyed(function () use ($values): void {
-            foreach (array_keys($values) as $name) {
-                unset($_ENV[$name], $_SERVER[$name]);
-                putenv($name);
-            }
-        });
-
         config(['trustedproxy' => require config_path('trustedproxy.php')]);
+    }
+
+    /**
+     * Put back what phpunit.xml pinned (TRUSTED_PROXIES='', TRUST_CLOUDFLARE='false') rather
+     * than unsetting it, so later test classes see the same env as the first one did.
+     */
+    private function restoreEnv(): void
+    {
+        foreach ($this->originalEnv as $name => $original) {
+            $original['getenv'] === false ? putenv($name) : putenv($name.'='.$original['getenv']);
+
+            if ($original['env'] === null) {
+                unset($_ENV[$name]);
+            } else {
+                $_ENV[$name] = $original['env'];
+            }
+
+            if ($original['server'] === null) {
+                unset($_SERVER[$name]);
+            } else {
+                $_SERVER[$name] = $original['server'];
+            }
+        }
+
+        $this->originalEnv = [];
     }
 }

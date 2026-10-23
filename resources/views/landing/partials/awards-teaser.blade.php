@@ -1,7 +1,7 @@
 {{-- resources/views/landing/partials/awards-teaser.blade.php --}}
 @if($event->isSectionVisible('awards'))
     <section id="awards" class="ccs-section scroll-mt-24">
-        <div class="ccs-eyebrow text-ccs-coral" data-reveal>{{ __('CCS Awards') }}</div>
+        <div class="ccs-eyebrow text-ccs-coral" data-reveal>{{ __(':event Awards', ['event' => app()->getLocale() === 'ar' ? $event->name_ar : $event->name_en]) }}</div>
         <h2 class="font-display text-3xl md:text-5xl font-extrabold mb-6" data-reveal>{{ __("Honoring the year's defining work.") }}</h2>
         @php $blurb = $event->contentFor(\App\Enums\LandingPageSection::AwardsTeaser, 'blurb'); @endphp
         @if($blurb)

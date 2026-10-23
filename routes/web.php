@@ -192,7 +192,9 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('events/{event}/award-votes', [AdminAwardVoteController::class, 'index'])->name('events.award-votes.index');
         Route::get('events/{event}/award-votes/export', [AdminAwardVoteController::class, 'export'])->name('events.award-votes.export');
         Route::post('events/{event}/award-votes/remove-ip', [AdminAwardVoteController::class, 'destroyIp'])->name('events.award-votes.destroy-ip');
+        Route::post('events/{event}/award-votes/restore-ip', [AdminAwardVoteController::class, 'restoreIp'])->name('events.award-votes.restore-ip');
         Route::delete('events/{event}/award-votes/{vote}', [AdminAwardVoteController::class, 'destroy'])->name('events.award-votes.destroy');
+        Route::patch('events/{event}/award-votes/{vote}/restore', [AdminAwardVoteController::class, 'restore'])->name('events.award-votes.restore');
         Route::post('events/{event}/session-types/reorder', [SessionTypeController::class, 'reorder'])->name('events.session-types.reorder');
         Route::resource('events.session-types', SessionTypeController::class)->except('show')->parameters(['session-types' => 'sessionType']);
         Route::post('events/{event}/locations/reorder', [LocationController::class, 'reorder'])->name('events.locations.reorder');

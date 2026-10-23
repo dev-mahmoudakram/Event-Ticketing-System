@@ -27,7 +27,6 @@
     "Backed by the industry.": "بدعم من القطاع.",
     "Bio": "نبذة",
     "CCS Admin": "إدارة قمة صناع المحتوى",
-    "CCS Awards": "جوائز قمة صناع المحتوى",
     "Capacity": "السعة",
     "Caption": "الوصف",
     "Choose a file or drag it here": "اختر ملفًا أو اسحبه هنا",
@@ -1036,5 +1035,14 @@
     "Removed": "تمت الإزالة",
     "Suspicious": "مشبوه",
     "Vote removed. The email still cannot vote again in this award.": "تمت إزالة الصوت. لا يزال هذا البريد ممنوعًا من التصويت مجددًا في هذه الجائزة.",
-    "Votes removed from this IP: :count": "الأصوات التي أُزيلت من هذا العنوان: :count"
+    "Votes removed from this IP: :count": "الأصوات التي أُزيلت من هذا العنوان: :count",
+    "Vote restored. It counts again.": "تمت استعادة الصوت، وأصبح يُحتسب مجددًا.",
+    "Votes restored from this IP: :count": "الأصوات التي استُعيدت من هذا العنوان: :count",
+    "Removed votes can be restored; they count again.": "يمكن استعادة الأصوات المُزالة، فتُحتسب مجددًا.",
+    "Restore this vote? It will count again.": "هل تريد استعادة هذا الصوت؟ سيُحتسب مجددًا.",
+    "Restore": "استعادة",
+    "Restore every removed vote from :ip in this award?": "هل تريد استعادة كل الأصوات المُزالة من :ip في هذه الجائزة؟",
+    "Restore all from this IP": "استعادة كل أصوات هذا العنوان",
+    ":event Awards": "جوائز :event",
+    "This page has expired. Please reload the page and try again.": "انتهت صلاحية الصفحة. يرجى إعادة تحميل الصفحة والمحاولة مرة أخرى."
 }

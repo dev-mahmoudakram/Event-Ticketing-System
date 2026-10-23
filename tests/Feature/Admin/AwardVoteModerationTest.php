@@ -178,6 +178,91 @@ class AwardVoteModerationTest extends TestCase
         $this->assertFalse($foreignVote->fresh()->isRemoved());
     }
 
+    public function test_a_removed_vote_can_be_restored_and_counts_again(): void
+    {
+        $vote = AwardVote::factory()->removed()->create([
+            'award_id' => $this->award->id, 'award_nominee_id' => $this->nominee->id, 'email' => 'voter@example.com',
+            'ip_address' => '10.0.0.5',
+        ]);
+        $this->assertSame(0, $this->award->votes()->counted()->count());
+
+        $this->actingAs($this->admin)
+            ->get(route('admin.events.award-votes.index', $this->event))
+            ->assertOk()
+            ->assertSee(route('admin.events.award-votes.restore', [$this->event, $vote]), false)
+            ->assertSee(route('admin.events.award-votes.restore-ip', $this->event), false)
+            ->assertSee(__('Restore all from this IP'))
+            ->assertSee(__('Removed votes can be restored; they count again.'));
+
+        $this->actingAs($this->admin)
+            ->patch(route('admin.events.award-votes.restore', [$this->event, $vote]))
+            ->assertRedirect()
+            ->assertSessionHas('success', __('Vote restored. It counts again.'));
+
+        $vote->refresh();
+        $this->assertFalse($vote->isRemoved());
+        $this->assertNull($vote->removed_by);
+        $this->assertSame(1, $this->award->votes()->counted()->count());
+        $this->assertSame(1, $this->award->votes()->count());
+    }
+
+    public function test_restoring_all_votes_from_an_ip_in_an_award(): void
+    {
+        $removedFromIp = collect(range(1, 3))->map(fn (): AwardVote => AwardVote::factory()->removed()->create([
+            'award_id' => $this->award->id, 'award_nominee_id' => $this->nominee->id, 'ip_address' => '10.0.0.5',
+        ]));
+        $removedOtherIp = AwardVote::factory()->removed()->create([
+            'award_id' => $this->award->id, 'award_nominee_id' => $this->nominee->id, 'ip_address' => '10.0.0.6',
+        ]);
+        $otherAward = Award::factory()->for($this->event)->create();
+        $removedSameIpOtherAward = AwardVote::factory()->removed()->create([
+            'award_id' => $otherAward->id,
+            'award_nominee_id' => AwardNominee::factory()->for($otherAward)->create()->id,
+            'ip_address' => '10.0.0.5',
+        ]);
+
+        $this->actingAs($this->admin)
+            ->post(route('admin.events.award-votes.restore-ip', $this->event), ['award' => $this->award->id, 'ip' => '10.0.0.5'])
+            ->assertRedirect()
+            ->assertSessionHas('success', __('Votes restored from this IP: :count', ['count' => 3]));
+
+        foreach ($removedFromIp as $vote) {
+            $vote->refresh();
+            $this->assertFalse($vote->isRemoved());
+            $this->assertNull($vote->removed_by);
+        }
+        $this->assertTrue($removedOtherIp->fresh()->isRemoved());
+        $this->assertTrue($removedSameIpOtherAward->fresh()->isRemoved());
+        $this->assertSame(3, $this->award->votes()->counted()->count());
+    }
+
+    public function test_restoring_by_ip_rejects_an_award_from_another_event(): void
+    {
+        $foreignAward = Award::factory()->create();
+        $foreignVote = AwardVote::factory()->removed()->create([
+            'award_id' => $foreignAward->id,
+            'award_nominee_id' => AwardNominee::factory()->for($foreignAward)->create()->id,
+            'ip_address' => '10.0.0.5',
+        ]);
+
+        $this->actingAs($this->admin)
+            ->post(route('admin.events.award-votes.restore-ip', $this->event), ['award' => $foreignAward->id, 'ip' => '10.0.0.5'])
+            ->assertSessionHasErrors('award');
+
+        $this->assertTrue($foreignVote->fresh()->isRemoved());
+    }
+
+    public function test_another_events_vote_cannot_be_restored(): void
+    {
+        $foreignVote = AwardVote::factory()->removed()->create();
+
+        $this->actingAs($this->admin)
+            ->patch(route('admin.events.award-votes.restore', [$this->event, $foreignVote]))
+            ->assertNotFound();
+
+        $this->assertTrue($foreignVote->fresh()->isRemoved());
+    }
+
     public function test_the_sidebar_highlights_awards_on_the_votes_page(): void
     {
         $this->actingAs($this->admin)
