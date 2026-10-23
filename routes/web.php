@@ -4,6 +4,9 @@ use App\Http\Controllers\Admin\AgendaItemController;
 use App\Http\Controllers\Admin\AudienceCardController;
 use App\Http\Controllers\Admin\AudienceTabController;
 use App\Http\Controllers\Admin\AuthController;
+use App\Http\Controllers\Admin\AwardController;
+use App\Http\Controllers\Admin\AwardNomineeController;
+use App\Http\Controllers\Admin\AwardVoteController as AdminAwardVoteController;
 use App\Http\Controllers\Admin\ContactMessageController as AdminContactMessageController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\DiscountCouponController;
@@ -41,6 +44,7 @@ use App\Http\Controllers\Admin\TicketTypeController;
 use App\Http\Controllers\Admin\WorkshopController as AdminWorkshopController;
 use App\Http\Controllers\AgendaController;
 use App\Http\Controllers\AwardsController;
+use App\Http\Controllers\AwardVoteController;
 use App\Http\Controllers\ContactMessageController;
 use App\Http\Controllers\EventPageController;
 use App\Http\Controllers\EventsController;
@@ -69,6 +73,11 @@ Route::prefix('events/{event}')->middleware(EnsureEventIsPublished::class)->grou
     Route::get('/agenda', [AgendaController::class, 'show'])->name('agenda.show');
     Route::get('/pages/{slug}', [EventPageController::class, 'show'])->where('slug', '[a-z0-9-]+')->name('event-pages.show');
     Route::get('/awards', [AwardsController::class, 'show'])->name('awards.show');
+    Route::get('/awards/counts', [AwardVoteController::class, 'counts'])->name('awards.counts');
+    Route::scopeBindings()->group(function () {
+        Route::post('/awards/{award}/code', [AwardVoteController::class, 'sendCode'])->middleware('throttle:award-code')->name('awards.code');
+        Route::post('/awards/{award}/vote', [AwardVoteController::class, 'vote'])->middleware('throttle:award-verify')->name('awards.vote');
+    });
     Route::get('/speakers', [PublicSpeakerController::class, 'index'])->name('speakers.index');
     Route::get('/workshops', [WorkshopController::class, 'index'])->name('workshops.index');
 
@@ -175,6 +184,17 @@ Route::prefix('admin')->name('admin.')->group(function () {
             ->parameters(['discount-coupons' => 'discountCoupon']);
         Route::post('events/{event}/pages/reorder', [AdminEventPageController::class, 'reorder'])->name('events.pages.reorder');
         Route::resource('events.pages', AdminEventPageController::class)->except('show');
+        Route::put('events/{event}/awards/settings', [AwardController::class, 'updateSettings'])->name('events.awards.settings');
+        Route::post('events/{event}/awards/reorder', [AwardController::class, 'reorder'])->name('events.awards.reorder');
+        Route::resource('events.awards', AwardController::class)->except('show');
+        Route::post('events/{event}/awards/{award}/nominees/reorder', [AwardNomineeController::class, 'reorder'])->name('events.awards.nominees.reorder');
+        Route::resource('events.awards.nominees', AwardNomineeController::class)->except('show');
+        Route::get('events/{event}/award-votes', [AdminAwardVoteController::class, 'index'])->name('events.award-votes.index');
+        Route::get('events/{event}/award-votes/export', [AdminAwardVoteController::class, 'export'])->name('events.award-votes.export');
+        Route::post('events/{event}/award-votes/remove-ip', [AdminAwardVoteController::class, 'destroyIp'])->name('events.award-votes.destroy-ip');
+        Route::post('events/{event}/award-votes/restore-ip', [AdminAwardVoteController::class, 'restoreIp'])->name('events.award-votes.restore-ip');
+        Route::delete('events/{event}/award-votes/{vote}', [AdminAwardVoteController::class, 'destroy'])->name('events.award-votes.destroy');
+        Route::patch('events/{event}/award-votes/{vote}/restore', [AdminAwardVoteController::class, 'restore'])->name('events.award-votes.restore');
         Route::post('events/{event}/session-types/reorder', [SessionTypeController::class, 'reorder'])->name('events.session-types.reorder');
         Route::resource('events.session-types', SessionTypeController::class)->except('show')->parameters(['session-types' => 'sessionType']);
         Route::post('events/{event}/locations/reorder', [LocationController::class, 'reorder'])->name('events.locations.reorder');

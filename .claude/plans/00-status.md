@@ -18,11 +18,11 @@ Last verified: 2026-09-05 (routes, models, controllers, migrations inspected dir
 | 05 | Ticket Request | ✅ Done — request, review, approve/reject, approval email with a payment link |
 | 06 | Payment | 🟡 Built on Kashier — waiting on live keys and a first live payment |
 | 07 | Workshops | ✅ Done — browsing, keyed booking, capacity and slot enforcement |
-| 08 | Awards | 🟡 Partial — teaser and page shell built, voting missing |
+| 08 | Awards | ✅ Done — admin awards and nominees, email-code voting, live counts, vote review and export |
 | 09 | QR System | ✅ Done — QR on issuance, signed scan URL, staff check-in portal |
 | 10 | Reports | ✅ Done — per-event report screen and CSV export |
 
-Eight phases complete, two partial (payment gateway, awards voting).
+Nine phases complete, one partial (payment gateway).
 
 ## 01 — Project Setup
 
@@ -112,10 +112,13 @@ of the Workshops booking flow (Phase 07).
 
 - [x] Admin-editable Awards teaser blurb (Landing Page Content CMS)
 - [x] Public awards teaser (landing page) + `/events/{event}/awards` page shell
-- [ ] Nominee entry (admin)
-- [x] `Award` / `AwardVote` models, the voting window, and the one-vote-per-email rule
-- [x] Decided: the public votes, one confirmed email per category
-- [ ] Vote submission flow + results display
+- [x] Nominee entry (admin): awards and nominees per event, photos, drag to reorder
+- [x] Awards → nominees → votes, one vote per email per award (database-enforced)
+- [x] Voting window: a schedule plus a manual Open now / Closed switch
+- [x] Vote flow: pick a nominee → email + Cloudflare Turnstile → 6-digit emailed code → vote counts
+- [x] Live public counts; the browser remembers "You voted"
+- [x] Abuse limits: per-IP and per-email rate limits, 5 tries per code, 10 wrong codes per hour lock an email
+- [x] Admin vote review: suspicious-IP flags, remove one vote or all from an IP (email stays blocked), CSV export
 
 ## 09 — QR System
 

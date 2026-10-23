@@ -18,6 +18,7 @@ enum Permission: string
     case LandingPage = 'landing_page';
     case AgendaWorkshops = 'agenda_workshops';
     case Pages = 'pages';
+    case Awards = 'awards';
     case Speakers = 'speakers';
     case SpeakerRequests = 'speaker_requests';
     case Sponsors = 'sponsors';
@@ -40,6 +41,7 @@ enum Permission: string
             self::LandingPage => __('Landing page'),
             self::AgendaWorkshops => __('Agenda and workshops'),
             self::Pages => __('Pages'),
+            self::Awards => __('Awards'),
             self::Speakers => __('Speakers'),
             self::SpeakerRequests => __('Speaker requests'),
             self::Sponsors => __('Sponsors'),
@@ -60,7 +62,7 @@ enum Permission: string
     {
         return match ($this) {
             self::Dashboard => __('Overview'),
-            self::Events, self::LandingPage, self::AgendaWorkshops, self::Pages => __('Event setup'),
+            self::Events, self::LandingPage, self::AgendaWorkshops, self::Pages, self::Awards => __('Event setup'),
             self::Speakers, self::SpeakerRequests, self::Sponsors, self::SponsorRequests => __('Speakers and sponsors'),
             self::TicketSetup, self::TicketRequests, self::Invitations, self::DiscountCoupons, self::EventReports, self::Inbox => __('Tickets and sales'),
             self::RegistrationDesk => __('Event day'),
@@ -82,6 +84,7 @@ enum Permission: string
             self::LandingPage => ['admin.events.content.*', 'admin.events.reels.*', 'admin.events.gallery-photos.*', 'admin.events.testimonials.*', 'admin.events.faqs.*'],
             self::AgendaWorkshops => ['admin.events.agenda-items.*', 'admin.events.workshops.*', 'admin.events.session-types.*', 'admin.events.locations.*'],
             self::Pages => ['admin.events.pages.*'],
+            self::Awards => ['admin.events.awards.*', 'admin.events.award-votes.*'],
             self::Speakers => ['admin.events.speakers.*'],
             self::SpeakerRequests => ['admin.events.speaker-requests.*'],
             self::Sponsors => ['admin.events.sponsors.*', 'admin.events.sponsor-tiers.*'],
@@ -109,6 +112,7 @@ enum Permission: string
             self::LandingPage => 'admin.events.content.edit',
             self::AgendaWorkshops => 'admin.events.agenda-items.index',
             self::Pages => 'admin.events.pages.index',
+            self::Awards => 'admin.events.awards.index',
             self::Speakers => 'admin.events.speakers.index',
             self::SpeakerRequests => 'admin.events.speaker-requests.index',
             self::Sponsors => 'admin.events.sponsors.index',

@@ -6,6 +6,7 @@ namespace Tests\Feature;
 
 use App\Enums\TicketStatus;
 use App\Models\Award;
+use App\Models\AwardNominee;
 use App\Models\AwardVote;
 use App\Models\Event;
 use App\Models\Ticket;
@@ -118,27 +119,29 @@ class NewSchemaTest extends TestCase
 
     public function test_a_nominee_belongs_to_a_category(): void
     {
-        $award = Award::factory()->create(['category_en' => 'Best Studio', 'nominee_name_en' => 'Atelier Rahma']);
+        $award = Award::factory()->create(['name_en' => 'Best Studio']);
+        $nominee = AwardNominee::factory()->for($award)->create(['name_en' => 'Atelier Rahma']);
 
-        $this->assertSame('Best Studio', $award->category());
-        $this->assertSame('Atelier Rahma', $award->nomineeName());
+        $this->assertSame('Best Studio', $award->name());
+        $this->assertSame('Atelier Rahma', $nominee->name());
+        $this->assertTrue($nominee->award->is($award));
     }
 
     public function test_one_email_votes_once_per_category(): void
     {
-        $event = Event::factory()->create();
-        $first = Award::factory()->for($event)->create(['category_en' => 'Best Studio']);
-        $second = Award::factory()->for($event)->create(['category_en' => 'Best Studio']);
+        $award = Award::factory()->create();
+        $first = AwardNominee::factory()->for($award)->create();
+        $second = AwardNominee::factory()->for($award)->create();
 
         AwardVote::create([
-            'event_id' => $event->id, 'award_id' => $first->id,
-            'category_en' => 'Best Studio', 'email' => 'voter@example.com',
+            'event_id' => $award->event_id, 'award_id' => $award->id,
+            'award_nominee_id' => $first->id, 'email' => 'voter@example.com',
         ]);
 
         $this->expectException(QueryException::class);
         AwardVote::create([
-            'event_id' => $event->id, 'award_id' => $second->id,
-            'category_en' => 'Best Studio', 'email' => 'voter@example.com',
+            'event_id' => $award->event_id, 'award_id' => $award->id,
+            'award_nominee_id' => $second->id, 'email' => 'voter@example.com',
         ]);
     }
 
@@ -146,27 +149,28 @@ class NewSchemaTest extends TestCase
     {
         $event = Event::factory()->create();
 
-        foreach (['Best Studio', 'Best Newcomer'] as $category) {
-            $award = Award::factory()->for($event)->create(['category_en' => $category]);
+        foreach (['Best Studio', 'Best Newcomer'] as $name) {
+            $award = Award::factory()->for($event)->create(['name_en' => $name]);
+            $nominee = AwardNominee::factory()->for($award)->create();
             AwardVote::create([
                 'event_id' => $event->id, 'award_id' => $award->id,
-                'category_en' => $category, 'email' => 'voter@example.com',
+                'award_nominee_id' => $nominee->id, 'email' => 'voter@example.com',
             ]);
         }
 
         $this->assertSame(2, AwardVote::count());
     }
 
-    public function test_only_confirmed_votes_count(): void
+    public function test_only_counted_votes_count(): void
     {
-        $event = Event::factory()->create();
-        $award = Award::factory()->for($event)->create();
+        $award = Award::factory()->create();
+        $nominee = AwardNominee::factory()->for($award)->create();
 
-        AwardVote::create(['event_id' => $event->id, 'award_id' => $award->id, 'category_en' => 'a', 'email' => 'one@example.com']);
-        AwardVote::create(['event_id' => $event->id, 'award_id' => $award->id, 'category_en' => 'b', 'email' => 'two@example.com', 'confirmed_at' => now()]);
+        AwardVote::create(['event_id' => $award->event_id, 'award_id' => $award->id, 'award_nominee_id' => $nominee->id, 'email' => 'one@example.com']);
+        AwardVote::create(['event_id' => $award->event_id, 'award_id' => $award->id, 'award_nominee_id' => $nominee->id, 'email' => 'two@example.com', 'removed_at' => now()]);
 
         $this->assertSame(2, $award->votes()->count());
-        $this->assertSame(1, $award->votes()->confirmed()->count());
+        $this->assertSame(1, $award->votes()->counted()->count());
     }
 
     public function test_voting_is_shut_until_a_window_is_set(): void

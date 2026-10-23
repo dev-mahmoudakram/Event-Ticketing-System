@@ -6,6 +6,7 @@ namespace App\Models;
 
 use App\Enums\EventStatus;
 use App\Enums\LandingPageSection;
+use App\Enums\VotingMode;
 use App\Models\Concerns\ResolvesStoredMedia;
 use App\Support\SocialPlatforms;
 use Database\Factories\EventFactory;
@@ -33,7 +34,7 @@ class Event extends Model
         'slug', 'name_ar', 'name_en', 'tagline_ar', 'tagline_en', 'cover_image_path',
         'logo_path', 'footer_logo_path', 'favicon_path', 'apple_touch_icon_path', 'share_image_path',
         'contact_email', 'contact_phone', 'social_links',
-        'voting_opens_at', 'voting_closes_at', 'show_award_results',
+        'voting_opens_at', 'voting_closes_at', 'voting_mode',
         'start_date', 'end_date', 'check_in_starts_at',
         'venue_name_ar', 'venue_name_en', 'venue_address_ar', 'venue_address_en',
         'map_embed_url', 'status', 'visible_sections', 'require_influencer_category',
@@ -48,7 +49,7 @@ class Event extends Model
         'social_links' => 'array',
         'voting_opens_at' => 'datetime',
         'voting_closes_at' => 'datetime',
-        'show_award_results' => 'boolean',
+        'voting_mode' => VotingMode::class,
         'require_influencer_category' => 'boolean',
     ];
 
@@ -128,10 +129,19 @@ class Event extends Model
     /**
      * Whether the public can cast a vote right now.
      *
-     * An event with no window set is not open: voting has to be switched on deliberately.
+     * A manual Open or Closed mode overrides the schedule. On the schedule, an event with no
+     * window set is not open: voting has to be switched on deliberately.
      */
     public function votingIsOpen(): bool
     {
+        if ($this->voting_mode === VotingMode::Open) {
+            return true;
+        }
+
+        if ($this->voting_mode === VotingMode::Closed) {
+            return false;
+        }
+
         if ($this->voting_opens_at === null || $this->voting_closes_at === null) {
             return false;
         }

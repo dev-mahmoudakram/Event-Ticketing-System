@@ -10,6 +10,7 @@ import initNiceSelects from './nice-select';
 import initFollowerCounts from './follower-count';
 import unsavedGuard from './unsaved-guard';
 import schedulePopup from './schedule-popup';
+import initAwardVoting from './award-voting';
 import intlTelInput from 'intl-tel-input/intlTelInputWithUtils';
 import 'intl-tel-input/styles';
 
@@ -225,3 +226,4 @@ initSortableLists();
 initInlineActions();
 initNiceSelects();
 initFollowerCounts();
+initAwardVoting();

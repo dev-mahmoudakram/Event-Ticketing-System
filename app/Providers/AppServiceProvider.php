@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Providers;
 
 use App\Models\Event;
+use App\Services\AwardVoting;
 use App\Support\SiteText;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
@@ -72,6 +73,24 @@ class AppServiceProvider extends ServiceProvider
 
         RateLimiter::for('light-forms', fn (Request $request) => Limit::perMinute(5)
             ->by($request->ip())->response($this->tooManyAttempts(...)));
+
+        // Award voting. A whole venue can share one Wi-Fi IP, so the per-IP limits are loose and
+        // only stop a script; the tight limit is per IP + email, and the one-vote rule is per
+        // email (in AwardVoting), never per IP.
+        // An email[] array is not an email: key it as empty and let validation answer 422.
+        RateLimiter::for('award-code', function (Request $request): array {
+            $email = $request->input('email');
+            $emailKey = sha1(AwardVoting::normalizeEmail(is_string($email) ? $email : ''));
+
+            return [
+                Limit::perMinute(30)->by('award-code-minute|'.$request->ip())->response($this->tooManyAttempts(...)),
+                Limit::perHour(1000)->by('award-code-hour|'.$request->ip())->response($this->tooManyAttempts(...)),
+                Limit::perMinute(5)->by('award-code-email|'.$request->ip().'|'.$emailKey)->response($this->tooManyAttempts(...)),
+            ];
+        });
+
+        RateLimiter::for('award-verify', fn (Request $request) => Limit::perMinute(60)
+            ->by('award-verify|'.$request->ip())->response($this->tooManyAttempts(...)));
     }
 
     /**
