@@ -118,17 +118,17 @@ class AwardVoting
             ->first();
 
         if ($pending === null || $pending->expires_at->isPast() || ! $this->reserveAttempt($pending)) {
-            throw new VotingRefused(__('That code has expired. Request a new one.'));
+            throw VotingRefused::forCode(__('That code has expired. Request a new one.'));
         }
 
         if ($pending->award_nominee_id !== $nominee->id) {
-            throw new VotingRefused(__('That code was sent for a different choice. Request a new one.'));
+            throw VotingRefused::forCode(__('That code was sent for a different choice. Request a new one.'));
         }
 
         if (! Hash::check(trim($code), $pending->code_hash)) {
             RateLimiter::hit($this->wrongCodeLimiterKey($award, $email), self::LOCKOUT_MINUTES * 60);
 
-            throw new VotingRefused(__('That code is not right.'));
+            throw VotingRefused::forCode(__('That code is not right.'));
         }
 
         try {

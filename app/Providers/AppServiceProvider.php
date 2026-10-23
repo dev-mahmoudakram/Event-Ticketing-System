@@ -72,6 +72,16 @@ class AppServiceProvider extends ServiceProvider
 
         RateLimiter::for('light-forms', fn (Request $request) => Limit::perMinute(5)
             ->by($request->ip())->response($this->tooManyAttempts(...)));
+
+        // Award voting. Per IP only slows a script down: a venue's shared Wi-Fi must still let
+        // everyone vote, so the one-vote rule is per email (in AwardVoting), never per IP.
+        RateLimiter::for('award-code', fn (Request $request) => [
+            Limit::perMinute(5)->by('award-code-minute|'.$request->ip())->response($this->tooManyAttempts(...)),
+            Limit::perHour(30)->by('award-code-hour|'.$request->ip())->response($this->tooManyAttempts(...)),
+        ]);
+
+        RateLimiter::for('award-verify', fn (Request $request) => Limit::perMinute(10)
+            ->by('award-verify|'.$request->ip())->response($this->tooManyAttempts(...)));
     }
 
     /**

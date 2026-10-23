@@ -43,6 +43,7 @@ use App\Http\Controllers\Admin\TicketTypeController;
 use App\Http\Controllers\Admin\WorkshopController as AdminWorkshopController;
 use App\Http\Controllers\AgendaController;
 use App\Http\Controllers\AwardsController;
+use App\Http\Controllers\AwardVoteController;
 use App\Http\Controllers\ContactMessageController;
 use App\Http\Controllers\EventPageController;
 use App\Http\Controllers\EventsController;
@@ -71,6 +72,11 @@ Route::prefix('events/{event}')->middleware(EnsureEventIsPublished::class)->grou
     Route::get('/agenda', [AgendaController::class, 'show'])->name('agenda.show');
     Route::get('/pages/{slug}', [EventPageController::class, 'show'])->where('slug', '[a-z0-9-]+')->name('event-pages.show');
     Route::get('/awards', [AwardsController::class, 'show'])->name('awards.show');
+    Route::get('/awards/counts', [AwardVoteController::class, 'counts'])->name('awards.counts');
+    Route::scopeBindings()->group(function () {
+        Route::post('/awards/{award}/code', [AwardVoteController::class, 'sendCode'])->middleware('throttle:award-code')->name('awards.code');
+        Route::post('/awards/{award}/vote', [AwardVoteController::class, 'vote'])->middleware('throttle:award-verify')->name('awards.vote');
+    });
     Route::get('/speakers', [PublicSpeakerController::class, 'index'])->name('speakers.index');
     Route::get('/workshops', [WorkshopController::class, 'index'])->name('workshops.index');
 
