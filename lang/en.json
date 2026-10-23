@@ -922,5 +922,20 @@
     "Saved, ending in :last. Leave blank to keep it.": "Saved, ending in :last. Leave blank to keep it.",
     "Follow the schedule": "Follow the schedule",
     "Open now": "Open now",
-    "Closed": "Closed"
+    "Closed": "Closed",
+    "Edit Award": "Edit Award",
+    "New Award": "New Award",
+    "Votes": "Votes",
+    "Voting window": "Voting window",
+    "\"Follow the schedule\" opens voting between the two dates below. With no dates it stays closed.": "\"Follow the schedule\" opens voting between the two dates below. With no dates it stays closed.",
+    "Voting": "Voting",
+    "Voting opens": "Voting opens",
+    "Voting closes": "Voting closes",
+    "No awards yet.": "No awards yet.",
+    "Nominees": "Nominees",
+    "This also deletes its votes. Are you sure?": "This also deletes its votes. Are you sure?",
+    "Edit Nominee": "Edit Nominee",
+    "New Nominee": "New Nominee",
+    "No nominees yet.": "No nominees yet.",
+    "Voting must close after it opens.": "Voting must close after it opens."
 }

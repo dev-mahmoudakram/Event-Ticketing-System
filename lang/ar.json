@@ -967,5 +967,20 @@
     "Saved, ending in :last. Leave blank to keep it.": "محفوظ، ينتهي بـ :last. اتركه فارغًا للإبقاء عليه.",
     "Follow the schedule": "اتباع الجدول الزمني",
     "Open now": "مفتوح الآن",
-    "Closed": "مغلق"
+    "Closed": "مغلق",
+    "Edit Award": "تعديل الجائزة",
+    "New Award": "جائزة جديدة",
+    "Votes": "الأصوات",
+    "Voting window": "فترة التصويت",
+    "\"Follow the schedule\" opens voting between the two dates below. With no dates it stays closed.": "خيار «حسب الجدول» يفتح التصويت بين التاريخين أدناه. وبدون تواريخ يبقى التصويت مغلقًا.",
+    "Voting": "التصويت",
+    "Voting opens": "يفتح التصويت",
+    "Voting closes": "يُغلق التصويت",
+    "No awards yet.": "لا توجد جوائز بعد.",
+    "Nominees": "المرشحون",
+    "This also deletes its votes. Are you sure?": "سيؤدي هذا إلى حذف أصواته أيضًا. هل أنت متأكد؟",
+    "Edit Nominee": "تعديل المرشح",
+    "New Nominee": "مرشح جديد",
+    "No nominees yet.": "لا يوجد مرشحون بعد.",
+    "Voting must close after it opens.": "يجب أن يُغلق التصويت بعد موعد فتحه."
 }
