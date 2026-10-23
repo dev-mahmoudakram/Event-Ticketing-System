@@ -161,6 +161,18 @@ class NewSchemaTest extends TestCase
         $this->assertSame(2, AwardVote::count());
     }
 
+    public function test_only_counted_votes_count(): void
+    {
+        $award = Award::factory()->create();
+        $nominee = AwardNominee::factory()->for($award)->create();
+
+        AwardVote::create(['event_id' => $award->event_id, 'award_id' => $award->id, 'award_nominee_id' => $nominee->id, 'email' => 'one@example.com']);
+        AwardVote::create(['event_id' => $award->event_id, 'award_id' => $award->id, 'award_nominee_id' => $nominee->id, 'email' => 'two@example.com', 'removed_at' => now()]);
+
+        $this->assertSame(2, $award->votes()->count());
+        $this->assertSame(1, $award->votes()->counted()->count());
+    }
+
     public function test_voting_is_shut_until_a_window_is_set(): void
     {
         $event = Event::factory()->create();

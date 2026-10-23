@@ -50,6 +50,18 @@ class AwardModelTest extends TestCase
         $this->assertSame(2, AwardVote::count());
     }
 
+    public function test_vote_emails_are_stored_lowercase_and_trimmed(): void
+    {
+        $award = Award::factory()->create();
+        $nominee = AwardNominee::factory()->for($award)->create();
+
+        $vote = AwardVote::factory()->for($award)->for($nominee, 'nominee')->create(['email' => ' Voter@X.com ']);
+        $this->assertSame('voter@x.com', $vote->fresh()->makeVisible('email')->email);
+
+        $this->expectException(QueryException::class);
+        AwardVote::factory()->for($award)->for($nominee, 'nominee')->create(['email' => 'voter@x.com']);
+    }
+
     public function test_removed_votes_do_not_count(): void
     {
         $award = Award::factory()->create();

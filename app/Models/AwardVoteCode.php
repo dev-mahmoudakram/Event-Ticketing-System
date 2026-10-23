@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
@@ -18,6 +19,14 @@ class AwardVoteCode extends Model
     protected function casts(): array
     {
         return ['expires_at' => 'datetime', 'attempts' => 'integer'];
+    }
+
+    /**
+     * Emails are stored trimmed and lower-cased, matching the votes they lead to.
+     */
+    protected function email(): Attribute
+    {
+        return Attribute::make(set: fn (string $value): string => mb_strtolower(trim($value)));
     }
 
     public function award(): BelongsTo
