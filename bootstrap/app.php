@@ -18,8 +18,9 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->redirectGuestsTo(fn () => route('admin.login'));
         // TLS ends at the proxy in front of the app, so take the scheme and client IP from it —
         // or every link is built as http:// on an https page. Only the proxies listed in
-        // config/trustedproxy.php (Cloudflare, the local reverse proxy, TRUSTED_PROXIES) are
-        // believed; anyone else's forwarded headers are ignored so a client can't fake its IP.
+        // config/trustedproxy.php (the local reverse proxy, TRUSTED_PROXIES, and Cloudflare only
+        // when TRUST_CLOUDFLARE is set) are believed; anyone else's forwarded headers are
+        // ignored so a client can't fake its IP.
         // The forwarded host is never trusted, so a forged one can't rewrite our links.
         $middleware->trustProxies(
             headers: Request::HEADER_X_FORWARDED_FOR | Request::HEADER_X_FORWARDED_PORT | Request::HEADER_X_FORWARDED_PROTO,

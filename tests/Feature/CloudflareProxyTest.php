@@ -8,6 +8,10 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Tests\TestCase;
 
+/**
+ * Each test makes a single request: Symfony keeps the trusted-proxy settings in static state,
+ * so a second request in the same test would inherit the first one's.
+ */
 class CloudflareProxyTest extends TestCase
 {
     protected function setUp(): void
@@ -19,6 +23,8 @@ class CloudflareProxyTest extends TestCase
 
     public function test_a_request_through_cloudflare_uses_the_visitors_ip(): void
     {
+        $this->trustCloudflare();
+
         $this->withServerVariables(['REMOTE_ADDR' => '173.245.48.10'])
             ->withHeader('X-Forwarded-For', '41.33.10.5')
             ->get('/_ip')
@@ -35,14 +41,26 @@ class CloudflareProxyTest extends TestCase
 
     public function test_ipv6_cloudflare_ranges_are_trusted(): void
     {
+        $this->trustCloudflare();
+
         $this->withServerVariables(['REMOTE_ADDR' => '2400:cb00::1'])
             ->withHeader('X-Forwarded-For', '41.33.10.5')
             ->get('/_ip')
             ->assertSeeText('41.33.10.5');
     }
 
+    public function test_cloudflare_is_not_trusted_by_default(): void
+    {
+        $this->withServerVariables(['REMOTE_ADDR' => '173.245.48.10'])
+            ->withHeader('X-Forwarded-For', '41.33.10.5')
+            ->get('/_ip')
+            ->assertSeeText('173.245.48.10');
+    }
+
     public function test_https_scheme_is_taken_from_a_trusted_proxy(): void
     {
+        $this->trustCloudflare();
+
         Route::get('/_secure', fn (Request $request) => $request->isSecure() ? 'secure' : 'plain');
 
         $this->withServerVariables(['REMOTE_ADDR' => '173.245.48.10'])
@@ -71,6 +89,8 @@ class CloudflareProxyTest extends TestCase
 
     public function test_the_workers_egress_range_is_not_trusted(): void
     {
+        $this->trustCloudflare();
+
         $this->withServerVariables(['REMOTE_ADDR' => '2a06:98c0::1'])
             ->withHeader('X-Forwarded-For', '41.33.10.5')
             ->get('/_ip')
@@ -107,25 +127,55 @@ class CloudflareProxyTest extends TestCase
             ->assertSeeText('41.33.10.5');
     }
 
-    public function test_cloudflare_and_localhost_stay_trusted_without_the_env_value(): void
+    public function test_localhost_is_trusted_and_cloudflare_is_not_by_default(): void
     {
-        $this->useTrustedProxiesEnv('');
+        $this->useEnv(['TRUSTED_PROXIES' => '']);
+
+        $proxies = config('trustedproxy.proxies');
+
+        $this->assertContains('127.0.0.1', $proxies);
+        $this->assertContains('::1', $proxies);
+        $this->assertNotContains('173.245.48.0/20', $proxies);
+    }
+
+    public function test_cloudflare_ranges_are_added_when_trust_cloudflare_is_set(): void
+    {
+        $this->trustCloudflare();
 
         $proxies = config('trustedproxy.proxies');
 
         $this->assertContains('173.245.48.0/20', $proxies);
+        $this->assertContains('2400:cb00::/32', $proxies);
         $this->assertContains('127.0.0.1', $proxies);
-        $this->assertContains('::1', $proxies);
+    }
+
+    private function trustCloudflare(): void
+    {
+        $this->useEnv(['TRUST_CLOUDFLARE' => 'true']);
     }
 
     private function useTrustedProxiesEnv(string $value): void
     {
-        $_ENV['TRUSTED_PROXIES'] = $_SERVER['TRUSTED_PROXIES'] = $value;
-        putenv('TRUSTED_PROXIES='.$value);
+        $this->useEnv(['TRUSTED_PROXIES' => $value]);
+    }
 
-        $this->beforeApplicationDestroyed(function (): void {
-            unset($_ENV['TRUSTED_PROXIES'], $_SERVER['TRUSTED_PROXIES']);
-            putenv('TRUSTED_PROXIES');
+    /**
+     * Sets env values and rebuilds the trusted-proxy config from them.
+     *
+     * @param  array<string, string>  $values
+     */
+    private function useEnv(array $values): void
+    {
+        foreach ($values as $name => $value) {
+            $_ENV[$name] = $_SERVER[$name] = $value;
+            putenv($name.'='.$value);
+        }
+
+        $this->beforeApplicationDestroyed(function () use ($values): void {
+            foreach (array_keys($values) as $name) {
+                unset($_ENV[$name], $_SERVER[$name]);
+                putenv($name);
+            }
         });
 
         config(['trustedproxy' => require config_path('trustedproxy.php')]);
