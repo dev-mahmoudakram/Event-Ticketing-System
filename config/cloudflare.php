@@ -7,6 +7,9 @@
  * Source (refresh from time to time):
  *   https://www.cloudflare.com/ips-v4
  *   https://www.cloudflare.com/ips-v6
+ *
+ * 2a06:98c0::/29 is deliberately left out: it is the Cloudflare Workers egress range,
+ * and anyone can run a Worker that calls the origin with forged headers.
  */
 return [
     'proxies' => [
@@ -32,7 +35,6 @@ return [
         '2803:f800::/32',
         '2405:b500::/32',
         '2405:8100::/32',
-        '2a06:98c0::/29',
         '2c0f:f248::/32',
     ],
 ];

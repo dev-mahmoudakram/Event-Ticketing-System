@@ -15,17 +15,13 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        $middleware->trustProxies(
-            at: (require __DIR__.'/../config/cloudflare.php')['proxies'],
-            headers: Request::HEADER_X_FORWARDED_FOR | Request::HEADER_X_FORWARDED_PROTO,
-        );
         $middleware->redirectGuestsTo(fn () => route('admin.login'));
-        // TLS ends at the proxy in front of the app (ngrok locally, the host's load balancer in
-        // production), so take the scheme and client IP from it — or every link is built as
-        // http:// on an https page and the browser blocks the forms. The forwarded host is not
-        // trusted, so a forged one can't rewrite our links.
+        // TLS ends at the proxy in front of the app, so take the scheme and client IP from it —
+        // or every link is built as http:// on an https page. Only the proxies listed in
+        // config/trustedproxy.php (Cloudflare, the local reverse proxy, TRUSTED_PROXIES) are
+        // believed; anyone else's forwarded headers are ignored so a client can't fake its IP.
+        // The forwarded host is never trusted, so a forged one can't rewrite our links.
         $middleware->trustProxies(
-            at: '*',
             headers: Request::HEADER_X_FORWARDED_FOR | Request::HEADER_X_FORWARDED_PORT | Request::HEADER_X_FORWARDED_PROTO,
         );
         $middleware->alias(['permission' => EnsureUserHasPermission::class]);
