@@ -182,36 +182,55 @@ class AwardVotingEndpointsTest extends TestCase
             ->assertJsonPath('message', __('We could not send the email. Please try again in a minute.'));
     }
 
-    public function test_the_sixth_code_request_in_a_minute_is_throttled(): void
+    public function test_the_thirty_first_code_request_in_a_minute_is_throttled(): void
+    {
+        $this->passCaptcha();
+
+        foreach (range(1, 30) as $attempt) {
+            $this->requestCode("voter{$attempt}@example.com")->assertOk();
+        }
+
+        $this->requestCode('voter31@example.com')
+            ->assertStatus(429)
+            ->assertJsonPath('message', __('Too many attempts. Please wait a minute and try again.'));
+    }
+
+    public function test_one_email_cannot_hammer_codes_from_one_ip(): void
     {
         $this->passCaptcha();
 
         foreach (range(1, 5) as $attempt) {
-            $this->requestCode("voter{$attempt}@example.com")->assertOk();
+            $this->assertNotSame(429, $this->requestCode('Voter@example.com ')->status(), "Request {$attempt} was throttled.");
         }
 
-        $this->requestCode('voter6@example.com')
+        $this->requestCode('voter@example.com')
             ->assertStatus(429)
             ->assertJsonPath('message', __('Too many attempts. Please wait a minute and try again.'));
+
+        $this->requestCode('someone-else@example.com')->assertOk();
     }
 
-    public function test_the_eleventh_vote_attempt_in_a_minute_is_throttled(): void
+    public function test_the_sixty_first_vote_attempt_in_a_minute_is_throttled(): void
     {
-        foreach (range(1, 10) as $attempt) {
+        foreach (range(1, 60) as $attempt) {
             $this->castVote("voter{$attempt}@example.com", '123456')->assertStatus(422);
         }
 
-        $this->castVote('voter11@example.com', '123456')
+        $this->castVote('voter61@example.com', '123456')
             ->assertStatus(429)
             ->assertJsonPath('message', __('Too many attempts. Please wait a minute and try again.'));
     }
 
+    /**
+     * The code limit is 30 a minute per IP, so 40 voters on one venue Wi-Fi are spread over
+     * two minutes (20 each) — the crowd is never blocked by one shared IP.
+     */
     public function test_many_people_on_one_ip_can_all_vote(): void
     {
         $this->passCaptcha();
 
-        foreach (range(1, 10) as $person) {
-            if ($person === 6) {
+        foreach (range(1, 40) as $person) {
+            if ($person === 21) {
                 $this->travel(61)->seconds();
             }
 
@@ -219,7 +238,7 @@ class AwardVotingEndpointsTest extends TestCase
             $this->castVote("person{$person}@example.com", $this->lastMailedCode())->assertOk();
         }
 
-        $this->assertSame(10, AwardVote::query()->counted()->where('award_id', $this->award->id)->count());
+        $this->assertSame(40, AwardVote::query()->counted()->where('award_id', $this->award->id)->count());
     }
 
     public function test_counts_are_public_json(): void
