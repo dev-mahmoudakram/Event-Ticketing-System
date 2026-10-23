@@ -15,14 +15,12 @@ class AwardFactory extends Factory
 {
     public function definition(): array
     {
-        $category = $this->faker->randomElement(['Creator of the Year', 'Best Newcomer', 'Best Studio']);
+        $name = $this->faker->randomElement(['Creator of the Year', 'Best Newcomer', 'Best Studio']);
 
         return [
             'event_id' => Event::factory(),
-            'category_ar' => $category,
-            'category_en' => $category,
-            'nominee_name_ar' => $this->faker->name(),
-            'nominee_name_en' => $this->faker->name(),
+            'name_ar' => $name,
+            'name_en' => $name,
             'sort_order' => 0,
         ];
     }

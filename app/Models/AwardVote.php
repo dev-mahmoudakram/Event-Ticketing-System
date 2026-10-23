@@ -5,21 +5,23 @@ declare(strict_types=1);
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class AwardVote extends Model
 {
+    use HasFactory;
+
     protected $fillable = [
-        'event_id', 'award_id', 'category_en', 'email',
-        'confirmation_token', 'confirmed_at', 'ip_address',
+        'event_id', 'award_id', 'award_nominee_id', 'email', 'ip_address', 'removed_at', 'removed_by',
     ];
 
-    protected $hidden = ['confirmation_token', 'email', 'ip_address'];
+    protected $hidden = ['email', 'ip_address'];
 
     protected function casts(): array
     {
-        return ['confirmed_at' => 'datetime'];
+        return ['removed_at' => 'datetime'];
     }
 
     public function event(): BelongsTo
@@ -32,17 +34,21 @@ class AwardVote extends Model
         return $this->belongsTo(Award::class);
     }
 
-    /**
-     * Only confirmed votes count. An unconfirmed row is somebody who started voting and never
-     * clicked the link in their email.
-     */
-    public function scopeConfirmed(Builder $query): Builder
+    public function nominee(): BelongsTo
     {
-        return $query->whereNotNull('confirmed_at');
+        return $this->belongsTo(AwardNominee::class, 'award_nominee_id');
     }
 
-    public function isConfirmed(): bool
+    /**
+     * Removed votes keep their row, so the email stays blocked, but they no longer count.
+     */
+    public function scopeCounted(Builder $query): Builder
     {
-        return $this->confirmed_at !== null;
+        return $query->whereNull('removed_at');
+    }
+
+    public function isRemoved(): bool
+    {
+        return $this->removed_at !== null;
     }
 }

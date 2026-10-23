@@ -964,5 +964,8 @@
     "Payment Settings": "إعدادات الدفع",
     "Payments are not set up yet. Approving a ticket request will fail until these settings are complete.": "لم يتم إعداد الدفع بعد. ستفشل الموافقة على طلبات التذاكر حتى تكتمل هذه الإعدادات.",
     "Payments are taken through Kashier. Copy these values from the Integrations page of your Kashier dashboard. Test and live mode each have their own keys.": "يتم الدفع عبر Kashier. انسخ هذه القيم من صفحة Integrations في لوحة تحكم Kashier. لكلٍّ من الوضع التجريبي والفعلي مفاتيحه الخاصة.",
-    "Saved, ending in :last. Leave blank to keep it.": "محفوظ، ينتهي بـ :last. اتركه فارغًا للإبقاء عليه."
+    "Saved, ending in :last. Leave blank to keep it.": "محفوظ، ينتهي بـ :last. اتركه فارغًا للإبقاء عليه.",
+    "Follow the schedule": "اتباع الجدول الزمني",
+    "Open now": "مفتوح الآن",
+    "Closed": "مغلق"
 }

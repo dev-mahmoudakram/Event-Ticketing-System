@@ -919,5 +919,8 @@
     "Payment Settings": "Payment Settings",
     "Payments are not set up yet. Approving a ticket request will fail until these settings are complete.": "Payments are not set up yet. Approving a ticket request will fail until these settings are complete.",
     "Payments are taken through Kashier. Copy these values from the Integrations page of your Kashier dashboard. Test and live mode each have their own keys.": "Payments are taken through Kashier. Copy these values from the Integrations page of your Kashier dashboard. Test and live mode each have their own keys.",
-    "Saved, ending in :last. Leave blank to keep it.": "Saved, ending in :last. Leave blank to keep it."
+    "Saved, ending in :last. Leave blank to keep it.": "Saved, ending in :last. Leave blank to keep it.",
+    "Follow the schedule": "Follow the schedule",
+    "Open now": "Open now",
+    "Closed": "Closed"
 }
